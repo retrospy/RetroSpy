@@ -4,7 +4,7 @@ echo " "
 echo "Updating and executing the RetroSpy installer script."
 echo " "
 
-wget -q -t 3 --output-file=/tmp/wget-log --show-progress -O /tmp/update-retrospy-installer.sh https://github.com/retrospy/RetroSpy/tree/master/MiSter/update-retrospy-installer.sh
+wget -q -t 3 --output-file=/tmp/wget-log --show-progress -O /tmp/update-retrospy-installer.sh https://github.com/retrospy/RetroSpy/raw/master/MiSter/update-retrospy-installer.sh
 
 chmod +x /tmp/update-retrospy-installer.sh
 
