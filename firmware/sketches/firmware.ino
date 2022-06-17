@@ -302,31 +302,31 @@ void setup()
         SNESSpy.setup();
     } else if ( !PINC_READ(MODEPIN_N64))  {
 	    delay(1000);
-	    Serial.println("Starting up in N64 mode");
+	    Serial.println(F("Starting up in N64 mode"));
 	    delay(1000);
         N64Spy.setup();
     } else if ( !PINC_READ(MODEPIN_GC)) {
 	    delay(1000);
-	    Serial.println("Starting up in Gamecube mode");
+	    Serial.println(F("Starting up in Gamecube mode"));
 	    delay(1000);
         GCSpy.setup();
     }
 #if defined(__arm__) && defined(CORE_TEENSY)
   else if( !PINC_READ( MODEPIN_DREAMCAST ) ) {
 	  delay(1000);
-	  Serial.println("Starting up in Dreamcast mode");
+	  Serial.println(F("Starting up in Dreamcast mode"));
 	  delay(1000);
        DCSpy.setup();
     } else if( !PINC_READ( MODEPIN_WII ) ) {
 	    delay(1000);
-	    Serial.println("Starting up in Wii mode");
+	    Serial.println(F("Starting up in Wii mode"));
 	    delay(1000);
         WiiSpy.setup();
     }
 #endif 
     else {
 	    delay(1000);
-	    Serial.println("Starting up in NES mode");
+	    Serial.println(F("Starting up in NES mode"));
 	    delay(1000);
         NESSpy.setup();
     }
