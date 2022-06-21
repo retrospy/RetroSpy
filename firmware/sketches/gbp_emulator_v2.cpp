@@ -218,6 +218,8 @@ void GameBoyPrinterEmulator::setup(void)
 	Serial.println(F("// This is free software, and you are welcome to redistribute it"));
 	Serial.println(F("// under certain conditions. Refer to LICENSE file for detail."));
 	Serial.println(F("// ---"));
+	
+	Serial.flush();
 } // setup()
 
 void GameBoyPrinterEmulator::loop()
