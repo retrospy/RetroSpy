@@ -431,7 +431,7 @@ namespace RetroSpy
                          _vm.Sources.SelectedItem == InputSource.NEOGEOMINI || _vm.Sources.SelectedItem == InputSource.PS3
                          || _vm.Sources.SelectedItem == InputSource.PS4 || _vm.Sources.SelectedItem == InputSource.TG16MINI
                          || _vm.Sources.SelectedItem == InputSource.ATARIVCS || _vm.Sources.SelectedItem == InputSource.EVERCADE
-                         || _vm.Sources.SelectedItem == InputSource.PS4CRONUS || _vm.Sources.SelectedItem == InputSource.A500MINI))
+                         || _vm.Sources.SelectedItem == InputSource.PS4CRONUS || _vm.Sources.SelectedItem == InputSource.A500MINI || _vm.Sources.SelectedItem == InputSource.PS4USB))
                 {
                     reader = _vm.Sources.SelectedItem.BuildReader4(txtHostname.Text, txtUsername.Text, txtPassword.Text);
                 }

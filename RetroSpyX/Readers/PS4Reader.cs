@@ -4,7 +4,7 @@ namespace RetroSpy.Readers
 {
     public static class PS4Reader
     {
-        private const int PACKET_SIZE = 153;
+        private const int PACKET_SIZE = 154;
         private const int PACKET_HEADER = 21;
         private const int POLISHED_PACKET_SIZE = 34;
 

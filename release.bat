@@ -130,6 +130,7 @@ cd ..
 
 mkdir RetroSpy-Setup\MiSTer
 if "%sub%" == "1" ( sed -e s/RELEASE_TAG/%~1/g MiSTer\update-retrospy-nightly.sh > RetroSpy-Setup\MiSTer\update-retrospy.sh) else (copy MiSTer\update-retrospy.sh RetroSpy-Setup\MiSTer)
+dos2unix RetroSpy-Setup\MiSTer\update-retrospy.sh
 ;cd RetroSpy-Setup
 ;"C:\Program Files\7-Zip\7z.exe" a ..\RetroSpy-Windows.zip MiSTer\update-retrospy.sh
 ;cd ..

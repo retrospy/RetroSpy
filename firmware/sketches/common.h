@@ -50,6 +50,7 @@ enum VideoOutputType {
 //#define RS_VISION
 //#define RS_VISION_ULTRA
 //#define RS_VISION_CDI
+//#define RS_VISION_COLECOVISION
 
 #ifdef RS_VISION
 #define TP_TIMERONE
@@ -65,6 +66,11 @@ enum VideoOutputType {
 
 #ifdef RS_VISION_CDI
 #define TP_IRLIB2
+#endif
+
+#ifdef RS_VISION_COLECOVISION
+#define TP_PINCHANGEINTERRUPT
+#define COLECOVISION_ROLLER_TIMER_INT_HANDLER
 #endif
 
 // Uncomment these to enable 3rd party libraries once installed

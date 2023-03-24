@@ -202,9 +202,9 @@ void ColecoVisionRollerSpy::setup(byte videoOutputType) {}
 void ColecoVisionRollerSpy::writeSerial() {}
 void ColecoVisionRollerSpy::debugSerial() {}
 void ColecoVisionRollerSpy::updateState() {}
-#endif
 
 const char* ColecoVisionRollerSpy::startupMsg()
 {
-		return "Colecovision Roller (NULL)";
+	return "Colecovision Roller (NULL)";
 }
+#endif

@@ -1,5 +1,9 @@
 #!/bin/bash
-  
+
+if [ -n "$1" ]; then
+  export sub=1
+fi   
+
 rm -rf bin/Release/RetroSpy-macOS
 rm -rf RetroSpy-macOS.zip
 
@@ -29,7 +33,13 @@ mv bin/Release/RetroSpy-macOS/RetroSpy.app/Contents/MacOS/keybindings.xml bin/Re
 cp -aR bin/Release/net7.0/firmware bin/Release/RetroSpy-macOS/firmware
 
 mkdir bin/Release/RetroSpy-macOS/MiSTer
-cp MiSTer/update-retrospy.sh bin/Release/RetroSpy-macOS/MiSTer
+if [ "$sub" = "1" ]
+then
+    sed -e s/RELEASE_TAG/$1/g MiSTer/update-retrospy-nightly.sh > bin/Release/RetroSpy-macOS/MiSTer/update-retrospy.sh
+else
+    cp MiSTer/update-retrospy.sh bin/Release/RetroSpy-macOS/MiSTer
+fi
+dos2unix bin/Release/RetroSpy-macOS/MiSTer/update-retrospy.sh
 
 cp LICENSE bin/Release/RetroSpy-macOS
  

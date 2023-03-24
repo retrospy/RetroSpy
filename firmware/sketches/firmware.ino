@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // RetroSpy Firmware for Arduino Uno & Teensy 3.5/4.0/4.1
-// Version: 6.1.3
+// Version: 6.1.4
 // RetroSpy written by zoggins of RetroSpy Technologies
 // NintendoSpy originally written by jaburns
 
@@ -409,6 +409,23 @@ bool CreateSpy()
 	case 0x02:
 		currentSpy = new CDTVWirelessSpy();
 		break;
+	}
+#elif defined(RS_VISION_COLECOVISION)
+	switch (ReadAnalog())
+	{
+	case 0x00:
+		currentSpy = new ColecoVisionSpy();
+		break;
+	case 0x01:
+		currentSpy = new ColecoVisionRollerSpy();
+		((ColecoVisionRollerSpy*)currentSpy)->setup(VIDEO_NTSC);
+		customSetup = true;
+		break;	
+	case 0x02:
+		currentSpy = new ColecoVisionRollerSpy();
+		((ColecoVisionRollerSpy*)currentSpy)->setup(VIDEO_PAL);
+		customSetup = true;
+		break;	
 	}
 #elif defined(MODE_DETECT)
 	if (!PINC_READ(MODEPIN_SNES))

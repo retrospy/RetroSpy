@@ -159,6 +159,10 @@ void AmigaMouseSpy::writeSerial() {}
 void AmigaMouseSpy::debugSerial() {}
 void AmigaMouseSpy::updateState() {}
 
+const char* AmigaMouseSpy::startupMsg()
+{
+	return "Amiga Mouse";
+}
 
 
 #else

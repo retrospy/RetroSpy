@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ -n "$1" ]; then
+  export sub=1
+fi
+
 rm -rf bin/Release/net7.0
 rm -rf bin/Release/RetroSpy-Linux
 rm -rf RetroSpy-Linux.tar.gz
@@ -33,7 +37,15 @@ else
          mv RetroSpy-Linux/bin/keybindings.xml RetroSpy-Linux
          mv RetroSpy-Linux/bin/game_palettes.cfg RetroSpy-Linux
          mkdir RetroSpy-Linux/MiSTer
-         cp ../../MiSTer/update-retrospy.sh RetroSpy-Linux/MiSTer
+
+         if [ "$sub" = "1" ]
+         then
+           sed -e s/RELEASE_TAG/$1/g ../../MiSTer/update-retrospy-nightly.sh > RetroSpy-Linux/MiSTer/update-retrospy.sh
+         else
+           cp ../../MiSTer/update-retrospy.sh RetroSpy-Linux/MiSTer
+         fi
+         dos2unix RetroSpy-Linux/MiSTer/update-retrospy.sh
+
          cp ../../LICENSE RetroSpy-Linux
 	     mv RetroSpy-Linux/bin/RetroSpy RetroSpy-Linux/bin/retrospy
 	     mv RetroSpy-Linux/bin/GBPemu RetroSpy-Linux/bin/pixelview
