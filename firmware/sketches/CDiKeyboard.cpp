@@ -26,7 +26,7 @@
 
 #include "CDiKeyboard.h"
 
-#if !defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(RASPBERRYPI_PICO)
+#if !defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 
 // Backspace == Delete
 static byte lookup[128] = {

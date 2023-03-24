@@ -29,7 +29,7 @@
 
 #include "ControllerSpy.h"
 
-#if defined(RASPBERRYPI_PICO)
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 typedef uint32_t port_t;
 #else
 typedef uint8_t port_t;

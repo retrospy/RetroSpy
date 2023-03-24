@@ -26,19 +26,19 @@
 
 #include "Wii.h"
 
-#if defined(RASPBERRYPI_PICO)
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 #define PIN_SCL		13
 #define PIN_SDA		12
 #define BIT_SCL		(1UL << PIN_SCL)
 #define BIT_SDA		(1UL << PIN_SDA)
 #else
-#define PIN_SCL		18
-#define PIN_SDA		19
-#define BIT_SCL		(1 << DIGITAL_PIN_18)
-#define BIT_SDA		(1 << DIGITAL_PIN_19)
+#define PIN_SCL		WII_SCL
+#define PIN_SDA		WII_SDA
+#define BIT_SCL		(1 << WII_BIT_SCL)
+#define BIT_SDA		(1 << WII_BIT_SDA)
 #endif
 
-#if defined(RASPBERRYPI_PICO)
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 #define READ_PINS gpio_get_all()
 #elif defined(__arm__) && defined(CORE_TEENSY) && defined(ARDUINO_TEENSY35)
 #define READ_PINS GPIOB_PDIR
@@ -46,9 +46,9 @@
 #define READ_PINS GPIO6_PSR
 #endif
 
-#if defined(__arm__) && defined(CORE_TEENSY) && (defined(ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41)) || defined(RASPBERRYPI_PICO)
+#if defined(__arm__) && defined(CORE_TEENSY) && (defined(ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41)) || defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 void WiiSpy::setup() {
-#if !defined(RASPBERRYPI_PICO)
+#if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	setup1();
 #endif
 
@@ -68,10 +68,10 @@ void WiiSpy::setup1() {
 }
 
 void WiiSpy::loop() {
-#if !defined(RASPBERRYPI_PICO)
+#if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	loop1();
 #endif
-
+	
 	if (sendRequest)
 	{
 		memcpy(sendData, cleanData, 51);
@@ -86,6 +86,8 @@ void WiiSpy::loop() {
 
 void WiiSpy::loop1()
 {
+	
+	
 	last_port = current_port;
 	noInterrupts();
 	current_port = READ_PINS & (BIT_SCL|BIT_SDA);
@@ -94,6 +96,7 @@ void WiiSpy::loop1()
 
 	if (bDataReady)
 	{
+
 		if ((last_port == (BIT_SCL|BIT_SDA)) && (current_port == BIT_SCL))
 		{
 			// START
@@ -101,6 +104,7 @@ void WiiSpy::loop1()
 		}
 		else if ((last_port == BIT_SCL) && (current_port == (BIT_SCL|BIT_SDA)))
 		{
+			
 			// STOP
 			i2c_index -= (i2c_index % 9);
 
@@ -113,14 +117,14 @@ void WiiSpy::loop1()
 			}
 
 			if (tempData[0] != 0x52) return;
-
+			
 			bool _isControllerID = isControllerID;
 			bool _isControllerPoll = isControllerPoll;
 			isControllerID = false;
 			isControllerPoll = false;
 
 			if (rawData[8] != 0) return;
-
+			
 			bool isWrite = rawData[7] == 0;
 
 			int i = 9;
@@ -149,7 +153,6 @@ void WiiSpy::loop1()
 			while (sendRequest)
 			{
 			}
-
 			if (isWrite)
 			{
 				if (numbytes == 2 && tempData[1] == 0)

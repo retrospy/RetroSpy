@@ -161,7 +161,7 @@ void setup()
 	for (int i = 3; i < 9; ++i)
 		if (i != 7)
 			pinMode(i, INPUT_PULLUP);
-#elif defined(RASPBERRYPI_PICO)
+#elif defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 	pinMode(MODEPIN_SNES, INPUT_PULLUP);
 	pinMode(MODEPIN_WII, INPUT_PULLUP);
 #elif defined(RS_VISION) || defined(RS_VISION_CDI)
@@ -196,7 +196,7 @@ void setup()
  
 }
 
-#if defined(RASPBERRYPI_PICO)
+#if defined(RASPBERRYPI_PICO)  || defined(ARDUINO_RASPBERRY_PI_PICO)
 void setup1()
 {
 	ControllerSpy* volatile *p = &currentSpy;
@@ -215,7 +215,7 @@ void loop()
 		currentSpy->loop();
 }
 
-#if defined(RASPBERRYPI_PICO)
+#if defined(RASPBERRYPI_PICO)  || defined(ARDUINO_RASPBERRY_PI_PICO)
 void loop1()
 {
 	if (currentSpy != NULL)
@@ -440,11 +440,11 @@ bool CreateSpy()
 	else if (!PINC_READ(MODEPIN_DREAMCAST))
 		currentSpy = new DreamcastSpy();
 #endif
-#if (defined(__arm__) && defined(CORE_TEENSY)) || defined(RASPBERRYPI_PICO)
+#if (defined(__arm__) && defined(CORE_TEENSY)) || defined(RASPBERRYPI_PICO)  || defined(ARDUINO_RASPBERRY_PI_PICO)
 	else if (!PINC_READ(MODEPIN_WII))
 		currentSpy = new WiiSpy();
 #endif 
-#if !defined(RASPBERRYPI_PICO)
+#if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	else
 		currentSpy = new NESSpy();
 #endif

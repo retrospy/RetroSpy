@@ -26,7 +26,7 @@
 
 #include "Intellivision.h"
 
-#if !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(RASPBERRYPI_PICO)
+#if !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 
 const unsigned char IntellivisionSpy::buttonMasks[32] = {
 			0b01000000, 0b01000001, 0b01100001, 0b01100000, 0b00100000, 0b00100001, 0b00110001, 0b00110000,
