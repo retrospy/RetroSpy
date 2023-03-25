@@ -29,18 +29,26 @@
 
 #include "ControllerSpy.h"
 
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+typedef uint32_t port_t;
+#else
+typedef uint8_t port_t;
+#endif
+
 class WiiSpy : public ControllerSpy {
 public:
 	void setup();
+	void setup1();
 	void loop();
+	void loop1();
 	void writeSerial();
 	void debugSerial();
 	void updateState();
 	const char* startupMsg();
 
 private:
-	uint8_t   current_portb = 0;
-	uint8_t   last_portb;
+	port_t    current_port = 0;
+	port_t    last_port;
 	int       i2c_index = 0;
 	bool      isControllerPoll = false;
 	bool      isControllerID = false;
@@ -50,6 +58,8 @@ private:
 	byte      keyThing[8];
 	byte      cleanData[274];
 	byte      rawData[16000];
+	byte      sendData[51];
+	volatile bool sendRequest = false;
 };
 
 #endif

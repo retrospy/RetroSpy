@@ -141,6 +141,11 @@
 #define GENESIS_TR            DIGITAL_PIN_05
 #define GENESIS_TL            DIGITAL_PIN_21
 
+#define WII_SCL					19
+#define WII_SDA				    18
+#define WII_BIT_SCL			   DIGITAL_PIN_19
+#define WII_BIT_SDA			   DIGITAL_PIN_18
+
 #define READ_PORTD( mask ) (GPIOD_PDIR & mask)
 #define READ_PORTB( mask ) (GPIOB_PDIR & mask)
 

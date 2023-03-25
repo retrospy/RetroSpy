@@ -73,6 +73,7 @@
         <string>sketches\VFlash.h</string>
         <string>sketches\config_every.h</string>
         <string>sketches\GBA.h</string>
+        <string>sketches\config_pico.h</string>
       </OtherFiles>
     </ProjectModeSettings>
   </Project>
@@ -227,7 +228,7 @@
       </DebugSettingsOverride>
       <BuildSettingsExtension xsi:type="com.visualgdb.build.external.arduino.extension">
         <BoardID>arduino:avr:uno</BoardID>
-        <COMPort />
+        <COMPort>COM11</COMPort>
         <Properties>
           <Entries />
         </Properties>
@@ -378,7 +379,7 @@
       </DebugSettingsOverride>
       <BuildSettingsExtension xsi:type="com.visualgdb.build.external.arduino.extension">
         <BoardID>arduino:avr:nano</BoardID>
-        <COMPort>COM10</COMPort>
+        <COMPort />
         <Properties>
           <Entries>
             <KeyValue>
@@ -754,6 +755,114 @@
             <KeyValue>
               <Key>keys</Key>
               <Value>en-us</Value>
+            </KeyValue>
+          </Entries>
+        </Properties>
+        <DebugUnoptimizedComponentTypes>Sketch</DebugUnoptimizedComponentTypes>
+      </BuildSettingsExtension>
+    </VisualGDBConfiguration>
+    <VisualGDBConfiguration>
+      <PlatformName>Raspberry_Pi_Pico</PlatformName>
+      <DebugSettingsOverride xsi:type="com.visualgdb.debug.embedded">
+        <AdditionalStartupCommands />
+        <AdditionalGDBSettings>
+          <Features>
+            <DisableAutoDetection>false</DisableAutoDetection>
+            <UseFrameParameter>false</UseFrameParameter>
+            <SimpleValuesFlagSupported>false</SimpleValuesFlagSupported>
+            <ListLocalsSupported>false</ListLocalsSupported>
+            <ByteLevelMemoryCommandsAvailable>false</ByteLevelMemoryCommandsAvailable>
+            <ThreadInfoSupported>false</ThreadInfoSupported>
+            <PendingBreakpointsSupported>false</PendingBreakpointsSupported>
+            <SupportTargetCommand>false</SupportTargetCommand>
+            <ReliableBreakpointNotifications>false</ReliableBreakpointNotifications>
+          </Features>
+          <EnableSmartStepping>false</EnableSmartStepping>
+          <FilterSpuriousStoppedNotifications>false</FilterSpuriousStoppedNotifications>
+          <ForceSingleThreadedMode>false</ForceSingleThreadedMode>
+          <UseAppleExtensions>false</UseAppleExtensions>
+          <CanAcceptCommandsWhileRunning>false</CanAcceptCommandsWhileRunning>
+          <MakeLogFile>false</MakeLogFile>
+          <IgnoreModuleEventsWhileStepping>true</IgnoreModuleEventsWhileStepping>
+          <UseRelativePathsOnly>false</UseRelativePathsOnly>
+          <ExitAction>None</ExitAction>
+          <DisableDisassembly>false</DisableDisassembly>
+          <ExamineMemoryWithXCommand>false</ExamineMemoryWithXCommand>
+          <StepIntoNewInstanceEntry>main</StepIntoNewInstanceEntry>
+          <ExamineRegistersInRawFormat>true</ExamineRegistersInRawFormat>
+          <DisableSignals>false</DisableSignals>
+          <EnableAsyncExecutionMode>false</EnableAsyncExecutionMode>
+          <AsyncModeSupportsBreakpoints>true</AsyncModeSupportsBreakpoints>
+          <TemporaryBreakConsolidationTimeout>0</TemporaryBreakConsolidationTimeout>
+          <EnableNonStopMode>false</EnableNonStopMode>
+          <MaxBreakpointLimit>0</MaxBreakpointLimit>
+          <EnableVerboseMode>true</EnableVerboseMode>
+          <EnablePrettyPrinters>false</EnablePrettyPrinters>
+        </AdditionalGDBSettings>
+        <DebugMethod />
+        <AutoDetectRTOS>true</AutoDetectRTOS>
+        <SemihostingSupport>Auto</SemihostingSupport>
+        <SemihostingPollingDelay>0</SemihostingPollingDelay>
+        <StepIntoEntryPoint>false</StepIntoEntryPoint>
+        <ReloadFirmwareOnReset>false</ReloadFirmwareOnReset>
+        <ValidateEndOfStackAddress>true</ValidateEndOfStackAddress>
+        <StopAtEntryPoint>false</StopAtEntryPoint>
+        <EnableVirtualHalts>false</EnableVirtualHalts>
+        <DynamicAnalysisSettings />
+        <EndOfStackSymbol>_estack</EndOfStackSymbol>
+        <TimestampProviderTicksPerSecond>0</TimestampProviderTicksPerSecond>
+        <KeepConsoleAfterExit>false</KeepConsoleAfterExit>
+        <UnusedStackFillPattern xsi:nil="true" />
+        <CheckInterfaceDrivers>true</CheckInterfaceDrivers>
+      </DebugSettingsOverride>
+      <BuildSettingsExtension xsi:type="com.visualgdb.build.external.arduino.extension">
+        <BoardID>rp2040:rp2040:rpipico</BoardID>
+        <COMPort>COM11</COMPort>
+        <Properties>
+          <Entries>
+            <KeyValue>
+              <Key>flash</Key>
+              <Value>2097152_0</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>freq</Key>
+              <Value>225</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>opt</Key>
+              <Value>Fast</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>rtti</Key>
+              <Value>Disabled</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>stackprotect</Key>
+              <Value>Disabled</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>exceptions</Key>
+              <Value>Disabled</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>dbgport</Key>
+              <Value>Disabled</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>dbglvl</Key>
+              <Value>None</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>usbstack</Key>
+              <Value>picosdk</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>ipbtstack</Key>
+              <Value>ipv4only</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>uploadmethod</Key>
+              <Value>default</Value>
             </KeyValue>
           </Entries>
         </Properties>

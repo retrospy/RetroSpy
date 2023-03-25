@@ -32,6 +32,8 @@
 #include "config_teensy.h"
 #elif defined(ARDUINO_AVR_NANO_EVERY)
 #include "config_every.h"
+#elif defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#include "config_pico.h"
 #else
 #include "config_arduino.h"
 #endif

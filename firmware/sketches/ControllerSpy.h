@@ -48,7 +48,9 @@ public:
 		delay(1000);		
 	}
 	
+	virtual void setup1() {}
 	virtual void loop() = 0;
+	virtual void loop1() {}
 	virtual void writeSerial() = 0;
 	virtual void debugSerial() = 0;
 	virtual void updateState() = 0;

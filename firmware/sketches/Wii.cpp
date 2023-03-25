@@ -26,45 +26,85 @@
 
 #include "Wii.h"
 
-#if defined(__arm__) && defined(CORE_TEENSY) && defined(ARDUINO_TEENSY35)
-#define READ_PINS GPIOB_PDIR & 12
-#elif defined(__arm__) && defined(CORE_TEENSY) && (defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41))
-#define READ_PINS GPIO6_PSR & 12
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#define PIN_SCL		13
+#define PIN_SDA		12
+#define BIT_SCL		(1UL << PIN_SCL)
+#define BIT_SDA		(1UL << PIN_SDA)
+#else
+#define PIN_SCL		WII_SCL
+#define PIN_SDA		WII_SDA
+#define BIT_SCL		(1 << WII_BIT_SCL)
+#define BIT_SDA		(1 << WII_BIT_SDA)
 #endif
 
-#if defined(__arm__) && defined(CORE_TEENSY) && (defined(ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41))
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#define READ_PINS gpio_get_all()
+#elif defined(__arm__) && defined(CORE_TEENSY) && defined(ARDUINO_TEENSY35)
+#define READ_PINS GPIOB_PDIR
+#elif defined(__arm__) && defined(CORE_TEENSY) && (defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41))
+#define READ_PINS GPIO6_PSR
+#endif
+
+#if defined(__arm__) && defined(CORE_TEENSY) && (defined(ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41)) || defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 void WiiSpy::setup() {
-	pinMode(19, INPUT);
-	pinMode(18, INPUT);
+#if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
+	setup1();
+#endif
+
+	delay(1000);
+	Serial.println(startupMsg());
+	delay(1000);
+}
+
+void WiiSpy::setup1() {
+	pinMode(PIN_SDA, INPUT);
+	pinMode(PIN_SCL, INPUT);
 
 	cleanData[0] = 2;
 	cleanData[1] = -1;
 	cleanData[46] = '\n';
 	cleanData[50] = '\n';
-	
-	delay(1000);
-	Serial.println(startupMsg());
-	delay(1000);
-	
-	
 }
 
 void WiiSpy::loop() {
-	last_portb = current_portb;
+#if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
+	loop1();
+#endif
+	
+	if (sendRequest)
+	{
+		memcpy(sendData, cleanData, 51);
+		sendRequest = false;
+#ifdef DEBUG
+		debugSerial();
+#else
+		writeSerial();
+#endif
+	}
+}
+
+void WiiSpy::loop1()
+{
+	
+	
+	last_port = current_port;
 	noInterrupts();
-	current_portb = READ_PINS;
+	current_port = READ_PINS & (BIT_SCL|BIT_SDA);
 	interrupts();
-	bool bDataReady = current_portb != last_portb;
+	bool bDataReady = current_port != last_port;
 
 	if (bDataReady)
 	{
-		if ((last_portb == 0xC) && (current_portb == 0x8))
+
+		if ((last_port == (BIT_SCL|BIT_SDA)) && (current_port == BIT_SCL))
 		{
 			// START
 			i2c_index = 0;
 		}
-		else if ((last_portb == 0x8) && (current_portb == 0xC))
+		else if ((last_port == BIT_SCL) && (current_port == (BIT_SCL|BIT_SDA)))
 		{
+			
 			// STOP
 			i2c_index -= (i2c_index % 9);
 
@@ -77,14 +117,14 @@ void WiiSpy::loop() {
 			}
 
 			if (tempData[0] != 0x52) return;
-
+			
 			bool _isControllerID = isControllerID;
 			bool _isControllerPoll = isControllerPoll;
 			isControllerID = false;
 			isControllerPoll = false;
 
 			if (rawData[8] != 0) return;
-
+			
 			bool isWrite = rawData[7] == 0;
 
 			int i = 9;
@@ -110,6 +150,9 @@ void WiiSpy::loop() {
 				i += 9;
 			}
 
+			while (sendRequest)
+			{
+			}
 			if (isWrite)
 			{
 				if (numbytes == 2 && tempData[1] == 0)
@@ -227,21 +270,16 @@ void WiiSpy::loop() {
 							j += 2;
 						}
 					}
-
-#ifdef DEBUG
-					debugSerial();
-#else
-					writeSerial();
-#endif
+					sendRequest = true;
 				}
 			}
 		}
-		else if ((last_portb == 0x4) && (current_portb == 0xC))
+		else if ((last_port == BIT_SDA) && (current_port == (BIT_SCL|BIT_SDA)))
 		{
 			// ONE
 			rawData[i2c_index++] = 1;
 		}
-		else if ((last_portb == 0x0) && (current_portb == 0x8))
+		else if ((last_port == 0x0) && (current_port == BIT_SCL))
 		{
 			// ZERO
 			rawData[i2c_index++] = 0;
@@ -251,27 +289,27 @@ void WiiSpy::loop() {
 
 void WiiSpy::writeSerial()
 {
-	if (cleanData[0] == 3)
-		Serial.write(cleanData, 51);
+	if (sendData[0] == 3)
+		Serial.write(sendData, 51);
 	else
-		Serial.write(cleanData, 47);
+		Serial.write(sendData, 47);
 }
 
 void WiiSpy::debugSerial()
 {
-	Serial.print(cleanData[0]);
+	Serial.print(sendData[0]);
 	Serial.print(' ');
-	Serial.print(cleanData[1]);
+	Serial.print(sendData[1]);
 	Serial.print(' ');
 	int j = 2;
 	int toPrint = 22;
-	if (cleanData[0] == 3)
+	if (sendData[0] == 3)
 	{
 		toPrint = 26;
 	}
 	for (int i = 0; i < toPrint; ++i)
 	{
-		byte data = (cleanData[j] | (cleanData[j + 1] >> 4));
+		byte data = (sendData[j] | (sendData[j + 1] >> 4));
 		Serial.print(data);
 		Serial.print(' ');
 		j += 2;

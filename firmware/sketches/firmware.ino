@@ -161,6 +161,9 @@ void setup()
 	for (int i = 3; i < 9; ++i)
 		if (i != 7)
 			pinMode(i, INPUT_PULLUP);
+#elif defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	pinMode(MODEPIN_SNES, INPUT_PULLUP);
+	pinMode(MODEPIN_WII, INPUT_PULLUP);
 #elif defined(RS_VISION) || defined(RS_VISION_CDI)
 	for (int i = A0; i <= A7; ++i)
 		pinMode(i, INPUT_PULLUP);
@@ -193,6 +196,17 @@ void setup()
  
 }
 
+#if defined(RASPBERRYPI_PICO)  || defined(ARDUINO_RASPBERRY_PI_PICO)
+void setup1()
+{
+	ControllerSpy* volatile *p = &currentSpy;
+	while (*p == NULL)
+	{
+	}
+	currentSpy->setup1();
+}
+#endif
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Arduino sketch main loop definition.
 void loop()
@@ -201,12 +215,22 @@ void loop()
 		currentSpy->loop();
 }
 
+#if defined(RASPBERRYPI_PICO)  || defined(ARDUINO_RASPBERRY_PI_PICO)
+void loop1()
+{
+	if (currentSpy != NULL)
+		currentSpy->loop1();
+}
+#endif
+
+#if defined(RS_VISION) || defined(RS_VISION_CDI)
 byte ReadAnalog()
 {
 	byte retVal = PINC;
 	
 	return (~retVal  & 0b00111111);
 }
+#endif
 
 #if defined(RS_VISION_ULTRA)
 byte ReadAnalog4()
@@ -406,18 +430,24 @@ bool CreateSpy()
 #elif defined(MODE_DETECT)
 	if (!PINC_READ(MODEPIN_SNES))
 		currentSpy = new SNESSpy;
+#if !defined(RASPBERRYPI_PICO)
 	else if (!PINC_READ(MODEPIN_N64))
 		currentSpy = new N64Spy();
 	else if (!PINC_READ(MODEPIN_GC))
 		currentSpy = new GCSpy();
+#endif
 #if defined(__arm__) && defined(CORE_TEENSY)
 	else if (!PINC_READ(MODEPIN_DREAMCAST))
 		currentSpy = new DreamcastSpy();
+#endif
+#if (defined(__arm__) && defined(CORE_TEENSY)) || defined(RASPBERRYPI_PICO)  || defined(ARDUINO_RASPBERRY_PI_PICO)
 	else if (!PINC_READ(MODEPIN_WII))
 		currentSpy = new WiiSpy();
 #endif 
+#if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	else
 		currentSpy = new NESSpy();
+#endif
 #elif defined(MODE_NES)
 	currentSpy = new NESSpy();
 #elif defined(MODE_POWERGLOVE)

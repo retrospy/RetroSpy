@@ -33,6 +33,7 @@ Global
 		Debug|Arduino_Nano_Every = Debug|Arduino_Nano_Every
 		Debug|Arduino_Uno = Debug|Arduino_Uno
 		Debug|LGT8F328 = Debug|LGT8F328
+		Debug|Raspberry_Pi_Pico = Debug|Raspberry_Pi_Pico
 		Debug|Teensy_3 5 = Debug|Teensy_3 5
 		Debug|Teensy_4 0 = Debug|Teensy_4 0
 		Debug|Teensy_4 1 = Debug|Teensy_4 1
@@ -43,6 +44,7 @@ Global
 		Release|Arduino_Nano_Every = Release|Arduino_Nano_Every
 		Release|Arduino_Uno = Release|Arduino_Uno
 		Release|LGT8F328 = Release|LGT8F328
+		Release|Raspberry_Pi_Pico = Release|Raspberry_Pi_Pico
 		Release|Teensy_3 5 = Release|Teensy_3 5
 		Release|Teensy_4 0 = Release|Teensy_4 0
 		Release|Teensy_4 1 = Release|Teensy_4 1
@@ -59,6 +61,8 @@ Global
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|Arduino_Uno.Build.0 = Debug|Arduino_Uno
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|LGT8F328.ActiveCfg = Debug|LGT8F328
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|LGT8F328.Build.0 = Debug|LGT8F328
+		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|Raspberry_Pi_Pico.ActiveCfg = Debug|Raspberry_Pi_Pico
+		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|Raspberry_Pi_Pico.Build.0 = Debug|Raspberry_Pi_Pico
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|Teensy_3 5.ActiveCfg = Debug|Teensy_3 5
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|Teensy_3 5.Build.0 = Debug|Teensy_3 5
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|Teensy_4 0.ActiveCfg = Debug|Teensy_4 0
@@ -76,6 +80,8 @@ Global
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Release|Arduino_Uno.Build.0 = Release|Arduino_Uno
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Release|LGT8F328.ActiveCfg = Release|LGT8F328
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Release|LGT8F328.Build.0 = Release|LGT8F328
+		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Release|Raspberry_Pi_Pico.ActiveCfg = Release|Raspberry_Pi_Pico
+		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Release|Raspberry_Pi_Pico.Build.0 = Release|Raspberry_Pi_Pico
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Release|Teensy_3 5.ActiveCfg = Release|Teensy_3 5
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Release|Teensy_3 5.Build.0 = Release|Teensy_3 5
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Release|Teensy_4 0.ActiveCfg = Release|Teensy_4 0
@@ -93,6 +99,8 @@ Global
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|Arduino_Uno.Build.0 = Debug|Win32
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|LGT8F328.ActiveCfg = Debug|LGT8F328
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|LGT8F328.Build.0 = Debug|LGT8F328
+		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|Raspberry_Pi_Pico.ActiveCfg = Debug|Raspberry_Pi_Pico
+		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|Raspberry_Pi_Pico.Build.0 = Debug|Raspberry_Pi_Pico
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|Teensy_3 5.ActiveCfg = Debug|Win32
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|Teensy_3 5.Build.0 = Debug|Win32
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|Teensy_4 0.ActiveCfg = Debug|Win32
@@ -111,6 +119,8 @@ Global
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Release|Arduino_Uno.Build.0 = Release|Win32
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Release|LGT8F328.ActiveCfg = Release|LGT8F328
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Release|LGT8F328.Build.0 = Release|LGT8F328
+		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Release|Raspberry_Pi_Pico.ActiveCfg = Release|Win32
+		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Release|Raspberry_Pi_Pico.Build.0 = Release|Win32
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Release|Teensy_3 5.ActiveCfg = Release|Win32
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Release|Teensy_3 5.Build.0 = Release|Win32
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Release|Teensy_4 0.ActiveCfg = Release|Win32
@@ -130,6 +140,8 @@ Global
 		{F7CC6315-6995-48B4-808A-ABDEFF62EEBE}.Debug|Arduino_Uno.Build.0 = Debug|Any CPU
 		{F7CC6315-6995-48B4-808A-ABDEFF62EEBE}.Debug|LGT8F328.ActiveCfg = Debug|Any CPU
 		{F7CC6315-6995-48B4-808A-ABDEFF62EEBE}.Debug|LGT8F328.Build.0 = Debug|Any CPU
+		{F7CC6315-6995-48B4-808A-ABDEFF62EEBE}.Debug|Raspberry_Pi_Pico.ActiveCfg = Debug|Any CPU
+		{F7CC6315-6995-48B4-808A-ABDEFF62EEBE}.Debug|Raspberry_Pi_Pico.Build.0 = Debug|Any CPU
 		{F7CC6315-6995-48B4-808A-ABDEFF62EEBE}.Debug|Teensy_3 5.ActiveCfg = Debug|Any CPU
 		{F7CC6315-6995-48B4-808A-ABDEFF62EEBE}.Debug|Teensy_3 5.Build.0 = Debug|Any CPU
 		{F7CC6315-6995-48B4-808A-ABDEFF62EEBE}.Debug|Teensy_4 0.ActiveCfg = Debug|Any CPU
@@ -150,6 +162,8 @@ Global
 		{F7CC6315-6995-48B4-808A-ABDEFF62EEBE}.Release|Arduino_Uno.Build.0 = Release|Any CPU
 		{F7CC6315-6995-48B4-808A-ABDEFF62EEBE}.Release|LGT8F328.ActiveCfg = Release|Any CPU
 		{F7CC6315-6995-48B4-808A-ABDEFF62EEBE}.Release|LGT8F328.Build.0 = Release|Any CPU
+		{F7CC6315-6995-48B4-808A-ABDEFF62EEBE}.Release|Raspberry_Pi_Pico.ActiveCfg = Release|Any CPU
+		{F7CC6315-6995-48B4-808A-ABDEFF62EEBE}.Release|Raspberry_Pi_Pico.Build.0 = Release|Any CPU
 		{F7CC6315-6995-48B4-808A-ABDEFF62EEBE}.Release|Teensy_3 5.ActiveCfg = Release|Any CPU
 		{F7CC6315-6995-48B4-808A-ABDEFF62EEBE}.Release|Teensy_3 5.Build.0 = Release|Any CPU
 		{F7CC6315-6995-48B4-808A-ABDEFF62EEBE}.Release|Teensy_4 0.ActiveCfg = Release|Any CPU
@@ -170,6 +184,8 @@ Global
 		{8ABC5880-452D-40DB-AF55-6B6FF76987A3}.Debug|Arduino_Uno.Build.0 = Debug|Any CPU
 		{8ABC5880-452D-40DB-AF55-6B6FF76987A3}.Debug|LGT8F328.ActiveCfg = Debug|Any CPU
 		{8ABC5880-452D-40DB-AF55-6B6FF76987A3}.Debug|LGT8F328.Build.0 = Debug|Any CPU
+		{8ABC5880-452D-40DB-AF55-6B6FF76987A3}.Debug|Raspberry_Pi_Pico.ActiveCfg = Debug|Any CPU
+		{8ABC5880-452D-40DB-AF55-6B6FF76987A3}.Debug|Raspberry_Pi_Pico.Build.0 = Debug|Any CPU
 		{8ABC5880-452D-40DB-AF55-6B6FF76987A3}.Debug|Teensy_3 5.ActiveCfg = Debug|Any CPU
 		{8ABC5880-452D-40DB-AF55-6B6FF76987A3}.Debug|Teensy_3 5.Build.0 = Debug|Any CPU
 		{8ABC5880-452D-40DB-AF55-6B6FF76987A3}.Debug|Teensy_4 0.ActiveCfg = Debug|Any CPU
@@ -190,6 +206,8 @@ Global
 		{8ABC5880-452D-40DB-AF55-6B6FF76987A3}.Release|Arduino_Uno.Build.0 = Release|Any CPU
 		{8ABC5880-452D-40DB-AF55-6B6FF76987A3}.Release|LGT8F328.ActiveCfg = Release|Any CPU
 		{8ABC5880-452D-40DB-AF55-6B6FF76987A3}.Release|LGT8F328.Build.0 = Release|Any CPU
+		{8ABC5880-452D-40DB-AF55-6B6FF76987A3}.Release|Raspberry_Pi_Pico.ActiveCfg = Release|Any CPU
+		{8ABC5880-452D-40DB-AF55-6B6FF76987A3}.Release|Raspberry_Pi_Pico.Build.0 = Release|Any CPU
 		{8ABC5880-452D-40DB-AF55-6B6FF76987A3}.Release|Teensy_3 5.ActiveCfg = Release|Any CPU
 		{8ABC5880-452D-40DB-AF55-6B6FF76987A3}.Release|Teensy_3 5.Build.0 = Release|Any CPU
 		{8ABC5880-452D-40DB-AF55-6B6FF76987A3}.Release|Teensy_4 0.ActiveCfg = Release|Any CPU
@@ -210,6 +228,8 @@ Global
 		{A250BB85-323F-4AC3-AFED-192D54C91BFC}.Debug|Arduino_Uno.Build.0 = Debug|Any CPU
 		{A250BB85-323F-4AC3-AFED-192D54C91BFC}.Debug|LGT8F328.ActiveCfg = Debug|Any CPU
 		{A250BB85-323F-4AC3-AFED-192D54C91BFC}.Debug|LGT8F328.Build.0 = Debug|Any CPU
+		{A250BB85-323F-4AC3-AFED-192D54C91BFC}.Debug|Raspberry_Pi_Pico.ActiveCfg = Debug|Any CPU
+		{A250BB85-323F-4AC3-AFED-192D54C91BFC}.Debug|Raspberry_Pi_Pico.Build.0 = Debug|Any CPU
 		{A250BB85-323F-4AC3-AFED-192D54C91BFC}.Debug|Teensy_3 5.ActiveCfg = Debug|Any CPU
 		{A250BB85-323F-4AC3-AFED-192D54C91BFC}.Debug|Teensy_3 5.Build.0 = Debug|Any CPU
 		{A250BB85-323F-4AC3-AFED-192D54C91BFC}.Debug|Teensy_4 0.ActiveCfg = Debug|Any CPU
@@ -230,6 +250,8 @@ Global
 		{A250BB85-323F-4AC3-AFED-192D54C91BFC}.Release|Arduino_Uno.Build.0 = Release|Any CPU
 		{A250BB85-323F-4AC3-AFED-192D54C91BFC}.Release|LGT8F328.ActiveCfg = Release|Any CPU
 		{A250BB85-323F-4AC3-AFED-192D54C91BFC}.Release|LGT8F328.Build.0 = Release|Any CPU
+		{A250BB85-323F-4AC3-AFED-192D54C91BFC}.Release|Raspberry_Pi_Pico.ActiveCfg = Release|Any CPU
+		{A250BB85-323F-4AC3-AFED-192D54C91BFC}.Release|Raspberry_Pi_Pico.Build.0 = Release|Any CPU
 		{A250BB85-323F-4AC3-AFED-192D54C91BFC}.Release|Teensy_3 5.ActiveCfg = Release|Any CPU
 		{A250BB85-323F-4AC3-AFED-192D54C91BFC}.Release|Teensy_3 5.Build.0 = Release|Any CPU
 		{A250BB85-323F-4AC3-AFED-192D54C91BFC}.Release|Teensy_4 0.ActiveCfg = Release|Any CPU
@@ -250,6 +272,8 @@ Global
 		{3D0560EC-2726-456B-B229-A16342255DB4}.Debug|Arduino_Uno.Build.0 = Debug|Any CPU
 		{3D0560EC-2726-456B-B229-A16342255DB4}.Debug|LGT8F328.ActiveCfg = Debug|Any CPU
 		{3D0560EC-2726-456B-B229-A16342255DB4}.Debug|LGT8F328.Build.0 = Debug|Any CPU
+		{3D0560EC-2726-456B-B229-A16342255DB4}.Debug|Raspberry_Pi_Pico.ActiveCfg = Debug|Any CPU
+		{3D0560EC-2726-456B-B229-A16342255DB4}.Debug|Raspberry_Pi_Pico.Build.0 = Debug|Any CPU
 		{3D0560EC-2726-456B-B229-A16342255DB4}.Debug|Teensy_3 5.ActiveCfg = Debug|Any CPU
 		{3D0560EC-2726-456B-B229-A16342255DB4}.Debug|Teensy_3 5.Build.0 = Debug|Any CPU
 		{3D0560EC-2726-456B-B229-A16342255DB4}.Debug|Teensy_4 0.ActiveCfg = Debug|Any CPU
@@ -270,6 +294,8 @@ Global
 		{3D0560EC-2726-456B-B229-A16342255DB4}.Release|Arduino_Uno.Build.0 = Release|Any CPU
 		{3D0560EC-2726-456B-B229-A16342255DB4}.Release|LGT8F328.ActiveCfg = Release|Any CPU
 		{3D0560EC-2726-456B-B229-A16342255DB4}.Release|LGT8F328.Build.0 = Release|Any CPU
+		{3D0560EC-2726-456B-B229-A16342255DB4}.Release|Raspberry_Pi_Pico.ActiveCfg = Release|Any CPU
+		{3D0560EC-2726-456B-B229-A16342255DB4}.Release|Raspberry_Pi_Pico.Build.0 = Release|Any CPU
 		{3D0560EC-2726-456B-B229-A16342255DB4}.Release|Teensy_3 5.ActiveCfg = Release|Any CPU
 		{3D0560EC-2726-456B-B229-A16342255DB4}.Release|Teensy_3 5.Build.0 = Release|Any CPU
 		{3D0560EC-2726-456B-B229-A16342255DB4}.Release|Teensy_4 0.ActiveCfg = Release|Any CPU

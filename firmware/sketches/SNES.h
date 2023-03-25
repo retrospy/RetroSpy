@@ -38,7 +38,9 @@
 
 class SNESSpy : public ControllerSpy {
 public:
+	void setup1();
 	void loop();
+	void loop1();
 	void writeSerial();
 	void debugSerial();
 	void updateState();
@@ -48,6 +50,9 @@ public:
 private:
 	unsigned char rawData[SNES_BITCOUNT_EXT];
 	unsigned char bytesToReturn = SNES_BITCOUNT;
+    unsigned char sendData[SNES_BITCOUNT_EXT];
+    unsigned char sendBytes = SNES_BITCOUNT;
+    volatile bool sendRequest = false;
 };
 
 #endif
