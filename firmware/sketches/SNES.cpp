@@ -63,12 +63,7 @@ void SNESSpy::loop1() {
 	{
 	}
 	updateState();
-#if !defined(DEBUG)
-	writeSerial();
-#else
-	debugSerial();
-#endif
-	T_DELAY(5);
+	sendRequest = true;
 }
 
 void SNESSpy::writeSerial() {
