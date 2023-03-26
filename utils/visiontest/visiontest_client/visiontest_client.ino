@@ -17,7 +17,7 @@ static int count = 0;
 void setup()
 {
     count = 0;
-    for(int i = 2; i < 10; ++i)
+    for(int i = 2; i < 12; ++i)
     {
       pinMode(i, INPUT_PULLUP);
     }
@@ -28,7 +28,7 @@ void setup()
 void loop()
 {
 
-  WAIT_LEADING_EDGEB(0);
+  WAIT_LEADING_EDGEB(3);
 
   //Serial.print("Starting Cycle #");
   //Serial.println(++count);
@@ -37,11 +37,11 @@ void loop()
   for(int i = 0; i < 64; ++i)
   { 
     
-    WAIT_LEADING_EDGEB(1);
-    byte val = 0;
-    for(int i = 0; i < 6; ++i)
+    WAIT_LEADING_EDGEB(4);
+    int val = 0;
+    for(int j = 0; j < 6; ++i)
     {
-      val |= digitalRead(i+2) == HIGH ? (1 << i) : 0; 
+	    val |= digitalRead(j + 2) == HIGH ? (1 << j) : 0; 
     }
     
     if (val != i)
@@ -69,6 +69,8 @@ void loop()
   
   Serial.print("Cycle #");
   Serial.print(++count);
-  Serial.println(" PASSED");
-
+  Serial.print(" PASSED, Switch=");
+  for(int j = 0; j < 6; ++i)
+      Serial.print(digitalRead(A0+j == HIGH ? "1" : "0");
+  Serial.println("");
 }
