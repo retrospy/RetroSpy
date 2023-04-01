@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<skin name="Xbox 360 Controller" author="jaburns" type="xbox360">
+<skin name="Xbox 360 Controller" author="jaburns" type="xbox360;pocket">
 
     <background name="Default" image="pad.png" />
 
