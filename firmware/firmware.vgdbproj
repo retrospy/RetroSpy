@@ -228,7 +228,7 @@
       </DebugSettingsOverride>
       <BuildSettingsExtension xsi:type="com.visualgdb.build.external.arduino.extension">
         <BoardID>arduino:avr:uno</BoardID>
-        <COMPort>COM11</COMPort>
+        <COMPort />
         <Properties>
           <Entries />
         </Properties>
@@ -384,7 +384,7 @@
           <Entries>
             <KeyValue>
               <Key>cpu</Key>
-              <Value>atmega328</Value>
+              <Value>atmega328old</Value>
             </KeyValue>
           </Entries>
         </Properties>
