@@ -112,6 +112,8 @@ void PRDTStateChanged()
 
 void CDTVWiredSpy::setup()
 {
+	printFirmwareInfo();
+
 	pinMode(PRDT_PIN, INPUT_PULLUP);
 	attachInterrupt(digitalPinToInterrupt(PRDT_PIN), PRDTStateChanged, CHANGE);
 	Timer1.initialize(10000);
