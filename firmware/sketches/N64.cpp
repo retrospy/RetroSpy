@@ -214,7 +214,6 @@ void N64Spy::updateState() {
 	unsigned short bits;
 	bool shortcutToControllerPoll = false;
 	getControllerInfo = false;
-	bool ignoreBits = false;
 	
 	unsigned char *rawDataPtr = &rawData[1];
 	byte /*bit7, bit6, bit5, bit4, bit3, */bit2, bit1, bit0;
@@ -256,7 +255,6 @@ void N64Spy::updateState() {
 		WAIT_FALLING_EDGE(N64_PIN);
 		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
 		// bit0 = PIND & 0b00000100;
-		ignoreBits = true;
 		bits = 281;
 		rawData[0] = 0x02;
 		goto read_loop;
@@ -286,8 +284,7 @@ read_loop:
 
 	// Read a bit from the line and store as a byte in "rawData"
 	*rawDataPtr = READ_PORTD(0b00000100);
-	if (!ignoreBits)
-		++rawDataPtr;
+	++rawDataPtr;
 	--bits;
 	if (bits == 0)
 	{
