@@ -144,12 +144,14 @@
 bool CreateSpy();
 
 ControllerSpy* currentSpy = NULL;
+bool muteStartupMessage;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // General initialization, just sets all pins to input and starts serial communication.
 void setup()
 {
-
+	muteStartupMessage = false;
+	
 	// FOR MODE DETECTION
 #if defined(RS_VISION_ULTRA)
 	for (int i = 13; i <= 18; ++i)
@@ -183,7 +185,7 @@ void setup()
 		currentSpy->setup();
 	}
 
-	if (currentSpy != NULL)
+	if (!muteStartupMessage && currentSpy != NULL)
 	{
 		currentSpy->printFirmwareInfo();
 	}
@@ -343,6 +345,7 @@ bool CreateSpy()
 		break;
 	case 0x19:
 		currentSpy = new CDTVWiredSpy();
+		muteStartupMessage = true;
 		break;
 	case 0x1A:
 		currentSpy = new ColecoVisionSpy();
@@ -518,6 +521,7 @@ bool CreateSpy()
 	customSetup = true;
 #elif defined(MODE_CDTV_WIRED)
 	currentSpy = new CDTVWiredSpy();
+	muteStartupMessage = true;
 #elif defined(MODE_CDTV_WIRELESS)
 	currentSpy = new CDTVWirelessSpy();
 #elif defined(MODE_FMTOWNS_KEYBOARD_AND_MOUSE)
