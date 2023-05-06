@@ -347,9 +347,9 @@ bool CreateSpy()
 		currentSpy = new CDTVWiredSpy();
 		muteStartupMessage = true;
 		break;
-	case 0x1A:
-		currentSpy = new ColecoVisionSpy();
-		break;
+//	case 0x1A:
+//		currentSpy = new ColecoVisionSpy();
+//		break;
 //	case 0x1B:
 //		currentSpy = new PippinSpy();
 //		((PippinSpy*)currentSpy)->setup(PIPPIN_CONTROLLER_SPY_ADDRESS, PIPPIN_MOUSE_SPY_ADDRESS);
