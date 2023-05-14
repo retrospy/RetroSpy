@@ -198,7 +198,7 @@ void CDTVWirelessSpy::loop()
 		rawData = 0;
 	}
 
-#ifndef DEBUG
+#if !defined(DEBUG) || DEBUG == 0
 	int checksum = 0;
 	for (int i = 0; i < 33; ++i)
 	{

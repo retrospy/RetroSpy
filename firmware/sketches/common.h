@@ -66,6 +66,7 @@ enum VideoOutputType {
 
 #ifdef RS_VISION_CDI
 #define TP_IRLIB2
+//#define TP_IRREMOTE
 #endif
 
 #ifdef RS_VISION_COLECOVISION

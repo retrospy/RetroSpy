@@ -412,6 +412,9 @@ bool CreateSpy()
 	case 0x02:
 		currentSpy = new CDTVWirelessSpy();
 		break;
+	case 0x03:
+		currentSpy = new VFlashSpy();
+		break;
 	}
 #elif defined(RS_VISION_COLECOVISION)
 	switch (ReadAnalog())

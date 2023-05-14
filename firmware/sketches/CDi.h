@@ -83,7 +83,10 @@ public:
 	void debugSerial() {}
 	void updateState() {}
 	
-	virtual const char* startupMsg();
+	virtual const char* startupMsg()
+	{
+		return "CDi Firmware Not Supported";
+	}
 
 private:
 	
