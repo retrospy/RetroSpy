@@ -215,17 +215,9 @@ void CDTVWirelessSpy::writeSerial() {}
 void CDTVWirelessSpy::debugSerial() {}
 void CDTVWirelessSpy::updateState() {}
 
-#else
-
-void CDTVWirelessSpy::setup() {}
-void CDTVWirelessSpy::loop() {}
-void CDTVWirelessSpy::writeSerial() {}
-void CDTVWirelessSpy::debugSerial() {}
-void CDTVWirelessSpy::updateState() {}
-
-#endif
-
 const char* CDTVWirelessSpy::startupMsg()
 {
 	return "CDTV Wireless";
 }
+
+#endif
