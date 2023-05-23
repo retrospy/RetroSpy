@@ -29,9 +29,6 @@
 #if !defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY))
 
 #include <SoftwareSerial.h>
-#include <IRLibAll.h>
-
-#include <SoftwareSerial.h>
 
 static SoftwareSerial mySerial(2, 3); // RX,TX 
 

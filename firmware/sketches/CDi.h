@@ -38,7 +38,7 @@
 
 #if !defined(TP_PINCHANGEINTERRUPT) && defined(TP_IRLIB2) && !(defined(__arm__) && defined(CORE_TEENSY))
 
-#include <SoftwareSerial.h>
+#include <AltSoftSerial.h>
 #include <IRLibAll.h>
 
 class CDiSpy : public ControllerSpy {
@@ -67,7 +67,7 @@ private:
 	int _wired_timeout;
 	int _wireless_timeout;
 	IRrecvPCI myReceiver;
-	SoftwareSerial vSerial;
+	AltSoftSerial vSerial;
 	IRdecode myDecoder; 
 };
 #else
