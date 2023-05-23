@@ -29,8 +29,22 @@
 
 #include "ControllerSpy.h"
 
+#if !defined(TP_PINCHANGEINTERRUPT) && defined(TP_IRLIB2) && !(defined(__arm__) && defined(CORE_TEENSY))
+
+#include <IRLibDecodeBase.h> 
+#include <IRLib_P04_RC6.h>   
+#include <IRLib_P13_RC5_CDi.h>  
+#include <IRLib_P14_CDTV.h>
+#include <IRLibCombo.h>     // After all protocols, include this
+#include <IRLibRecvPCI.h>
+
 class CDTVWirelessSpy : public ControllerSpy {
 public:
+	
+	CDTVWirelessSpy()
+		: myReceiver(CDTV_IRPIN)
+	{}
+
 	void setup();
 	void loop();
 	void writeSerial();
@@ -41,6 +55,28 @@ public:
 
 private:
 
+	IRrecvPCI myReceiver;
+	IRdecode myDecoder; 
 };
 
+#else
+
+class CDTVWirelessSpy : public ControllerSpy {
+public:
+
+	void setup() {}
+	
+	void loop() {}
+	void writeSerial() {}
+	void debugSerial() {}
+	void updateState() {}
+	
+	virtual const char* startupMsg()
+	{
+		return "CDTV Wireless Firmware Not Supported";
+	}
+	
+};
+
+#endif
 #endif

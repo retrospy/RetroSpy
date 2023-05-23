@@ -42,7 +42,8 @@ private:
 	bool checkPrefixN64();
 #if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO) || defined(ARDUINO_AVR_NANO_EVERY) || defined(ARDUINO_AVR_LARDU_328E)
 	unsigned char rawData[100];
-#else	unsigned char rawData[300];
+#else
+	unsigned char rawData[300];
 #endif
 	unsigned short readBits;
 };

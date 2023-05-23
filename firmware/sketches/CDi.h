@@ -39,12 +39,17 @@
 #if !defined(TP_PINCHANGEINTERRUPT) && defined(TP_IRLIB2) && !(defined(__arm__) && defined(CORE_TEENSY))
 
 #include <AltSoftSerial.h>
-#include <IRLibAll.h>
+#include <IRLibDecodeBase.h> 
+#include <IRLib_P04_RC6.h>   
+#include <IRLib_P13_RC5_CDi.h>  
+#include <IRLib_P14_CDTV.h>
+#include <IRLibCombo.h>     // After all protocols, include this
+#include <IRLibRecvPCI.h>
 
 class CDiSpy : public ControllerSpy {
 public:
 	CDiSpy(int wired_timeout, int wireless_timeout)
-		: myReceiver(2)
+		: myReceiver(CDI_IRPIN)
 		, vSerial(9, 10, true)
 		, _wired_timeout(wired_timeout)
 		, _wireless_timeout(wireless_timeout)

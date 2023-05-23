@@ -171,10 +171,10 @@ void CDiSpy::HandleIR()
 			myDecoder.value = myDecoder.value >> 1;
 		}
     
-		if ((myDecoder.protocolNum == 13
+		if ((myDecoder.protocolNum == RC5_CDI
 		    && myDecoder.address == 0 
 		    && (myDecoder.bits == 29 && (myDecoder.value & 0b11111111111100000000000000000000) == 0b00001001001000000000000000000000))
-			|| (myDecoder.protocolNum == 4 && myDecoder.address == 0 && myDecoder.bits == 20))                     
+			|| (myDecoder.protocolNum == RC6 && myDecoder.address == 0 && myDecoder.bits == 20))                     
 		{
 #ifdef WIRELESS_DEBUG
 			for (int32_t i = 31; i >= 0; --i)
@@ -238,7 +238,7 @@ void CDiSpy::HandleIR()
 	}
 
 #endif          
-	if ((myDecoder.protocolNum == 13 || myDecoder.protocolNum == 4) 
+	if ((myDecoder.protocolNum == RC5_CDI || myDecoder.protocolNum == RC6) 
 	    && myDecoder.address == 0 
 	    && (myDecoder.bits == 32 || (myDecoder.bits == 29 && (myDecoder.value & 0b11111111111100000000000000000000) != 0b00001001001000000000000000000000)))                       
 	{

@@ -144,6 +144,10 @@
 #define GENESIS_TR            DIGITAL_PIN_07
 #define GENESIS_TL            DIGITAL_PIN_06
 
+#define CDTV_IRPIN				DIGITAL_PIN_02
+
+#define CDI_IRPIN				DIGITAL_PIN_02
+
 #define PIND_READ( pin ) (PIND&(1<<(pin)))
 #define PINB_READ( pin ) (PINB&(1<<(pin)))
 #define PINC_READ( pin ) (PINC&(1<<(pin)))
