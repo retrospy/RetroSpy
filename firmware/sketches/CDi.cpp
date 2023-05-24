@@ -139,13 +139,13 @@ void CDiSpy::HandleSerial()
 				Serial.print((c & (1 << i)) ? "1" : "0");
 			Serial.print("|");
        
-			for (int i = 0; i < 2; ++i)
+			for (int i = 0; i < 2; ++i) 
 			{
 				char c = vSerial.read();
 				for (int i = 7; i >= 0; --i)
 					Serial.print((c & (1 << i)) ? "1" : "0");
 				if (i == 1)
-					Serial.print("\n");
+					Serial.println();
 				else
 					Serial.print("|");
 			}

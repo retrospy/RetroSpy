@@ -36,7 +36,8 @@
 class CDiKeyboardSpy : public ControllerSpy {
 public:
 	CDiKeyboardSpy()
-		: vSerial(9, 10, true),
+		: vSerial(CDI_RECVSER, CDI_SENDSER, true)
+		,
 		T_mode_caps_on(false)
 	{}
 	

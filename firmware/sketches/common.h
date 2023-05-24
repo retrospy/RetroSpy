@@ -65,10 +65,14 @@ enum VideoOutputType {
 #endif
 
 #ifdef RS_VISION_CDI
-#ifdef CDI_IRPIN
-#undef CDI_IRPIN
+#ifdef CDI_RECVSER
+#undef CDI_RECVSER
 #endif
-#define CDI_IRPIN 3
+#define CDI_RECVSER 8
+#ifdef CDI_SENDSER
+#undef CDI_SENDSER
+#endif
+#define CDI_SENDSER 9
 #define TP_IRLIB2
 #endif
 

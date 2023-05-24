@@ -38,7 +38,7 @@
 
 #if !defined(TP_PINCHANGEINTERRUPT) && defined(TP_IRLIB2) && !(defined(__arm__) && defined(CORE_TEENSY))
 
-#include <AltSoftSerial.h>
+#include <SoftwareSerial.h>
 #include <IRLibDecodeBase.h> 
 #include <IRLib_P04_RC6.h>   
 #include <IRLib_P13_RC5_CDi.h>  
@@ -50,7 +50,7 @@ class CDiSpy : public ControllerSpy {
 public:
 	CDiSpy(int wired_timeout, int wireless_timeout)
 		: myReceiver(CDI_IRPIN)
-		, vSerial(9, 10, true)
+		, vSerial(CDI_RECVSER, CDI_SENDSER, true)
 		, _wired_timeout(wired_timeout)
 		, _wireless_timeout(wireless_timeout)
 	{}
@@ -72,7 +72,7 @@ private:
 	int _wired_timeout;
 	int _wireless_timeout;
 	IRrecvPCI myReceiver;
-	AltSoftSerial vSerial;
+	SoftwareSerial vSerial;
 	IRdecode myDecoder; 
 };
 #else

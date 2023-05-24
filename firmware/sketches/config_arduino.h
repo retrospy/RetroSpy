@@ -147,6 +147,8 @@
 #define CDTV_IRPIN				DIGITAL_PIN_02
 
 #define CDI_IRPIN				DIGITAL_PIN_02
+#define CDI_RECVSER				DIGITAL_PIN_09 + PORTB_PIN_OFFSET
+#define CDI_SENDSER				DIGITAL_PIN_10 + PORTB_PIN_OFFSET
 
 #define PIND_READ( pin ) (PIND&(1<<(pin)))
 #define PINB_READ( pin ) (PINB&(1<<(pin)))
