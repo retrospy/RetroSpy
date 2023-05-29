@@ -2,7 +2,7 @@
 
 echo "Installing RetroSpy for MiSTer"
 echo " "
-
+ 
 echo "Updating and executing the RetroSpy installer script."
 echo " "
 

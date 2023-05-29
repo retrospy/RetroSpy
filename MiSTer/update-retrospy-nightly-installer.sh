@@ -1,7 +1,7 @@
 #!/bin/bash
 
 [ $# -ne 1 ] && { echo "Usage: $0 [GitHub Personal Access Token]"; exit 1; }
-
+ 
 GITHUB_API_TOKEN=$1
 
 #Base directory for all script tasks

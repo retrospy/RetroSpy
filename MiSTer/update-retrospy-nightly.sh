@@ -2,7 +2,7 @@
 
 # https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line
 GITHUB_API_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                 
+                  
 echo "Installing RELEASE_TAG Build of RetroSpy for MiSTer"
 echo " "
 

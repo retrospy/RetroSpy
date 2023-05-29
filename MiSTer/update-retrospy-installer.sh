@@ -1,5 +1,5 @@
 #!/bin/bash
-
+ 
 #Github URL
 RETROSPY_URL=https://github.com/retrospy/RetroSpy/releases/latest/download/retrospy
 
