@@ -404,15 +404,18 @@ bool CreateSpy()
 	switch (ReadAnalog())
 	{
 	case 0x00:
-		currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT);
+		currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, 7, 6);
 		break;
 	case 0x01:
-		currentSpy = new CDiKeyboardSpy();
+		currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, 8, 6);
 		break;
 	case 0x02:
-		currentSpy = new CDTVWirelessSpy();
+		currentSpy = new CDiKeyboardSpy();
 		break;
 	case 0x03:
+		currentSpy = new CDTVWirelessSpy();
+		break;
+	case 0x04:
 		currentSpy = new VFlashSpy();
 		break;
 	}

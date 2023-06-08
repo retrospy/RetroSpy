@@ -72,7 +72,7 @@ enum VideoOutputType {
 #ifdef CDI_SENDSER
 #undef CDI_SENDSER
 #endif
-#define CDI_SENDSER 9
+#define CDI_SENDSER 6
 #define TP_IRLIB2
 #endif
 

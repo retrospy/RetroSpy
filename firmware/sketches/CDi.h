@@ -48,9 +48,9 @@
 
 class CDiSpy : public ControllerSpy {
 public:
-	CDiSpy(int wired_timeout, int wireless_timeout)
+	CDiSpy(int wired_timeout, int wireless_timeout, int recvpin = 9, int sendpin = 10)
 		: myReceiver(CDI_IRPIN)
-		, vSerial(CDI_RECVSER, CDI_SENDSER, true)
+		, vSerial(recvpin, sendpin, true)
 		, _wired_timeout(wired_timeout)
 		, _wireless_timeout(wireless_timeout)
 	{}
