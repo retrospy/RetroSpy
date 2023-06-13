@@ -142,6 +142,7 @@ REM Copy Drivers
 ;xcopy /y /e /s drivers RetroSpy-Setup\drivers\
 ;xcopy /y /e /s CH341SER RetroSpy-Setup\CH341SER\
 ;copy serial_install.exe RetroSpy-Setup\
+;copy GBPUpdaterX2\CH340G_2019.zip RetroSpy-Setup\
 
 if exist "C:\Program Files (x86)\Actual Installer\actinst.exe" (
 "C:\Program Files (x86)\Actual Installer\actinst.exe" /S ".\RetroSpy-64.aip"

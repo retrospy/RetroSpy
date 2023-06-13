@@ -4,11 +4,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" 
         x:Class="GBPUpdaterX2.MainWindow"
-        Title="RetroSpy Pixel Updater" Width="602" Height="550" MinWidth="602" MinHeight="550" MaxWidth="602" MaxHeight="550" Foreground="#FFFFFF" Background="#FF252526" CanResize="false">
+        Title="RetroSpy Vision/Pixel Updater" Width="602" Height="550" MinWidth="602" MinHeight="550" MaxWidth="602" MaxHeight="550" Foreground="#FFFFFF" Background="#FF252526" CanResize="false" Closing="Window_Closing">
 	<Grid>
 		<StackPanel VerticalAlignment="Top">
-			<Label x:Name="SerialNumberLabel" Content="Serial Number" HorizontalAlignment="Left" Margin="10,5,5,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16"/>
-			<TextBox Name="txtboxSerialNumber" Margin="10,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="24" Width="191.8" FontSize="16" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" Background="#FF3E3E42" Foreground="#FFCBCBCB" BorderBrush="#FF656565" Text="None" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+			<Label x:Name="DeviceLabel" Content="Device" HorizontalAlignment="Left" Margin="10,5,5,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16"/>
+			<ComboBox Name="DeviceComboBox" Margin="10,5,5,0" SelectedIndex="0" VerticalAlignment="Top" BorderBrush="#FF252525" Width="250" Height="29.9" FontFamily="Segoe UI" FontSize="12" Background="#efefef" SelectionChanged="DeviceSelectComboBox_SelectionChanged">
+			</ComboBox>
+			<Label x:Name="COMPortLabel" Content="Serial Port" HorizontalAlignment="Left" Margin="275,-61,5,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="false"/>
+			<ComboBox Name="COMPortComboBox" Margin="275,-32,5,0" SelectedIndex="0" VerticalAlignment="Top" BorderBrush="#FF252525" Width="250" Height="29.9" FontFamily="Segoe UI" FontSize="12" Background="#efefef" SelectionChanged="DeviceSelectComboBox_SelectionChanged" IsVisible="false">
+			</ComboBox>
+			<Label x:Name="SerialNumberLabel" Content="Serial Number" HorizontalAlignment="Left" Margin="275,-61,5,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="false"/>
+			<TextBox Name="txtboxSerialNumber" Margin="275,-32,5,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="24" Width="191.8" FontSize="16" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" Background="#FF3E3E42" Foreground="#FFCBCBCB" BorderBrush="#FF656565" Text="None" ScrollViewer.VerticalScrollBarVisibility="Hidden" IsVisible="false">
 				<TextBox.Styles>
 					<Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
 						<Setter Property="Background" Value="#FF3E3E42"/>

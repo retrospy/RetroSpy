@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -17,15 +18,87 @@ using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace GBPUpdaterX2
 {
     public partial class MainWindow : Window
     {
+        private readonly DispatcherTimer _portListUpdateTimer;
+        private bool letUpdatePortThreadRun = false;
+        private bool isClosing;
+        private readonly object updatePortLock = new();
+
         public class COMPortInfo
         {
             public string? PortName { get; set; }
             public string? FriendlyName { get; set; }
+        }
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            isClosing = true;
+            Environment.Exit(0);
+        }
+
+        private void UpdatePortListThread()
+        {
+            if (letUpdatePortThreadRun)
+            {
+                Thread thread = new(UpdatePortList);
+                thread.Start();
+            }
+        }
+
+        private void UpdatePortList()
+        {
+
+            if (!isClosing && Monitor.TryEnter(updatePortLock))
+            {
+                try
+                {
+                    List<string> arduinoPorts = SetupCOMPortInformation();
+                    //GetTeensyPorts(arduinoPorts);
+                    //GetRaspberryPiPorts(arduinoPorts);
+
+                    arduinoPorts.Sort();
+
+                    string[] ports = arduinoPorts.ToArray<string>();
+
+                    if (ports.Length == 0)
+                    {
+                        ports = new string[1];
+                        ports[0] = "No Arduino/Teensy Found";
+                        Dispatcher.UIThread.Post(() =>
+                        {
+                            COMPortComboBox.Items = ports;
+                        });
+
+                    }
+                    else
+                    {
+                        Dispatcher.UIThread.Post(() =>
+                        {
+                            COMPortComboBox.Items = ports;
+                        });
+                    }
+
+                    if (COMPortComboBox.SelectedIndex == -1)
+                    {
+                        Dispatcher.UIThread.Post(() =>
+                        {
+                            COMPortComboBox.SelectedIndex = 0;
+                        });
+                    }
+                }
+                catch (TaskCanceledException)
+                {
+                    // Closing the window can cause this due to a race condition
+                }
+                finally
+                {
+                    Monitor.Exit(updatePortLock);
+                }
+            }
         }
 
         private static string[] GetUSBCOMDevices()
@@ -111,7 +184,7 @@ namespace GBPUpdaterX2
             return ports;
         }
 
-        private async static void DownloadFirmware(string downloadDirectory)
+        private async static void DownloadFirmware(string downloadDirectory, string filename = "GBP_Firmware.zip")
         {
             string token = string.Empty;
             if (File.Exists("GITHUB_TOKEN"))
@@ -137,7 +210,7 @@ namespace GBPUpdaterX2
 
 
                 if (JsonConvert.DeserializeObject(strResponse) is not JObject json)
-                    throw new FileNotFoundException("Cannot find GBP_Firmware.zip's Asset ID.");
+                    throw new FileNotFoundException("Cannot find " + filename + "'s Asset ID.");
 
                 string? id = null;
                 foreach (var asset in (JArray?)json["assets"] ?? new JArray())
@@ -145,7 +218,7 @@ namespace GBPUpdaterX2
                     if (asset is null)
                         continue;
 
-                    if ((string?)asset["name"] == "GBP_Firmware.zip")
+                    if ((string?)asset["name"] == filename)
                     {
                         id = (string?)asset["id"];
                         break;
@@ -153,7 +226,7 @@ namespace GBPUpdaterX2
                 }
 
                 if (id is null)
-                    throw new FileNotFoundException("Cannot find GBP_Firmware.zip's Asset ID.");
+                    throw new FileNotFoundException("Cannot find " + filename + "'s Asset ID.");
 
                 request = new()
                 {
@@ -169,7 +242,7 @@ namespace GBPUpdaterX2
 
 
                 using var fs = new FileStream(
-                    Path.Combine(downloadDirectory, "GBP_Firmware.zip"),
+                    Path.Combine(downloadDirectory, filename),
                     FileMode.CreateNew);
                 response.Content.ReadAsStream().CopyTo(fs);
             }
@@ -177,13 +250,13 @@ namespace GBPUpdaterX2
             {
                 HttpRequestMessage request = new()
                 {
-                    RequestUri = new Uri("https://github.com/retrospy/RetroSpy/releases/latest/download/GBP_Firmware.zip")
+                    RequestUri = new Uri("https://github.com/retrospy/RetroSpy/releases/latest/download/" + filename)
                 };
 
                 HttpClient client = new();
                 var response = client.Send(request);
                 using var fs = new FileStream(
-                    Path.Combine(downloadDirectory, "GBP_Firmware.zip"),
+                    Path.Combine(downloadDirectory, filename),
                     FileMode.CreateNew);
                 response.Content.ReadAsStream().CopyTo(fs);
             }
@@ -192,12 +265,70 @@ namespace GBPUpdaterX2
         public MainWindow()
         {
             InitializeComponent();
+
+            SerialNumberLabel.IsVisible = true;
+            txtboxSerialNumber.IsVisible = true;
+            List<string> devices = new List<string>
+            {
+                "RetroSpy Pixel",
+                "RetroSpy Vision",
+                "Serial Debugger"
+            };
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                devices.Add("Bad CH340 Driver Fix");
+            }
+
+            DeviceComboBox.Items = devices;
+            DeviceComboBox.SelectedIndex = 0;
+
+            UpdatePortList();
+            letUpdatePortThreadRun = true;
+
+            _portListUpdateTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            _portListUpdateTimer.Tick += (sender, e) => UpdatePortListThread();
+            _portListUpdateTimer.Start();
+        }
+
+        private void DeviceSelectComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
+        {
+            if (DeviceComboBox.SelectedIndex == 0)
+            {
+                SerialNumberLabel.IsVisible = true;
+                txtboxSerialNumber.IsVisible = true;
+            }
+            else
+            {
+                SerialNumberLabel.IsVisible = false;
+                txtboxSerialNumber.IsVisible = false;
+            }
+
+            if (DeviceComboBox.SelectedIndex > 0 && DeviceComboBox.SelectedIndex < 3)
+            {
+                COMPortComboBox.SelectedIndex = 0;
+                COMPortLabel.IsVisible = true;
+                COMPortComboBox.IsVisible = true;
+            }
+            else
+            {
+                COMPortLabel.IsVisible = false;
+                COMPortComboBox.IsVisible = false;
+            }
+
+            if (DeviceComboBox.SelectedIndex != 2 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                isClosing = true;
+                Thread.Sleep(1000);
+                isClosing = false;
+            }
         }
 
         private void UpdateThread()
         {
-
-
             try
             {
                 int serialNumber = 0;
@@ -439,10 +570,360 @@ namespace GBPUpdaterX2
 
         }
 
+        private void UpdateVisionThread()
+        {
+            try
+            {
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    this.goButton.IsEnabled = false;
+                    txtboxData.Text = string.Empty;
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                _ = Directory.CreateDirectory(tempDirectory);
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Downloading latest firmware...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+
+                DownloadFirmware(tempDirectory, "Vision_Firmware.zip");
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.Text += "Decompressing firmware package...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "Vision_Firmware.zip"), tempDirectory);
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                string? port = (string?)COMPortComboBox.SelectedItem;
+                port ??= "No Arduino/Teensy Found";
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Updating firmware...\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ProcessStartInfo processInfo;
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    processInfo = new ProcessStartInfo("cmd.exe",
+                        "/c avrdude.exe -Cavrdude.conf -v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    processInfo = new ProcessStartInfo("chmod",
+                        "755 " + Path.Join(tempDirectory, "avrdude"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false
+                    };
+                    Process? p1 = Process.Start(processInfo);
+                    p1?.WaitForExit();
+
+                    processInfo = new ProcessStartInfo(Path.Join(tempDirectory, "avrdude"),
+                        "-v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    processInfo = new ProcessStartInfo("avrdude",
+                        "-v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else
+                {
+                    throw new PlatformNotSupportedException();
+                }
+
+                StringBuilder sb = new();
+                Process? p = Process.Start(processInfo);
+                if (p != null)
+                {
+                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data);
+                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data);
+                    p.BeginOutputReadLine();
+                    p.BeginErrorReadLine();
+                    p.WaitForExit();
+                }
+
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += sb.ToString() + "\n";
+                    txtboxData.Text += "..." + "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+
+                    try
+                    {
+                        var m = MessageBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandardWindow("RetroSpy", "Update complete! Please reboot your device.", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Info);
+                        await m.ShowDialog(this);
+                        goButton.IsEnabled = true;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                        var m = MessageBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandardWindow("RetroSpy", ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
+                        await m.ShowDialog(this);
+                        goButton.IsEnabled = true;
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                    var m = MessageBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandardWindow("RetroSpy", ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
+                    await m.ShowDialog(this);
+
+                    goButton.IsEnabled = true;
+                });
+
+            }
+        }
+
+        private void SerialDebuggerThread()
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                this.goButton.IsEnabled = false;
+                txtboxData.Text = string.Empty;
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+            try
+            {
+                SerialPort? _serialPort = null;
+
+                string? port = (string?)COMPortComboBox.SelectedItem;
+                port ??= "No Arduino/Teensy Found";
+
+                using (_serialPort = new SerialPort(port, 115200, Parity.None, 8, StopBits.One)
+                {
+                    Handshake = Handshake.None,
+
+                    DtrEnable = true,
+                    ReadTimeout = 500,
+                    WriteTimeout = 500
+                })
+                {
+                    _serialPort.Open();
+
+                    while (!isClosing)
+                    {
+                        int readCount = _serialPort.BytesToRead;
+                        if (readCount > 0)
+                        {
+                            byte[] readBuffer = new byte[readCount];
+                            _ = _serialPort.Read(readBuffer, 0, readCount);
+
+                            Dispatcher.UIThread.Post(() =>
+                            {
+                                txtboxData.Text += System.Text.Encoding.Default.GetString(readBuffer);
+                                txtboxData.CaretIndex = int.MaxValue;
+                            });
+                            Thread.Sleep(1);
+                        }
+                    }
+
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        goButton.IsEnabled = true;
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                    var m = MessageBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandardWindow("RetroSpy", ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
+                    await m.ShowDialog(this);
+
+                    goButton.IsEnabled = true;
+                });
+
+            }
+
+        }
+
+        private void DriverFixThread()
+        {
+            try
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    this.goButton.IsEnabled = false;
+                    txtboxData.Text = string.Empty;
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                var deviceId = "USB\\VID_1A86&PID_7523";
+
+                // Guilty driver version to be uninstalled
+                var driverVersion = "3.8.2023.02";
+
+                if (AnalyzePorts())
+                {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        txtboxData.Text += "Installing default driver ...\n";
+                        txtboxData.CaretIndex = int.MaxValue;
+                    });
+                    InstallDefaultDriver();
+
+                    if (!OEMDriversHelper.UninstallDriverVersion(deviceId, driverVersion, txtboxData))
+                    {
+                        Dispatcher.UIThread.Post(() =>
+                        {
+                            txtboxData.Text += "Driver non compatible with fake CH340 not found\n";
+                            txtboxData.CaretIndex = int.MaxValue;
+                        });
+                    }
+
+                    if (!WindowsUpdateHelper.BlockUpdatesFor(deviceId, txtboxData))
+                    {
+                        Dispatcher.UIThread.Post(() =>
+                        {
+                            txtboxData.Text += "Could not find pending driver updates\n";
+                            txtboxData.CaretIndex = int.MaxValue;
+                        });
+                    }
+                }
+
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    var m = MessageBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandardWindow("RetroSpy", "Update complete! Please reboot your device.", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Info);
+                    await m.ShowDialog(this);
+                    goButton.IsEnabled = true;
+                });
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                    var m = MessageBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandardWindow("RetroSpy", ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
+                    await m.ShowDialog(this);
+
+                    goButton.IsEnabled = true;
+                });
+            }
+        }
+
+        public bool AnalyzePorts()
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "Checking ports :\n";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+            var CH340GPorts = SerialPortDescriptionHelper.GetSerialPorts()?.Where(i => i.IsCH340).ToList();
+            if (CH340GPorts != null)
+            {
+                foreach (var port in CH340GPorts)
+                {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        txtboxData.Text += $"\tFound CH340G on port {port.PortName}, driver : {port.DriverVersion} ({port.DriverInf}) : likely to be {(port.IsFakeCH340 ? "Fake" : "Legit")}\n";
+                        txtboxData.CaretIndex = int.MaxValue;
+                    });
+                }
+            }
+
+            if (!(CH340GPorts?.Any() ?? true))
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "\tNo CH340G found, please make sure to plug it first.\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public void InstallDefaultDriver()
+        {
+            var temp2 = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            System.IO.Directory.CreateDirectory(temp2);
+            ZipFile.ExtractToDirectory(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? string.Empty, "CH340G_2019.zip"), temp2);
+            string inffile = Path.Combine(temp2, "CH341ser.Inf");
+            PNPUtilHelper.InstallDriver(inffile, txtboxData);
+        }
+
         private void GoButton_Click(object? sender, RoutedEventArgs? e)
         {
-            Thread thread = new(UpdateThread);
-            thread.Start();
+            if (DeviceComboBox.SelectedIndex == 0)
+            {
+                Thread thread = new(UpdateThread);
+                thread.Start();
+            }
+
+            if (DeviceComboBox.SelectedIndex == 1)
+            {
+                Thread thread = new(UpdateVisionThread);
+                thread.Start();
+            }
+
+            if (DeviceComboBox.SelectedIndex == 2)
+            {
+                Thread thread = new(SerialDebuggerThread);
+                thread.Start();
+            }
+
+            if (DeviceComboBox.SelectedIndex == 3 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Thread thread = new(DriverFixThread);
+                thread.Start();
+            }
         }
     }
 }

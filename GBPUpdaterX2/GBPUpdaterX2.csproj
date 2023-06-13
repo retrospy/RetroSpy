@@ -20,6 +20,7 @@
 	</PropertyGroup>
   <ItemGroup>
     <None Remove=".gitignore" />
+    <None Remove="CH340G_2019.zip" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,6 +46,22 @@
 
 	
 		<ItemGroup>
+		  <COMReference Include="WUApiLib">
+		    <WrapperTool>tlbimp</WrapperTool>
+		    <VersionMinor>0</VersionMinor>
+		    <VersionMajor>2</VersionMajor>
+		    <Guid>b596cc9f-56e5-419e-a622-e01bb457431e</Guid>
+		    <Lcid>0</Lcid>
+		    <Isolated>false</Isolated>
+		    <EmbedInteropTypes>true</EmbedInteropTypes>
+		  </COMReference>
+		</ItemGroup>
+
+	
+		<ItemGroup>
+		  <Content Include="CH340G_2019.zip">
+		    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		  </Content>
 		  <Content Include="GBPUpdater.ico" />
 		</ItemGroup>
 
