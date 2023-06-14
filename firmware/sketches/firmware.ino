@@ -225,7 +225,7 @@ void loop1()
 }
 #endif
 
-#if defined(RS_VISION) || defined(RS_VISION_CDI)
+#if defined(RS_VISION)
 byte ReadAnalog()
 {
 	byte retVal = PINC;
@@ -233,6 +233,15 @@ byte ReadAnalog()
 	return (~retVal  & 0b00111111);
 }
 #endif
+
+#if defined(RS_VISION_CDI)
+byte ReadAnalog()
+{
+	byte retVal = PINC;
+	
+	return (~retVal  & 0b00001111);
+}
+#endif 
 
 #if defined(RS_VISION_ULTRA)
 byte ReadAnalog4()

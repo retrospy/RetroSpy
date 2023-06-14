@@ -49,7 +49,7 @@ enum VideoOutputType {
 // Vision Hardware Configurations
 //#define RS_VISION
 //#define RS_VISION_ULTRA
-//#define RS_VISION_CDI
+#define RS_VISION_CDI
 //#define RS_VISION_COLECOVISION
 
 #ifdef RS_VISION
@@ -68,11 +68,11 @@ enum VideoOutputType {
 #ifdef CDI_RECVSER
 #undef CDI_RECVSER
 #endif
-#define CDI_RECVSER 8
+#define CDI_RECVSER 6
 #ifdef CDI_SENDSER
 #undef CDI_SENDSER
 #endif
-#define CDI_SENDSER 6
+#define CDI_SENDSER 8
 #define TP_IRLIB2
 #endif
 

@@ -164,9 +164,9 @@ void CDiSpy::HandleSerial()
 void CDiSpy::HandleIR()
 {
 	if (myReceiver.getResults()) {
-		myDecoder.decode();    //Decode it
+		myDecoder.decode(); //Decode it
 
-	  if(myDecoder.bits == 29)
+		if (myDecoder.bits == 29)
 		{
 			myDecoder.value = myDecoder.value >> 1;
 		}
@@ -184,162 +184,196 @@ void CDiSpy::HandleIR()
 					Serial.print("|");
 			}
 			Serial.print("\n");
-		}
+
 #else
 			char button_pushed = 0;
 			for (int i = 0; i < 8; ++i)
 			{
 				button_pushed |= (myDecoder.value & (1 << i));
 			}
-			
-		switch (button_pushed)
-		{
-		case 0x03: // Pause
-		case 0x30:
-		  wireless_rawData[2] |= 0b00001000;
-			break;
-		case 0x0C: // Standby
-		  wireless_rawData[2] |= 0b00010000;
-			break;
-		case 0x02: // Stop
-		case 0x31:
-		  wireless_rawData[2] |= 0b00100000;
-			break;
-		case 0x014: // Previous Track
-		case 0x21:
-		  wireless_rawData[2] |= 0b01000000;
-			break;
-		case 0x04: // Play
-		case 0x2C:
-		  wireless_rawData[2] |= 0b10000000;
-			break;
-		case 0x20: // Next Track
-		  wireless_rawData[3] |= 0b00000001;
-			break;
-		case 0x10: // Next Track / Volume Up
-			if((myDecoder.value & 0b00001111111100000000) == 0b00000001100100000000)
-				wireless_rawData[3] |= 0b00010000;
-			else
+		
+			char outputCode = 0;
+		
+			switch (button_pushed)
+			{
+			case 0x03: // Pause
+			case 0x30:
+				wireless_rawData[2] |= 0b00001000;
+				outputCode = 'c';
+				break;
+			case 0x0C: // Standby
+				wireless_rawData[2] |= 0b00010000;
+				outputCode = 'c';
+				break;
+			case 0x02: // Stop
+			case 0x31:
+				wireless_rawData[2] |= 0b00100000;
+				outputCode = 'c';
+				break;
+			case 0x014: // Previous Track
+			case 0x21:
+				wireless_rawData[2] |= 0b01000000;
+				outputCode = 'c';
+				break;
+			case 0x04: // Play
+			case 0x2C:
+				wireless_rawData[2] |= 0b10000000;
+				outputCode = 'c';
+				break;
+			case 0x20: // Next Track
 				wireless_rawData[3] |= 0b00000001;
-			break;
-		case 0x17: // TV/CDI
-		case 0x43: 
-		  wireless_rawData[3] |= 0b00000100;
-			break;
-		case 0x18: // Volume Down
-		case 0x11:
-		  wireless_rawData[3] |= 0b00001000;
-			break;
-		case 0x19: // Volume Up
-		  wireless_rawData[3] |= 0b00010000;
-			break;
+				outputCode = 'c';
+				break;
+			case 0x10: // Next Track / Volume Up
+				if ((myDecoder.value & 0b00001111111100000000) == 0b00000001100100000000)
+					wireless_rawData[3] |= 0b00010000;
+				else
+					wireless_rawData[3] |= 0b00000001;
+				outputCode = 'c';
+				break;
+			case 0x17: // TV/CDI
+			case 0x43: 
+				wireless_rawData[3] |= 0b00000100;
+				outputCode = 'c';
+				break;
+			case 0x18: // Volume Down
+			case 0x11:
+				wireless_rawData[3] |= 0b00001000;
+				outputCode = 'c';
+				break;
+			case 0x19: // Volume Up
+				wireless_rawData[3] |= 0b00010000;
+				outputCode = 'c';
+				break;
+			}
+			wireless_remote_timeout = millis();
+		
+			if (outputCode != 0 && (PINC & 0b00010000) != 0)
+			{
+				byte output[6];
+				output[0] = 0x80;
+				output[1] = 0x80;
+				output[2] = 'c';
+				output[3] = 0x80;
+				output[4] = 0x80;
+				output[5] = 0;
+				Serial.write(output, 6);
+			}
+			#endif      
 		}
-		wireless_remote_timeout = millis();
-	}
-
-#endif          
-	if ((myDecoder.protocolNum == RC5_CDI || myDecoder.protocolNum == RC6) 
-	    && myDecoder.address == 0 
-	    && (myDecoder.bits == 32 || (myDecoder.bits == 29 && (myDecoder.value & 0b11111111111100000000000000000000) != 0b00001001001000000000000000000000)))                       
-	{
+		
+		if ((myDecoder.protocolNum == RC5_CDI || myDecoder.protocolNum == RC6) 
+		    && myDecoder.address == 0 
+		    && (myDecoder.bits == 32 || (myDecoder.bits == 29 && (myDecoder.value & 0b11111111111100000000000000000000) != 0b00001001001000000000000000000000)))                       
+		{
 #ifdef WIRELESS_DEBUG
 
-//		for (int32_t i = 31; i >= 0; --i)
-//		{
-//			Serial.print((myDecoder.value & ((int32_t)1 << i)) != 0 ? "1" : "0");
-//			if (i % 8 == 0)
-//				Serial.print("|");
-//		}
-//		Serial.print("\n");
-	}
-}
-#else
-wireless_yaxis = 0;
-for (int i = 0; i < 8; ++i)
-{
-	wireless_yaxis |= (myDecoder.value & (1 << i));
-}
-          
-if (wireless_yaxis == 0 || wireless_yaxis == 128)
-{
-	wireless_rawData[0] = 0;
-}
-else if (wireless_yaxis > 128)
-{
-	if (myDecoder.bits == 29)
-		wireless_yaxis = 128 + 256 - wireless_yaxis;
+			for (int32_t i = 31; i >= 0; --i)
+			{
+				Serial.print((myDecoder.value & ((int32_t)1 << i)) != 0 ? "1" : "0");
+				if (i % 8 == 0)
+					Serial.print("|");
+			}
+			Serial.print("\n");
 
-	if (wireless_yaxis > max_up)
-		max_up = wireless_yaxis;
+			#else
+			wireless_yaxis = 0;
+			for (int i = 0; i < 8; ++i)
+			{
+				wireless_yaxis |= (myDecoder.value & (1 << i));
+			}
           
-	wireless_rawData[0] =  ScaleInteger(wireless_yaxis, 128, max_up, 0, 255);
-	wireless_rawData[3] &= ~0b00100000;
-}
-else
-{
-	if (wireless_yaxis > max_down)
-		max_down = wireless_yaxis;
+			if (wireless_yaxis == 0 || wireless_yaxis == 128)
+			{
+				wireless_rawData[0] = 0;
+			}
+			else if (wireless_yaxis > 128)
+			{
+				if (myDecoder.bits == 29)
+					wireless_yaxis = 128 + 256 - wireless_yaxis;
+
+				if (wireless_yaxis > max_up)
+					max_up = wireless_yaxis;
           
-	wireless_rawData[0] =  ScaleInteger(wireless_yaxis, 0, max_down, 0, 255);
-	wireless_rawData[3] |= 0b00100000;
-}
+				wireless_rawData[0] =  ScaleInteger(wireless_yaxis, 128, max_up, 0, 255);
+				wireless_rawData[3] &= ~0b00100000;
+			}
+			else
+			{
+				if (wireless_yaxis > max_down)
+					max_down = wireless_yaxis;
+          
+				wireless_rawData[0] =  ScaleInteger(wireless_yaxis, 0, max_down, 0, 255);
+				wireless_rawData[3] |= 0b00100000;
+			}
         
-wireless_xaxis = 0;
-for (int i = 8; i < 16; ++i)
-{
-	wireless_xaxis |= ((myDecoder.value & (1 << i)) >> 8);
-} 
+			wireless_xaxis = 0;
+			for (int i = 8; i < 16; ++i)
+			{
+				wireless_xaxis |= ((myDecoder.value & (1 << i)) >> 8);
+			} 
         
-if (wireless_xaxis == 0 || wireless_xaxis == 128)
-{
-	wireless_rawData[1] = 0;
-}
-else if (wireless_xaxis > 128)
-{
-	if (myDecoder.bits == 29)
-		wireless_xaxis = 128 + 256 - wireless_xaxis;
+			if (wireless_xaxis == 0 || wireless_xaxis == 128)
+			{
+				wireless_rawData[1] = 0;
+			}
+			else if (wireless_xaxis > 128)
+			{
+				if (myDecoder.bits == 29)
+					wireless_xaxis = 128 + 256 - wireless_xaxis;
 
 
-	if (wireless_xaxis > max_left)
-		max_left = wireless_xaxis;
+				if (wireless_xaxis > max_left)
+					max_left = wireless_xaxis;
             
-	wireless_rawData[1] = ScaleInteger(wireless_xaxis, 128, max_left, 0, 255);
-	wireless_rawData[3] &= ~0b01000000;
-}
-else
-{
-	if (wireless_xaxis > max_right)
-		max_right = wireless_xaxis;
+				wireless_rawData[1] = ScaleInteger(wireless_xaxis, 128, max_left, 0, 255);
+				wireless_rawData[3] &= ~0b01000000;
+			}
+			else
+			{
+				if (wireless_xaxis > max_right)
+					max_right = wireless_xaxis;
             
-	wireless_rawData[1] = ScaleInteger(wireless_xaxis, 0, max_right, 0, 255);
-	wireless_rawData[3] |= 0b01000000;
-}
+				wireless_rawData[1] = ScaleInteger(wireless_xaxis, 0, max_right, 0, 255);
+				wireless_rawData[3] |= 0b01000000;
+			}
 
-wireless_rawData[2] = (myDecoder.value & 0b00000000000000100000000000000000) != 0 ? (wireless_rawData[2] | 0x04) : (wireless_rawData[2] & ~0x04);
-wireless_rawData[2] = (myDecoder.value & 0b00000000000000010000000000000000) != 0 ? (wireless_rawData[2] | 0x01) : (wireless_rawData[2] & ~0x01);
+			bool button1 = (myDecoder.value & 0b00000000000000100000000000000000) != 0;
+			bool button2 = (myDecoder.value & 0b00000000000000010000000000000000) != 0;
+			wireless_rawData[2] = button1 ? (wireless_rawData[2] | 0x04) : (wireless_rawData[2] & ~0x04);
+			wireless_rawData[2] = button2 ? (wireless_rawData[2] | 0x01) : (wireless_rawData[2] & ~0x01);
                       
-wireless_timeout = millis();
-}
+			wireless_timeout = millis();
 
-}
+			if ((PINC & 0b00010000) != 0)
+			{
+				//byte output[3];
+				//output[0] = 0xC0 | button1 ? 0x20 : ~0x20 | button2 ? 0x10 : ~0x10 | ((wireless_xaxis & 0b11000000) >> 6) | ((wireless_yaxis & 0b11000000) >> 4);
+				//output[1] = wireless_xaxis & 0b00111111;
+				//output[2] = wireless_yaxis & 0b00111111;
+				//Serial.write(output, 3);
 
+
+			}
 #endif
-    
-if (((millis() - wireless_timeout) >= _wireless_timeout))
-{
-	for (int i = 0; i < 2; ++i)
-		wireless_rawData[i] = 0;
-	wireless_rawData[2] &= 0b11111010;
-	wireless_xaxis = wireless_yaxis = 0;
-}
+		}
+	}
+	
+	if (((millis() - wireless_timeout) >= _wireless_timeout))
+	{
+		for (int i = 0; i < 2; ++i)
+			wireless_rawData[i] = 0;
+		wireless_rawData[2] &= 0b11111010;
+		wireless_xaxis = wireless_yaxis = 0;
+	}
   
-if (((millis() - wireless_remote_timeout) >= _wireless_timeout))
-{
-	wireless_rawData[2] &= 0b00000101;
-	wireless_rawData[3] &= 0b01100000;
-}
+	if (((millis() - wireless_remote_timeout) >= _wireless_timeout))
+	{
+		wireless_rawData[2] &= 0b00000101;
+		wireless_rawData[3] &= 0b01100000;
+	}
     
-myReceiver.enableIRIn();       //Restart receiver
+	myReceiver.enableIRIn(); //Restart receiver
 }
 
 void CDiSpy::printRawData()
