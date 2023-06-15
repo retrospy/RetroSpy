@@ -71,11 +71,11 @@ void CDiSpy::setup() {
 }
 
 void CDiSpy::loop() {
-	//HandleSerial();
+	HandleSerial();
 	HandleIR();
 #ifndef WIRED_DEBUG
 #ifndef WIRELESS_DEBUG
-	//printRawData();
+	printRawData();
 #endif
 #endif
 }
