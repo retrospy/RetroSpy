@@ -413,10 +413,10 @@ bool CreateSpy()
 	switch (ReadAnalog())
 	{
 	case 0x00:
-		currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, 7, 6);
+		currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, 8, 6);
 		break;
 	case 0x01:
-		currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, 8, 6);
+		currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, 7, 6);
 		break;
 	case 0x02:
 		currentSpy = new CDiKeyboardSpy();

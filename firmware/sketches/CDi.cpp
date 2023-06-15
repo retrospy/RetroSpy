@@ -47,6 +47,20 @@ static unsigned long wired_timeout;
 void CDiSpy::setup() {
 	vSerial.begin(1200); 
 
+	// Initialization of IR to Serial Adapter
+	vSerial.write(205);
+	vSerial.write(192);
+	vSerial.write(128);
+	vSerial.write(128);
+	delay(18);
+	vSerial.write(205);
+	vSerial.write(192);
+	delay(18);
+	vSerial.write(205);
+	vSerial.write(192);
+	vSerial.write(128);
+	vSerial.write(128);
+	
 	max_right = max_left = max_up = max_down = 0;
   
 	myReceiver.enableIRIn();  // Start the receiver
@@ -57,11 +71,11 @@ void CDiSpy::setup() {
 }
 
 void CDiSpy::loop() {
-	HandleSerial();
+	//HandleSerial();
 	HandleIR();
 #ifndef WIRED_DEBUG
 #ifndef WIRELESS_DEBUG
-	printRawData();
+	//printRawData();
 #endif
 #endif
 }
@@ -77,7 +91,6 @@ void CDiSpy::HandleSerial()
 		char c = vSerial.read();
 		if ((c & 0b11000000) == 0b11000000)
 		{
-   
 #ifndef WIRED_DEBUG     
   
 			wired_rawData[2] = (c & 0b00100000) != 0 ? (wired_rawData[2] | 0x01) : (wired_rawData[2] & ~0x01);    // Button 1
@@ -192,58 +205,64 @@ void CDiSpy::HandleIR()
 				button_pushed |= (myDecoder.value & (1 << i));
 			}
 		
-			char outputCode = 0;
+			byte outputCode = 0;
 		
 			switch (button_pushed)
 			{
 			case 0x03: // Pause
 			case 0x30:
 				wireless_rawData[2] |= 0b00001000;
-				outputCode = 'c';
+				outputCode = 34;
 				break;
 			case 0x0C: // Standby
 				wireless_rawData[2] |= 0b00010000;
-				outputCode = 'c';
+				outputCode = 17;
 				break;
 			case 0x02: // Stop
 			case 0x31:
 				wireless_rawData[2] |= 0b00100000;
-				outputCode = 'c';
+				outputCode = 33;
 				break;
 			case 0x014: // Previous Track
 			case 0x21:
 				wireless_rawData[2] |= 0b01000000;
-				outputCode = 'c';
+				outputCode = 36;
 				break;
 			case 0x04: // Play
 			case 0x2C:
 				wireless_rawData[2] |= 0b10000000;
-				outputCode = 'c';
+				outputCode = 32;
 				break;
 			case 0x20: // Next Track
 				wireless_rawData[3] |= 0b00000001;
-				outputCode = 'c';
+				outputCode = 35;
 				break;
 			case 0x10: // Next Track / Volume Up
 				if ((myDecoder.value & 0b00001111111100000000) == 0b00000001100100000000)
+				{
 					wireless_rawData[3] |= 0b00010000;
+					outputCode = 30;
+				}
 				else
+				{
 					wireless_rawData[3] |= 0b00000001;
-				outputCode = 'c';
+					outputCode = 35;
+				}
+				
 				break;
 			case 0x17: // TV/CDI
 			case 0x43: 
 				wireless_rawData[3] |= 0b00000100;
-				outputCode = 'c';
+				outputCode = 29;
 				break;
 			case 0x18: // Volume Down
 			case 0x11:
 				wireless_rawData[3] |= 0b00001000;
-				outputCode = 'c';
+				outputCode = 31;
 				break;
 			case 0x19: // Volume Up
 				wireless_rawData[3] |= 0b00010000;
-				outputCode = 'c';
+				outputCode = 30;
 				break;
 			}
 			wireless_remote_timeout = millis();
@@ -253,7 +272,7 @@ void CDiSpy::HandleIR()
 				byte output[6];
 				output[0] = 0x80;
 				output[1] = 0x80;
-				output[2] = 'c';
+				output[2] = outputCode;
 				output[3] = 0x80;
 				output[4] = 0x80;
 				output[5] = 0;
@@ -274,9 +293,9 @@ void CDiSpy::HandleIR()
 				if (i % 8 == 0)
 					Serial.print("|");
 			}
-			Serial.print("\n");
+			Serial.println();
 
-			#else
+#else
 			wireless_yaxis = 0;
 			for (int i = 0; i < 8; ++i)
 			{
@@ -345,14 +364,29 @@ void CDiSpy::HandleIR()
                       
 			wireless_timeout = millis();
 
-			if ((PINC & 0b00010000) != 0)
+			if ((~PINC & 0b00010000) != 0)
 			{
-				//byte output[3];
-				//output[0] = 0xC0 | button1 ? 0x20 : ~0x20 | button2 ? 0x10 : ~0x10 | ((wireless_xaxis & 0b11000000) >> 6) | ((wireless_yaxis & 0b11000000) >> 4);
-				//output[1] = wireless_xaxis & 0b00111111;
-				//output[2] = wireless_yaxis & 0b00111111;
-				//Serial.write(output, 3);
-
+				if (wireless_xaxis > 128)
+					wireless_xaxis = 128 + 256 - wireless_xaxis;		
+				if ((wireless_xaxis & 0b00111111) == 0 && (wireless_xaxis & 0b11000000) != 0)
+					wireless_xaxis = 255 & 0b00111111;
+				
+				if (wireless_yaxis > 128)
+					wireless_yaxis = 128 + 256 - wireless_yaxis;
+				if ((wireless_yaxis & 0b00111111) == 0 && (wireless_yaxis & 0b11000000) != 0)
+					wireless_yaxis = 255 & 0b00111111;
+				
+				byte output[3];
+				output[0] = 0xC0 | (button1 ? 0x20 : 0x0) | (button2 ? 0x10 : 0x0) | ((wireless_xaxis & 0b11000000) >> 6) | ((wireless_yaxis & 0b11000000) >> 4);
+				output[1] = 0x80 | (wireless_xaxis & 0b00111111);
+				output[2] = 0x80 | (wireless_yaxis & 0b00111111);
+	
+				if ((output[0] & 0b00000010) != 0)
+					output[0] |= 0b00000011;
+				if ((output[0] & 0b00001000) != 0)
+					output[0] |= 0b00001100;
+				
+				vSerial.write(output,3);
 
 			}
 #endif
