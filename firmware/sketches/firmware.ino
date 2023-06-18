@@ -81,6 +81,7 @@
 // CD-i controller timeouts (ms)
 #define CDI_WIRED_TIMEOUT 50
 #define CDI_WIRELESS_TIMEOUT 100
+#define CDI_WIRELESS_REMOTE_TIMEOUT 150
 
 // Pippin Controller Configuration
 #define PIPPIN_CONTROLLER_SPY_ADDRESS 0xF
@@ -237,7 +238,7 @@ byte ReadAnalog()
 #if defined(RS_VISION_CDI)
 byte ReadAnalog()
 {
-	byte retVal = PINC;
+	byte retVal = 0xFF;
 	
 	return (~retVal  & 0b00001111);
 }
@@ -413,10 +414,10 @@ bool CreateSpy()
 	switch (ReadAnalog())
 	{
 	case 0x00:
-		currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, 8, 6);
+		currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, CDI_WIRELESS_REMOTE_TIMEOUT, 9);
 		break;
 	case 0x01:
-		currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, 7, 6);
+		currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, CDI_WIRELESS_REMOTE_TIMEOUT, 5);
 		break;
 	case 0x02:
 		currentSpy = new CDiKeyboardSpy();
