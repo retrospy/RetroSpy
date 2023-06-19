@@ -28,8 +28,8 @@
 
 #if !defined(TP_PINCHANGEINTERRUPT) && defined(TP_IRREMOTE) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
 
-#include <IRremote.hpp> // include the libraryc
-#define DECODE_RC6
+#define USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE
+#include <IRremote.hpp>
 
 static unsigned long wireless_timeout;
 static unsigned long wireless_remote_timeout;
@@ -95,12 +95,13 @@ void CDiSpy::loop1()
 {
 	if (hasOutput)
 	{				
-		//		if (IrReceiver.decodedIRData.numberOfBits == 29)
-		//		{
-		//			IrReceiver.decodedIRData.decodedRawData = IrReceiver.decodedIRData.decodedRawData >> 1;
-		//		}
+		if (bits == 29)
+		{
+			value = value >> 1;
+		}
 		
-		if (protocolNum == RC6 && bits == 20)
+		if ((protocolNum == RC6 && bits == 20) || 
+			(protocolNum == RC5_CDI && bits == 29 && (value & 0b11111111111100000000000000000000) == 0b00001001001000000000000000000000))
 		{
 #ifdef WIRELESS_DEBUG
 			for (int32_t i = 31; i >= 0; --i)
@@ -195,10 +196,8 @@ void CDiSpy::loop1()
 			hasOutput = false;
 #endif      
 		}
-		//		if ((myDecoder.protocolNum == RC5_CDI || myDecoder.protocolNum == RC6)
-		//			&& myDecoder.address == 0
-		//			&& (myDecoder.bits == 32 || (myDecoder.bits == 29 && (myDecoder.value & 0b11111111111100000000000000000000) != 0b00001001001000000000000000000000)))                       
-		else if(protocolNum == RC6 && bits == 36)
+		else if((protocolNum == RC6 && bits == 36) ||
+				 (protocolNum == RC5_CDI && bits == 29 && (value & 0b11111111111100000000000000000000) != 0b00001001001000000000000000000000))
 		{
 #ifdef WIRELESS_DEBUG
 			for (int32_t i = 31; i >= 0; --i)
@@ -221,6 +220,9 @@ void CDiSpy::loop1()
 			}
 			else if (wireless_yaxis > 128)
 			{
+				if (bits == 29)
+					wireless_yaxis = 128 + 256 - wireless_yaxis;
+				
 				if (wireless_yaxis > max_up)
 					max_up = wireless_yaxis;
           
@@ -248,8 +250,8 @@ void CDiSpy::loop1()
 			}
 			else if (wireless_xaxis > 128)
 			{
-				//if (myDecoder.bits == 29)
-				//	wireless_xaxis = 128 + 256 - wireless_xaxis;
+				if (bits == 29)
+					wireless_xaxis = 128 + 256 - wireless_xaxis;
 
 				if (wireless_xaxis > max_left)
 					max_left = wireless_xaxis;
@@ -277,7 +279,7 @@ void CDiSpy::loop1()
 			if (true)
 			{
 				if (wireless_xaxis > 128)
-					wireless_xaxis = 128 + 256 - wireless_xaxis;		
+					wireless_xaxis = 128 + 256 - wireless_xaxis;
 				if ((wireless_xaxis & 0b00111111) == 0 && (wireless_xaxis & 0b10000000) != 0)
 					wireless_xaxis = 255;
 				

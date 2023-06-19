@@ -93,6 +93,10 @@
 
 #include "common.h"
 
+#if defined(TP_IRREMOTE)
+#include <IRremote.hpp>
+#endif
+
 #include "NES.h"
 #include "SNES.h"
 #include "N64.h"
