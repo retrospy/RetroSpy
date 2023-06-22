@@ -99,8 +99,8 @@ Global
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|Arduino_Uno.Build.0 = Debug|Win32
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|LGT8F328.ActiveCfg = Debug|LGT8F328
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|LGT8F328.Build.0 = Debug|LGT8F328
-		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|Raspberry_Pi_Pico.ActiveCfg = Debug|Raspberry_Pi_Pico
-		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|Raspberry_Pi_Pico.Build.0 = Debug|Raspberry_Pi_Pico
+		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|Raspberry_Pi_Pico.ActiveCfg = Debug|Win32
+		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|Raspberry_Pi_Pico.Build.0 = Debug|Win32
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|Teensy_3 5.ActiveCfg = Debug|Win32
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|Teensy_3 5.Build.0 = Debug|Win32
 		{974FC0E2-EAF9-441F-83DC-ACED8390CC9B}.Debug|Teensy_4 0.ActiveCfg = Debug|Win32
