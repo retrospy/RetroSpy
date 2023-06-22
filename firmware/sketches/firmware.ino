@@ -547,7 +547,7 @@ bool CreateSpy()
 #elif defined(MODE_FMTOWNS_KEYBOARD_AND_MOUSE)
 	currentSpy = new FMTownsKeyboardAndMouseSpy();
 #elif defined(MODE_CDI)
-	currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT);
+	currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, CDI_WIRELESS_REMOTE_TIMEOUT, 0xFF);
 #elif defined(MODE_CDI_KEYBOARD)
 	currentSpy = new CDiKeyboardSpy();
 #elif defined(MODE_GAMEBOY_PRINTER)

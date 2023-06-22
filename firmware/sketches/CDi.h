@@ -36,20 +36,44 @@
 //#define WIRED_DEBUG
 //#define WIRELESS_DEBUG
 
-#if !defined(TP_PINCHANGEINTERRUPT) && defined(TP_IRREMOTE) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
+#if !defined(TP_PINCHANGEINTERRUPT) && defined(TP_IRREMOTE) 
 
 #include <SoftwareSerial.h>
 
 class CDiSpy : public ControllerSpy {
 public:
 	CDiSpy(int wired_timeout, int wireless_timeout, int wireless_remote_timeout, int recvpin)
-		: vSerial(0xFF, 11, true)
+		: vSerial(CDI_RECVSER, CDI_SENDSER, true)
 		, _wired_timeout(wired_timeout)
 		, _wireless_timeout(wireless_timeout)
 		, _wireless_remote_timeout(wireless_remote_timeout)
 	{
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 		Serial2.setRX(recvpin);
+#endif
 	}
+	
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	int available()
+	{
+		return Serial2.available();
+	}
+	
+	char read()
+	{
+		return Serial2.read();
+	}
+#else
+	int available()
+	{
+		return vSerial.available();
+	}
+	
+	char read()
+	{
+		return vSerial.read();
+	}	
+#endif
 
 	void setup();
 	void loop();

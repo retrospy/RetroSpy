@@ -26,7 +26,7 @@
 
 #include "CDi.h"
 
-#if !defined(TP_PINCHANGEINTERRUPT) && defined(TP_IRREMOTE) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
+#if !defined(TP_PINCHANGEINTERRUPT) && defined(TP_IRREMOTE)
 
 #define USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE
 #include <IRremote.hpp>
@@ -50,8 +50,10 @@ static unsigned long wired_timeout;
 void CDiSpy::setup() {
 	
 	vSerial.begin(1200); 
+
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 	Serial2.begin(1200);
-	
+
 	// Initialization of IR to Serial Adapter
 	vSerial.write(205);
 	vSerial.write(192);
@@ -65,12 +67,13 @@ void CDiSpy::setup() {
 	vSerial.write(192);
 	vSerial.write(128);
 	vSerial.write(128);
+#endif
 	
 	max_right = max_left = max_up = max_down = 0;
   
 	hasOutput = false;
 	
-	IrReceiver.begin(15);
+	IrReceiver.begin(CDI_IRPIN);
 	
 #ifdef WIRELESS_DEBUG 
 	  Serial.println(F("Ready to receive IR signals"));
@@ -179,6 +182,7 @@ void CDiSpy::loop1()
 			}
 			wireless_remote_timeout = millis();
 			
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 			//if (outputCode != 0 && (PINC & 0b00010000) != 0)
 			if (outputCode != 0 && (flags & IRDATA_FLAGS_IS_REPEAT) == 0)
 			{
@@ -193,6 +197,7 @@ void CDiSpy::loop1()
 				output[7] = 0;
 				vSerial.write(output, 8);
 			}
+#endif
 			hasOutput = false;
 #endif      
 		}
@@ -275,6 +280,7 @@ void CDiSpy::loop1()
                       
 			wireless_timeout = millis();
 			
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 			//if ((~PINC & 0b00010000) != 0)
 			if (true)
 			{
@@ -308,6 +314,7 @@ void CDiSpy::loop1()
 				//				Serial.println();
 				vSerial.write(output, 3);
 			}
+#endif
 			hasOutput = false;
 #endif
 		}
@@ -315,6 +322,7 @@ void CDiSpy::loop1()
 	
 	if (((millis() - wireless_timeout) >= _wireless_timeout))
 	{
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 		//if ((~PINC & 0b00010000) != 0 && (wireless_rawData[2] & 0b00000101) != 0)
 		if (true && ((wireless_rawData[2] & 0b00000101) != 0))
 		{
@@ -324,6 +332,7 @@ void CDiSpy::loop1()
 			output[2] = 0x80;
 			vSerial.write(output, 3);
 		}
+#endif 
 		
 		for (int i = 0; i < 2; ++i)
 			wireless_rawData[i] = 0;
@@ -342,9 +351,9 @@ void CDiSpy::loop1()
 void CDiSpy::HandleSerial()
 {
 
-	if (Serial2.available() >= 3) {
+	if (available() >= 3) {
 
-		char c = Serial2.read();
+		char c = read();
 		if ((c & 0b11000000) == 0b11000000)
 		{
 #ifndef WIRED_DEBUG     
@@ -354,10 +363,10 @@ void CDiSpy::HandleSerial()
 			wired_yAxis = ((c & 0b00001100) << 4);
 			wired_xAxis = ((c & 0b00000011) << 6);
   
-			c = Serial2.read();
+			c = read();
 			wired_xAxis = wired_xAxis + (byte)(c & 0b00111111);
   
-			c = Serial2.read();
+			c = read();
 			wired_yAxis = wired_yAxis + (byte)(c & 0b00111111);
 			
 			if (wired_yAxis == 0 || wired_yAxis == 128)
@@ -441,6 +450,10 @@ void CDiSpy::HandleIR()
 		flags = IrReceiver.decodedIRData.flags;
 
 		hasOutput = true;
+
+#if !(defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
+		loop1();
+#endif
 	}
 	IrReceiver.resume();
 }

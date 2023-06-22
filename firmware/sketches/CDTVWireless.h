@@ -29,7 +29,7 @@
 
 #include "ControllerSpy.h"
 
-#if defined(TP_IRREMOTE) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
+#if defined(TP_IRREMOTE)
 
 class CDTVWirelessSpy : public ControllerSpy {
 public:

@@ -26,7 +26,7 @@
 
 #include "CDTVWireless.h"
 
-#if defined(TP_IRREMOTE) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
+#if defined(TP_IRREMOTE)
 
 #define USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE
 #include <IRremote.hpp>
@@ -168,7 +168,7 @@ unsigned long long GetBitMask_ControllerKeys(unsigned long received_code)
 void CDTVWirelessSpy::setup()
 {
 	rawData = 0;
-	IrReceiver.begin(15); // Start the receiver
+	IrReceiver.begin(CDI_IRPIN); // Start the receiver
 }
 
 void CDTVWirelessSpy::loop()
