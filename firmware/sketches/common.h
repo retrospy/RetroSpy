@@ -49,7 +49,7 @@ enum VideoOutputType {
 // Vision Hardware Configurations
 //#define RS_VISION
 //#define RS_VISION_DREAM
-#define RS_VISION_CDI
+//#define RS_VISION_CDI
 //#define RS_VISION_COLECOVISION
 
 #ifdef RS_VISION
