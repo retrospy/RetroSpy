@@ -51,7 +51,7 @@ void CDiSpy::setup() {
 	
 	vSerial.begin(1200); 
 
-#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#if defined(RS_VISION_CDI) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
 	Serial2.begin(1200);
 
 	// Initialization of IR to Serial Adapter
@@ -182,9 +182,8 @@ void CDiSpy::loop1()
 			}
 			wireless_remote_timeout = millis();
 			
-#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-			//if (outputCode != 0 && (PINC & 0b00010000) != 0)
-			if (outputCode != 0 && (flags & IRDATA_FLAGS_IS_REPEAT) == 0)
+#if defined(RS_VISION_CDI) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
+			if (digitalRead(17) == LOW && outputCode != 0 && (flags & IRDATA_FLAGS_IS_REPEAT) == 0)
 			{
 				byte output[8];
 				output[0] = 0xC0;
@@ -280,9 +279,8 @@ void CDiSpy::loop1()
                       
 			wireless_timeout = millis();
 			
-#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-			//if ((~PINC & 0b00010000) != 0)
-			if (true)
+#if defined(RS_VISION_CDI) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
+			if (digitalRead(17) == LOW)
 			{
 				if (wireless_xaxis > 128)
 					wireless_xaxis = 128 + 256 - wireless_xaxis;
@@ -322,9 +320,8 @@ void CDiSpy::loop1()
 	
 	if (((millis() - wireless_timeout) >= _wireless_timeout))
 	{
-#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-		//if ((~PINC & 0b00010000) != 0 && (wireless_rawData[2] & 0b00000101) != 0)
-		if (true && ((wireless_rawData[2] & 0b00000101) != 0))
+#if defined(RS_VISION_CDI) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
+		if (digitalRead(17) == LOW && (wireless_rawData[2] & 0b00000101) != 0)
 		{
 			byte output[3];
 			output[0] = 0xC0;
@@ -512,6 +509,8 @@ const char* CDiSpy::startupMsg()
 	strcat(startupBuffer, itoa(_wired_timeout, itoaBuff, 10));
 	strcat(startupBuffer, ",");
 	strcat(startupBuffer, itoa(_wireless_timeout, itoaBuff, 10));
+	strcat(startupBuffer, ",");
+	strcat(startupBuffer, itoa(_wireless_remote_timeout, itoaBuff, 10));
 	strcat(startupBuffer, ")");
 	return startupBuffer;
 }

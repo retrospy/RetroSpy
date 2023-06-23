@@ -48,8 +48,8 @@ enum VideoOutputType {
 
 // Vision Hardware Configurations
 //#define RS_VISION
-//#define RS_VISION_ULTRA
-//#define RS_VISION_CDI
+//#define RS_VISION_DREAM
+#define RS_VISION_CDI
 //#define RS_VISION_COLECOVISION
 
 #ifdef RS_VISION
@@ -57,7 +57,7 @@ enum VideoOutputType {
 #define TP_PINCHANGEINTERRUPT
 #endif
 
-#ifdef RS_VISION_ULTRA
+#ifdef RS_VISION_DREAM
 #ifdef N64_PIN
 #undef N64_PIN
 #endif
