@@ -26,9 +26,9 @@
 
 #include "VFlash.h"
 
-#if (!defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY)) || (defined(RS_VISION_ULTRA)))
+#if (!defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY)) || (defined(RS_VISION_DREAM)))
 
-#if !defined(RS_VISION_ULTRA)
+#if !defined(RS_VISION_DREAM)
 #include <SoftwareSerial.h>
 
 static SoftwareSerial mySerial(2, 3); // RX,TX 
@@ -40,7 +40,7 @@ static byte buttons[15];
 
 void VFlashSpy::setup() {
 
-#if !defined(RS_VISION_ULTRA)
+#if !defined(RS_VISION_DREAM)
 	mySerial.begin(9600);
 #else
 	Serial1.begin(9600);
@@ -77,7 +77,7 @@ void VFlashSpy::debugSerial() {
 	Serial.println(y);
 }
 
-#if !defined(RS_VISION_ULTRA)
+#if !defined(RS_VISION_DREAM)
 int VFlashSpy::available()
 {
 	return mySerial.available();
