@@ -48,7 +48,7 @@ enum VideoOutputType {
 
 // Vision Hardware Configurations
 //#define RS_VISION
-//#define RS_VISION_ULTRA
+//#define RS_VISION_DREAM
 //#define RS_VISION_CDI
 //#define RS_VISION_COLECOVISION
 
@@ -57,7 +57,7 @@ enum VideoOutputType {
 #define TP_PINCHANGEINTERRUPT
 #endif
 
-#ifdef RS_VISION_ULTRA
+#ifdef RS_VISION_DREAM
 #ifdef N64_PIN
 #undef N64_PIN
 #endif
@@ -65,15 +65,7 @@ enum VideoOutputType {
 #endif
 
 #ifdef RS_VISION_CDI
-#ifdef CDI_RECVSER
-#undef CDI_RECVSER
-#endif
-#define CDI_RECVSER 8
-#ifdef CDI_SENDSER
-#undef CDI_SENDSER
-#endif
-#define CDI_SENDSER 6
-#define TP_IRLIB2
+#define TP_IRREMOTE
 #endif
 
 #ifdef RS_VISION_COLECOVISION
@@ -82,7 +74,7 @@ enum VideoOutputType {
 #endif
 
 // Uncomment these to enable 3rd party libraries once installed
-//#define TP_IRLIB2               // Used by MODE_CDI & MODE_CDTV_WIRELESS
+//#define TP_IRREMOTE               // Used by MODE_CDI & MODE_CDTV_WIRELESS
 // Used by MODE_PIPPIN & MODE_CDTV_WIRED
 //#define TP_TIMERONE             
 // Used by MODE_COLECOVISION, MODE_DRIVING_CONTROLLER & MODE_KEYBOARD_CONTROLLER

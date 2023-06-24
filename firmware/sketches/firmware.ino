@@ -81,6 +81,7 @@
 // CD-i controller timeouts (ms)
 #define CDI_WIRED_TIMEOUT 50
 #define CDI_WIRELESS_TIMEOUT 100
+#define CDI_WIRELESS_REMOTE_TIMEOUT 150
 
 // Pippin Controller Configuration
 #define PIPPIN_CONTROLLER_SPY_ADDRESS 0xF
@@ -91,6 +92,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "common.h"
+
+#if defined(TP_IRREMOTE)
+#include <IRremote.hpp>
+#endif
 
 #include "NES.h"
 #include "SNES.h"
@@ -153,7 +158,7 @@ void setup()
 	muteStartupMessage = false;
 	
 	// FOR MODE DETECTION
-#if defined(RS_VISION_ULTRA)
+#if defined(RS_VISION_DREAM)
 	for (int i = 13; i <= 18; ++i)
 		pinMode(i, INPUT_PULLUP);
 #elif defined(__arm__) && defined(CORE_TEENSY)
@@ -163,10 +168,13 @@ void setup()
 	for (int i = 3; i < 9; ++i)
 		if (i != 7)
 			pinMode(i, INPUT_PULLUP);
+#elif defined(RS_VISION_CDI)
+	for (int i = 16; i <= 21; ++i)
+		pinMode(i, INPUT_PULLUP);
 #elif defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 	pinMode(MODEPIN_SNES, INPUT_PULLUP);
 	pinMode(MODEPIN_WII, INPUT_PULLUP);
-#elif defined(RS_VISION) || defined(RS_VISION_CDI)
+#elif defined(RS_VISION)
 	for (int i = A0; i <= A7; ++i)
 		pinMode(i, INPUT_PULLUP);
 #elif !defined(MODE_ATARI_PADDLES) && !defined(MODE_ATARI5200_1) && !defined(MODE_ATARI5200_2) && !defined(MODE_AMIGA_ANALOG_1) && !defined(MODE_AMIGA_ANALOG_2)
@@ -225,7 +233,7 @@ void loop1()
 }
 #endif
 
-#if defined(RS_VISION) || defined(RS_VISION_CDI)
+#if defined(RS_VISION)
 byte ReadAnalog()
 {
 	byte retVal = PINC;
@@ -234,10 +242,24 @@ byte ReadAnalog()
 }
 #endif
 
-#if defined(RS_VISION_ULTRA)
+#if defined(RS_VISION_CDI)
+byte ReadAnalog()
+{
+	byte retVal = 0x00;
+	
+	for (int i = 0; i < 4; ++i)
+	{
+		if (digitalRead(21 - i) == LOW)
+			retVal |= (1 << i);
+	}
+	
+	return retVal;
+}
+#endif 
+
+#if defined(RS_VISION_DREAM)
 byte ReadAnalog4()
 {
-	Serial.println("here");
 	byte retVal = 0x00;
 	
 	for (int i = 0; i < 6; ++i)
@@ -245,7 +267,6 @@ byte ReadAnalog4()
 		if (digitalReadFast(i + 13) == LOW)
 			retVal |= (1 << i);
 	}
-	Serial.println(retVal);
 	return retVal;
 }
 #endif
@@ -347,14 +368,6 @@ bool CreateSpy()
 		currentSpy = new CDTVWiredSpy();
 		muteStartupMessage = true;
 		break;
-//	case 0x1A:
-//		currentSpy = new ColecoVisionSpy();
-//		break;
-//	case 0x1B:
-//		currentSpy = new PippinSpy();
-//		((PippinSpy*)currentSpy)->setup(PIPPIN_CONTROLLER_SPY_ADDRESS, PIPPIN_MOUSE_SPY_ADDRESS);
-//		customSetup = true;
-//		break;
 	case 0x1C:
 		currentSpy = new KeyboardControllerSpy();
 		((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_NORMAL, KeyboardControllerSpy::CABLE_GENESIS);
@@ -381,7 +394,7 @@ bool CreateSpy()
 		customSetup = true;
 		break;	
 	}
-#elif defined(RS_VISION_ULTRA)
+#elif defined(RS_VISION_DREAM)
 	switch (ReadAnalog4())
 	{
 	case 0x00:
@@ -410,10 +423,10 @@ bool CreateSpy()
 	switch (ReadAnalog())
 	{
 	case 0x00:
-		currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, 7, 6);
+		currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, CDI_WIRELESS_REMOTE_TIMEOUT, 9);
 		break;
 	case 0x01:
-		currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, 8, 6);
+		currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, CDI_WIRELESS_REMOTE_TIMEOUT, 5);
 		break;
 	case 0x02:
 		currentSpy = new CDiKeyboardSpy();
@@ -536,7 +549,7 @@ bool CreateSpy()
 #elif defined(MODE_FMTOWNS_KEYBOARD_AND_MOUSE)
 	currentSpy = new FMTownsKeyboardAndMouseSpy();
 #elif defined(MODE_CDI)
-	currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT);
+	currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, CDI_WIRELESS_REMOTE_TIMEOUT, 0xFF);
 #elif defined(MODE_CDI_KEYBOARD)
 	currentSpy = new CDiKeyboardSpy();
 #elif defined(MODE_GAMEBOY_PRINTER)

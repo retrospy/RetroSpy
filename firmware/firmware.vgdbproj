@@ -388,7 +388,7 @@
             </KeyValue>
           </Entries>
         </Properties>
-        <DebugUnoptimizedComponentTypes>Sketch</DebugUnoptimizedComponentTypes>
+        <DebugUnoptimizedComponentTypes>None</DebugUnoptimizedComponentTypes>
       </BuildSettingsExtension>
     </VisualGDBConfiguration>
     <VisualGDBConfiguration>
@@ -826,11 +826,11 @@
             </KeyValue>
             <KeyValue>
               <Key>freq</Key>
-              <Value>225</Value>
+              <Value>250</Value>
             </KeyValue>
             <KeyValue>
               <Key>opt</Key>
-              <Value>Fast</Value>
+              <Value>Optimize3</Value>
             </KeyValue>
             <KeyValue>
               <Key>rtti</Key>

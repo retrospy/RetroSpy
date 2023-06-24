@@ -39,4 +39,8 @@
 #define SNES_DATA          16
 #define SNES_CLOCK         18
 
+#define CDI_IRPIN				15
+#define CDI_RECVSER				0xFF
+#define CDI_SENDSER				11
+
 #define FASTRUN

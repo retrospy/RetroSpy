@@ -36,27 +36,48 @@
 //#define WIRED_DEBUG
 //#define WIRELESS_DEBUG
 
-#if !defined(TP_PINCHANGEINTERRUPT) && defined(TP_IRLIB2) && !(defined(__arm__) && defined(CORE_TEENSY))
+#if !defined(TP_PINCHANGEINTERRUPT) && defined(TP_IRREMOTE) 
 
 #include <SoftwareSerial.h>
-#include <IRLibDecodeBase.h> 
-#include <IRLib_P04_RC6.h>   
-#include <IRLib_P13_RC5_CDi.h>  
-#include <IRLib_P14_CDTV.h>
-#include <IRLibCombo.h>     // After all protocols, include this
-#include <IRLibRecvPCI.h>
 
 class CDiSpy : public ControllerSpy {
 public:
-	CDiSpy(int wired_timeout, int wireless_timeout, int recvpin = 9, int sendpin = 10)
-		: myReceiver(CDI_IRPIN)
-		, vSerial(recvpin, sendpin, true)
+	CDiSpy(int wired_timeout, int wireless_timeout, int wireless_remote_timeout, int recvpin)
+		: vSerial(CDI_RECVSER, CDI_SENDSER, true)
 		, _wired_timeout(wired_timeout)
 		, _wireless_timeout(wireless_timeout)
-	{}
+		, _wireless_remote_timeout(wireless_remote_timeout)
+	{
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+		Serial2.setRX(recvpin);
+#endif
+	}
+	
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	int available()
+	{
+		return Serial2.available();
+	}
+	
+	char read()
+	{
+		return Serial2.read();
+	}
+#else
+	int available()
+	{
+		return vSerial.available();
+	}
+	
+	char read()
+	{
+		return vSerial.read();
+	}	
+#endif
 
 	void setup();
 	void loop();
+	void loop1();
 	void writeSerial();
 	void debugSerial();
 	void updateState();
@@ -71,9 +92,13 @@ private:
 	
 	int _wired_timeout;
 	int _wireless_timeout;
-	IRrecvPCI myReceiver;
+	int _wireless_remote_timeout;
 	SoftwareSerial vSerial;
-	IRdecode myDecoder; 
+	volatile bool hasOutput;
+	int bits;
+	uint64_t value;
+	int protocolNum;
+	uint8_t flags;
 };
 #else
 
