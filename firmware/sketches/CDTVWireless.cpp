@@ -26,8 +26,10 @@
 
 #include "CDTVWireless.h"
 
-#if defined(TP_IRLIB2) && !(defined(__arm__) && defined(CORE_TEENSY))
-#include <IRLibAll.h>
+#if defined(TP_IRREMOTE)
+
+#define USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE
+#include <IRremote.hpp>
 
 #define WIRELESS_TIMEOUT 100
 
@@ -166,28 +168,27 @@ unsigned long long GetBitMask_ControllerKeys(unsigned long received_code)
 void CDTVWirelessSpy::setup()
 {
 	rawData = 0;
-	myReceiver.enableIRIn(); // Start the receiver
+	IrReceiver.begin(CDI_IRPIN); // Start the receiver
 }
 
 void CDTVWirelessSpy::loop()
 {
-	if (myReceiver.getResults()) {
-		myDecoder.decode(); //Decode it
-
-		if (myDecoder.protocolNum == CDTV && myDecoder.bits == 24)
+	if (IrReceiver.decode()) 
+	{
+		if (IrReceiver.decodedIRData.protocol == CDTV && IrReceiver.decodedIRData.numberOfBits == 24)
 		{
 			// Handle "remote control" keys
-			if ((myDecoder.value & 0b0000000000000000000000000000011) != 0x03)
-				rawData = GetBitMask_RemoteKeys(myDecoder.value);
+			if ((IrReceiver.decodedIRData.decodedRawData & 0b0000000000000000000000000000011) != 0x03)
+				rawData = GetBitMask_RemoteKeys(IrReceiver.decodedIRData.decodedRawData);
 			else
-				rawData = GetBitMask_ControllerKeys(myDecoder.value);
+				rawData = GetBitMask_ControllerKeys(IrReceiver.decodedIRData.decodedRawData);
 			wireless_timeout = millis();
 		}
-		else if (myDecoder.protocolNum == CDTV && myDecoder.bits == 4 && myDecoder.value == 0xFFFFFF)
+		else if (IrReceiver.decodedIRData.protocol == CDTV && IrReceiver.decodedIRData.numberOfBits == 4 && IrReceiver.decodedIRData.command == 0xFFFF)
 		{
 			wireless_timeout = millis();
 		}
-		myReceiver.enableIRIn(); //Restart receiver
+		IrReceiver.resume(); //Restart receiver
 	}
 	else if (((millis() - wireless_timeout) >= WIRELESS_TIMEOUT))
 	{
