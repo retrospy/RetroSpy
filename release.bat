@@ -87,6 +87,20 @@ if errorlevel 0 goto buildOK
 echo Aborting release. Error during Vision Firmware build.
 goto end
 
+:Dream
+if exist "..\..\..\Dream_Firmware\" (
+cd firmware
+..\sed -i "s/.*\/\/#define.*RS_VISION_DREAM/#define RS_VISION_DREAM/" sketches\common.h
+C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=teensy:avr:teensy40:usb=serial,speed=816,opt=o3std,keys=en-us -build-path D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Teensy_4_0\Release -verbose -hardware "C:\Program Files (x86)\Arduino/hardware" -hardware C:\Users\Administrator\Documents/ArduinoData/packages -hardware C:\Users\Administrator\AppData\Local/Arduino15/packages -tools "C:\Program Files (x86)\Arduino/tools-builder" -tools "C:\Program Files (x86)\Arduino/hardware/tools/avr" -tools C:\Users\Administrator\Documents/ArduinoData/packages -tools C:\Users\Administrator\AppData\Local/Arduino15/packages -built-in-libraries "C:\Program Files (x86)\Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
+..\sed -i "s/.*#define.*RS_VISION_DREAM/\/\/#define RS_VISION_DREAM/" sketches\common.h
+del ..\..\..\..\Dream_Firmware\firmware.ino.hex
+copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Teensy_4_0\Release\firmware.ino.hex ..\..\..\..\Dream_Firmware\firmware.ino.hex
+cd ..
+)
+
+if errorlevel 0 goto buildOK
+echo Aborting release. Error during Vision Dream Firmware build.
+goto end
 
 :buildOK
 ;del RetroSpy-Windows.zip
