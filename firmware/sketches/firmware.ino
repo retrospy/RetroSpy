@@ -397,6 +397,12 @@ bool CreateSpy()
 		currentSpy = new WiiSpy();
 		break;
 	case 0x04:
+		currentSpy = new VFlashSpy();
+		break;
+	case 0x05:
+		currentSpy = new VSmileSpy();
+		break;
+	case 0x06:
 		currentSpy = new NuonSpy();
 		break;
 	}
@@ -414,9 +420,6 @@ bool CreateSpy()
 		break;
 	case 0x03:
 		currentSpy = new CDTVWirelessSpy();
-		break;
-	case 0x04:
-		currentSpy = new VFlashSpy();
 		break;
 	}
 #elif defined(RS_VISION_COLECOVISION)

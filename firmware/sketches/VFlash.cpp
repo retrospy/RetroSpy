@@ -26,20 +26,25 @@
 
 #include "VFlash.h"
 
-#if !defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY))
+#if (!defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY)) || (defined(RS_VISION_ULTRA)))
 
+#if !defined(RS_VISION_ULTRA)
 #include <SoftwareSerial.h>
 
 static SoftwareSerial mySerial(2, 3); // RX,TX 
+#endif
 
 static byte rawData[120];
 static byte x, y;
 static byte buttons[15];
 
 void VFlashSpy::setup() {
-	
+
+#if !defined(RS_VISION_ULTRA)
 	mySerial.begin(9600);
-	
+#else
+	Serial1.begin(9600);
+#endif
 }
 
 void VFlashSpy::loop() {
@@ -72,25 +77,47 @@ void VFlashSpy::debugSerial() {
 	Serial.println(y);
 }
 
+#if !defined(RS_VISION_ULTRA)
+int VFlashSpy::available()
+{
+	return mySerial.available();
+}
+
+char VFlashSpy::read()
+{
+	return mySerial.read();
+}
+#else
+int VFlashSpy::available()
+{
+	return Serial1.available();
+}
+
+char VFlashSpy::read()
+{
+	return Serial1.read();
+}
+#endif
+
 void VFlashSpy::updateState() {
 	int count = 0;
 	byte c = 0;
 	do {
 
-		if (mySerial.available())
+		if (available())
 		{
-			c = mySerial.read();
+			c = read();
 		}
 	} while (c != 255);
 
 	for (int i = 0; i < 8; ++i)
 		rawData[count++] = (c & (1 << i)) == 0 ? 0 : 1;
       
-	while (mySerial.available() < 14) {};
+	while (available() < 14) {};
 	
 	for (int i = 0; i < 14; ++i)
 	{
-		c = mySerial.read();      
+		c = read();      
 		for (int j = 0; j < 8; ++j)
 		{
 			rawData[count++] = (c & (1 << j)) == 0 ? ZERO : ONE;

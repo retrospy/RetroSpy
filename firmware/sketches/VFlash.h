@@ -36,6 +36,8 @@ public:
 	void writeSerial();
 	void debugSerial();
 	void updateState();
+	int available();
+	char read();
 	
 	virtual const char* startupMsg();
 
