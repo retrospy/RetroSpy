@@ -26,7 +26,7 @@
 
 #include "CDiKeyboard.h"
 
-#if !defined(TP_PINCHANGEINTERRUPT)
+#if !defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY))
 
 #define NIL (byte)-1
 

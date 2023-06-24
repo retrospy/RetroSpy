@@ -29,7 +29,7 @@
 
 #include "ControllerSpy.h"
 
-#if !defined(TP_PINCHANGEINTERRUPT)
+#if !defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY))
 
 #include <SoftwareSerial.h>
 
