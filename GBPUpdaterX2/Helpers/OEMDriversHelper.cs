@@ -1,4 +1,6 @@
-﻿using Avalonia.Controls;
+﻿#if OS_WINDOWS
+
+using Avalonia.Controls;
 using Avalonia.Threading;
 using Microsoft.Win32;
 using System;
@@ -109,3 +111,5 @@ namespace GBPUpdaterX2
         private static partial Regex DriverVersionRegEx();
     }
 }
+
+#endif

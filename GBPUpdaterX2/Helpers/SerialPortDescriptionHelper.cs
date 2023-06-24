@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if OS_WINDOWS
+
+using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
@@ -183,3 +185,5 @@ namespace GBPUpdaterX2
         }
     }
 }
+
+#endif

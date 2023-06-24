@@ -1,4 +1,6 @@
-﻿namespace GBPUpdaterX2
+﻿#if OS_WINDOWS
+
+namespace GBPUpdaterX2
 {
     public class OEMDriverInf
     {
@@ -14,3 +16,5 @@
         public string Path { get; }
     }
 }
+
+#endif

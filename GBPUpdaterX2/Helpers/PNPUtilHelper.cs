@@ -1,4 +1,6 @@
-﻿using Avalonia.Controls;
+﻿#if OS_WINDOWS
+
+using Avalonia.Controls;
 using Avalonia.Threading;
 using System;
 using System.Diagnostics;
@@ -101,3 +103,5 @@ namespace GBPUpdaterX2
         }
     }
 }
+
+#endif

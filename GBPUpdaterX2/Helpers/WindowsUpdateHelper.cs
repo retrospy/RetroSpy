@@ -1,4 +1,6 @@
-﻿using Avalonia.Controls;
+﻿#if OS_WINDOWS
+
+using Avalonia.Controls;
 using Avalonia.Threading;
 using System;
 using System.Runtime.InteropServices;
@@ -106,3 +108,4 @@ namespace GBPUpdaterX2
         }
     }
 }
+#endif

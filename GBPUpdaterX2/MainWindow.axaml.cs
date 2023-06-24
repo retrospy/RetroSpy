@@ -788,6 +788,7 @@ namespace GBPUpdaterX2
 
         }
 
+#if OS_WINDOWS
         private void DriverFixThread()
         {
             try
@@ -898,6 +899,7 @@ namespace GBPUpdaterX2
             string inffile = Path.Combine(temp2, "CH341ser.Inf");
             PNPUtilHelper.InstallDriver(inffile, txtboxData);
         }
+#endif
 
         private void GoButton_Click(object? sender, RoutedEventArgs? e)
         {
@@ -918,12 +920,13 @@ namespace GBPUpdaterX2
                 Thread thread = new(SerialDebuggerThread);
                 thread.Start();
             }
-
+#if OS_WINDOWS
             if (DeviceComboBox.SelectedIndex == 3 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 Thread thread = new(DriverFixThread);
                 thread.Start();
             }
+#endif
         }
     }
 }

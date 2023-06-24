@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿#if OS_WINDOWS
+
+using System.Collections.ObjectModel;
 
 namespace GBPUpdaterX2
 {
@@ -34,3 +36,5 @@ namespace GBPUpdaterX2
         }
     }
 }
+
+#endif
