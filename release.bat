@@ -83,7 +83,7 @@ copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\fir
 cd ..
 )
 
-if errorlevel 0 goto buildOK
+if errorlevel 0 goto Dream
 echo Aborting release. Error during Vision Firmware build.
 goto end
 
@@ -199,6 +199,11 @@ del Vision_Firmware.zip
 copy Vision_Firmware.zip RetroSpy-Upload
 )
 
+if exist "..\..\..\Vision_Firmware\" (
+del Dream_Firmware.zip
+"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Vision_Firmware\firmware.ino.hex
+copy Dream_Firmware.zip RetroSpy-Upload
+)
 
 
 if exist "..\..\..\kernel\kernel.tar.gz" (
