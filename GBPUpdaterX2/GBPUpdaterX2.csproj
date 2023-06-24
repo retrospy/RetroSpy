@@ -8,6 +8,9 @@
 	  <RootNamespace>GBPUpdater</RootNamespace>
 	  <AssemblyName>GBPUpdater</AssemblyName>
 	  <BaseOutputPath>..\bin</BaseOutputPath>
+	  <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+	  <IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
+	  <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
   </PropertyGroup>
 
 	<PropertyGroup>
@@ -45,7 +48,7 @@
 	</ItemGroup>
 
 	
-		<ItemGroup>
+		<ItemGroup Condition="'$(IsWindows)'=='true'">
 		  <COMReference Include="WUApiLib">
 		    <WrapperTool>tlbimp</WrapperTool>
 		    <VersionMinor>0</VersionMinor>
