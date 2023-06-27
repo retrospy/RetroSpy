@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.IO.Ports;
@@ -49,6 +50,113 @@ namespace GBPUpdaterX2
             }
         }
 
+        private static void GetTeensyPorts(List<string> arduinoPorts)
+        {
+            const uint vid = 0x16C0;
+            const uint serPid = 0x483;
+            string vidStr = "'%USB_VID[_]" + vid.ToString("X", CultureInfo.CurrentCulture) + "%'";
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                using ManagementObjectSearcher searcher = new("root\\CIMV2", "SELECT * FROM Win32_PnPEntity WHERE DeviceID LIKE " + vidStr);
+                foreach (ManagementBaseObject mgmtObject in searcher.Get())
+                {
+                    string[] DeviceIdParts = ((string)mgmtObject["PNPDeviceID"]).Split("\\".ToArray());
+                    if (DeviceIdParts[0] != "USB")
+                    {
+                        break;
+                    }
+
+                    int start = DeviceIdParts[1].IndexOf("PID_", StringComparison.Ordinal) + 4;
+                    uint pid = Convert.ToUInt32(DeviceIdParts[1].Substring(start, 4), 16);
+                    if (pid == serPid)
+                    {
+                        mgmtObject.ToString();
+                        //uint serNum = Convert.ToUInt32(DeviceIdParts[2], CultureInfo.CurrentCulture);
+                        string port;
+                        if (((string)mgmtObject["Caption"]).Split("()".ToArray()).Length > 2)
+                            port = ((string)mgmtObject["Caption"]).Split("()".ToArray())[1];
+                        else
+                            continue;
+
+                        string hwid = ((string[])mgmtObject["HardwareID"])[0];
+                        switch (hwid.Substring(hwid.IndexOf("REV_", StringComparison.Ordinal) + 4, 4))
+                        {
+                            case "0273":
+                                //board = PJRC_Board.Teensy_LC;
+                                break;
+
+                            case "0274":
+                                //board = PJRC_Board.Teensy_30;
+                                break;
+
+                            case "0275":
+                                //board = PJRC_Board.Teensy_31_2;
+                                break;
+
+                            case "0276":
+                                arduinoPorts.Add(port + " (Teensy 3.5)");
+                                break;
+
+                            case "0277":
+                                arduinoPorts.Add(port + " (Teensy 3.6)");
+                                break;
+
+                            case "0279":
+                                arduinoPorts.Add(port + " (Teensy 4.0)");
+                                break;
+
+                            case "0280":
+                                arduinoPorts.Add(port + " (Teensy 4.1)");
+                                break;
+
+                            default:
+                                //board = PJRC_Board.unknown;
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void GetRaspberryPiPorts(List<string> arduinoPorts)
+        {
+            const uint vid = 0x2E8A;
+            string vidStr = "'%USB_VID[_]" + vid.ToString("X", CultureInfo.CurrentCulture) + "%'";
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                using ManagementObjectSearcher searcher = new("root\\CIMV2", "SELECT * FROM Win32_PnPEntity WHERE DeviceID LIKE " + vidStr);
+                foreach (ManagementBaseObject mgmtObject in searcher.Get())
+                {
+                    string[] DeviceIdParts = ((string)mgmtObject["PNPDeviceID"]).Split("\\".ToArray());
+                    if (DeviceIdParts[0] != "USB")
+                    {
+                        break;
+                    }
+
+                    int start = DeviceIdParts[1].IndexOf("PID_", StringComparison.Ordinal) + 4;
+                    uint pid = Convert.ToUInt32(DeviceIdParts[1].Substring(start, 4), 16);
+
+                    string port;
+                    if (((string)mgmtObject["Caption"]).Split("()".ToArray()).Length > 2)
+                        port = ((string)mgmtObject["Caption"]).Split("()".ToArray())[1];
+                    else
+                        continue;
+
+                    switch (pid)
+                    {
+                        case 0x000A:
+                            arduinoPorts.Add(port + " (Raspberry Pi Pico)");
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
         private void UpdatePortList()
         {
 
@@ -57,8 +165,8 @@ namespace GBPUpdaterX2
                 try
                 {
                     List<string> arduinoPorts = SetupCOMPortInformation();
-                    //GetTeensyPorts(arduinoPorts);
-                    //GetRaspberryPiPorts(arduinoPorts);
+                    GetTeensyPorts(arduinoPorts);
+                    GetRaspberryPiPorts(arduinoPorts);
 
                     arduinoPorts.Sort();
 
@@ -184,7 +292,7 @@ namespace GBPUpdaterX2
             return ports;
         }
 
-        private async static void DownloadFirmware(string downloadDirectory, string filename = "GBP_Firmware.zip")
+        private static void DownloadFirmware(string downloadDirectory, string filename = "GBP_Firmware.zip")
         {
             string token = string.Empty;
             if (File.Exists("GITHUB_TOKEN"))
@@ -206,7 +314,9 @@ namespace GBPUpdaterX2
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
                 var response = client.Send(request);
 
-                string strResponse = await response.Content.ReadAsStringAsync();
+                var responseTask = response.Content.ReadAsStringAsync();
+                responseTask.Wait();
+                string strResponse = responseTask.Result.ToString();
 
 
                 if (JsonConvert.DeserializeObject(strResponse) is not JObject json)
@@ -272,6 +382,7 @@ namespace GBPUpdaterX2
             {
                 "RetroSpy Pixel",
                 "RetroSpy Vision",
+                "RetroSpy Vision Dream",
                 "Serial Debugger"
             };
 
@@ -307,7 +418,7 @@ namespace GBPUpdaterX2
                 txtboxSerialNumber.IsVisible = false;
             }
 
-            if (DeviceComboBox.SelectedIndex > 0 && DeviceComboBox.SelectedIndex < 3)
+            if (DeviceComboBox.SelectedIndex == 1 || DeviceComboBox.SelectedIndex == 3)
             {
                 COMPortComboBox.SelectedIndex = 0;
                 COMPortLabel.IsVisible = true;
@@ -319,7 +430,7 @@ namespace GBPUpdaterX2
                 COMPortComboBox.IsVisible = false;
             }
 
-            if (DeviceComboBox.SelectedIndex != 2 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (DeviceComboBox.SelectedIndex == 4 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 isClosing = true;
                 Thread.Sleep(1000);
@@ -722,6 +833,160 @@ namespace GBPUpdaterX2
             }
         }
 
+        private void UpdateDreamThread()
+        {
+            try
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    this.goButton.IsEnabled = false;
+                    txtboxData.Text = string.Empty;
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                _ = Directory.CreateDirectory(tempDirectory);
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Downloading latest firmware...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+
+                DownloadFirmware(tempDirectory, "Dream_Firmware.zip");
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.Text += "Decompressing firmware package...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "Dream_Firmware.zip"), tempDirectory);
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Updating firmware...\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ProcessStartInfo processInfo;
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    processInfo = new ProcessStartInfo("cmd.exe" ,
+                        "/c teensy_loader_cli.exe --mcu=TEENSY40 -v -w firmware.ino.hex")
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    processInfo = new ProcessStartInfo("chmod",
+                        "755 " + Path.Join(tempDirectory, "teensy_loader_cli.mac"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false
+                    };
+                    Process? p1 = Process.Start(processInfo);
+                    p1?.WaitForExit();
+
+                    processInfo = new ProcessStartInfo("cmd.exe",
+                        "/c teensy_loader_cli.mac --mcu=TEENSY40 -v -w firmware.ino.hex")
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    processInfo = new ProcessStartInfo("chmod",
+                        "755 " + Path.Join(tempDirectory, "teensy_loader_cli.linux"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false
+                    };
+                    Process? p1 = Process.Start(processInfo);
+                    p1?.WaitForExit();
+
+                    processInfo = new ProcessStartInfo("cmd.exe",
+                        "/c teensy_loader_cli.linux --mcu=TEENSY40 -v -w firmware.ino.hex")
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else
+                {
+                    throw new PlatformNotSupportedException();
+                }
+
+                StringBuilder sb = new();
+                Process? p = Process.Start(processInfo);
+                if (p != null)
+                {
+                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data);
+                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data);
+                    p.BeginOutputReadLine();
+                    p.BeginErrorReadLine();
+                    p.WaitForExit();
+                }
+
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += sb.ToString() + "\n";
+                    txtboxData.Text += "..." + "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+
+                    try
+                    {
+                        var m = MessageBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandardWindow("RetroSpy", "Update complete! Please reboot your device.", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Info);
+                        await m.ShowDialog(this);
+                        goButton.IsEnabled = true;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                        var m = MessageBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandardWindow("RetroSpy", ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
+                        await m.ShowDialog(this);
+                        goButton.IsEnabled = true;
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                    var m = MessageBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandardWindow("RetroSpy", ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
+                    await m.ShowDialog(this);
+
+                    goButton.IsEnabled = true;
+                });
+
+            }
+        }
+
         private void SerialDebuggerThread()
         {
             Dispatcher.UIThread.Post(() =>
@@ -917,11 +1182,17 @@ namespace GBPUpdaterX2
 
             if (DeviceComboBox.SelectedIndex == 2)
             {
+                Thread thread = new(UpdateDreamThread);
+                thread.Start();
+            }
+
+            if (DeviceComboBox.SelectedIndex == 3)
+            {
                 Thread thread = new(SerialDebuggerThread);
                 thread.Start();
             }
 #if OS_WINDOWS
-            if (DeviceComboBox.SelectedIndex == 3 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (DeviceComboBox.SelectedIndex == 4 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 Thread thread = new(DriverFixThread);
                 thread.Start();
