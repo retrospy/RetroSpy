@@ -199,12 +199,14 @@ del Vision_Firmware.zip
 copy Vision_Firmware.zip RetroSpy-Upload
 )
 
-if exist "..\..\..\Vision_Firmware\" (
+if exist "..\..\..\Dream_Firmware\" (
 del Dream_Firmware.zip
-"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Vision_Firmware\firmware.ino.hex
+"C:\Program Files\7-Zip\7z.exe" a Dream_Firmware.zip ..\..\..\Dream_Firmware\firmware.ino.hex
+"C:\Program Files\7-Zip\7z.exe" a Dream_Firmware.zip ..\..\..\Dream_Firmware\teensy_loader_cli.linux
+"C:\Program Files\7-Zip\7z.exe" a Dream_Firmware.zip ..\..\..\Dream_Firmware\teensy_loader_cli.exe
+"C:\Program Files\7-Zip\7z.exe" a Dream_Firmware.zip ..\..\..\Dream_Firmware\teensy_loader_cli.mac
 copy Dream_Firmware.zip RetroSpy-Upload
 )
-
 
 if exist "..\..\..\kernel\kernel.tar.gz" (
 copy ..\..\..\kernel\kernel.tar.gz RetroSpy-Upload
