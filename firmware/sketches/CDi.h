@@ -44,6 +44,9 @@ class CDiSpy : public ControllerSpy {
 public:
 	CDiSpy(int wired_timeout, int wireless_timeout, int wireless_remote_timeout, int recvpin)
 		: vSerial(CDI_RECVSER, CDI_SENDSER, true)
+#if defined(RS_VISION_CDI) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
+		, vSerial_1(CDI_RECVSER, CDI_SENDSER_1, true)
+#endif
 		, _wired_timeout(wired_timeout)
 		, _wireless_timeout(wireless_timeout)
 		, _wireless_remote_timeout(wireless_remote_timeout)
@@ -94,6 +97,9 @@ private:
 	int _wireless_timeout;
 	int _wireless_remote_timeout;
 	SoftwareSerial vSerial;
+#if defined(RS_VISION_CDI) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
+	SoftwareSerial vSerial_1;
+#endif
 	volatile bool hasOutput;
 	int bits;
 	uint64_t value;

@@ -52,21 +52,41 @@ void CDiSpy::setup() {
 	vSerial.begin(1200); 
 
 #if defined(RS_VISION_CDI) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
+	vSerial_1.begin(1200);
 	Serial2.begin(1200);
 
 	// Initialization of IR to Serial Adapter
-	vSerial.write(205);
-	vSerial.write(192);
-	vSerial.write(128);
-	vSerial.write(128);
-	delay(18);
-	vSerial.write(205);
-	vSerial.write(192);
-	delay(18);
-	vSerial.write(205);
-	vSerial.write(192);
-	vSerial.write(128);
-	vSerial.write(128);
+	if (digitalRead(16) == LOW)
+	{
+		vSerial.write(205);
+		vSerial.write(192);
+		vSerial.write(128);
+		vSerial.write(128);
+		delay(18);
+		vSerial.write(205);
+		vSerial.write(192);
+		delay(18);
+		vSerial.write(205);
+		vSerial.write(192);
+		vSerial.write(128);
+		vSerial.write(128);
+	}
+	
+	if (digitalRead(17) == LOW)
+	{
+		vSerial_1.write(205);
+		vSerial_1.write(192);
+		vSerial_1.write(128);
+		vSerial_1.write(128);
+		delay(18);
+		vSerial_1.write(205);
+		vSerial_1.write(192);
+		delay(18);
+		vSerial_1.write(205);
+		vSerial_1.write(192);
+		vSerial_1.write(128);
+		vSerial_1.write(128);
+	}
 #endif
 	
 	max_right = max_left = max_up = max_down = 0;
@@ -183,7 +203,7 @@ void CDiSpy::loop1()
 			wireless_remote_timeout = millis();
 			
 #if defined(RS_VISION_CDI) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
-			if (digitalRead(17) == LOW && outputCode != 0 && (flags & IRDATA_FLAGS_IS_REPEAT) == 0)
+			if ((digitalRead(16) == LOW || digitalRead(17) == LOW) && outputCode != 0 && (flags & IRDATA_FLAGS_IS_REPEAT) == 0)
 			{
 				byte output[8];
 				output[0] = 0xC0;
@@ -194,7 +214,10 @@ void CDiSpy::loop1()
 				output[5] = 0x80;
 				output[6] = 0x80;
 				output[7] = 0;
-				vSerial.write(output, 8);
+				if (digitalRead(16) == LOW)
+					vSerial.write(output, 8);
+				if (digitalRead(17) == LOW)
+					vSerial_1.Write(output, 8)
 			}
 #endif
 			hasOutput = false;
@@ -280,7 +303,7 @@ void CDiSpy::loop1()
 			wireless_timeout = millis();
 			
 #if defined(RS_VISION_CDI) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
-			if (digitalRead(17) == LOW)
+			if (digitalRead(17) == LOW || digitalRead(16) == LOW)
 			{
 				if (wireless_xaxis > 128)
 					wireless_xaxis = 128 + 256 - wireless_xaxis;
@@ -310,7 +333,10 @@ void CDiSpy::loop1()
 				//				for (int i = 7; i >= 0; --i)
 				//					Serial.print((output[2] & (1 << i)) ? "1" : "0");
 				//				Serial.println();
-				vSerial.write(output, 3);
+				if (digitalRead(16) == LOW)
+					vSerial.write(output, 3);
+				if (digitalRead(17) == LOW)
+					vSerial_1.Write(output, 3)
 			}
 #endif
 			hasOutput = false;
@@ -321,13 +347,16 @@ void CDiSpy::loop1()
 	if (((millis() - wireless_timeout) >= _wireless_timeout))
 	{
 #if defined(RS_VISION_CDI) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
-		if (digitalRead(17) == LOW && (wireless_rawData[2] & 0b00000101) != 0)
+		if ((digitalRead(17) == LOW || digitalRead(16)) && (wireless_rawData[2] & 0b00000101) != 0)
 		{
 			byte output[3];
 			output[0] = 0xC0;
 			output[1] = 0x80;
 			output[2] = 0x80;
-			vSerial.write(output, 3);
+			if (digitalRead(16) == LOW)
+				vSerial.write(output, 3);
+			if (digitalRead(17) == LOW)
+				vSerial_1.Write(output, 3)
 		}
 #endif 
 		

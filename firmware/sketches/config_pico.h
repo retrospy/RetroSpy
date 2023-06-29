@@ -42,5 +42,6 @@
 #define CDI_IRPIN				15
 #define CDI_RECVSER				0xFF
 #define CDI_SENDSER				11
+#define CDI_SENDSER_1			12
 
 #define FASTRUN
