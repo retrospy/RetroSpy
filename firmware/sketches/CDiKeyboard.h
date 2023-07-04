@@ -35,17 +35,41 @@
 
 class CDiKeyboardSpy : public ControllerSpy {
 public:
-	CDiKeyboardSpy()
+	CDiKeyboardSpy(int recvpin)
 		: vSerial(CDI_RECVSER, CDI_SENDSER, true)
-		,
-		T_mode_caps_on(false)
-	{}
+		, T_mode_caps_on(false)
+		, serial2RX(recvpin)
+	{
+		Serial2.setRX(recvpin);
+	}
 	
 	void setup();
 	void loop();
 	void writeSerial();
 	void debugSerial();
 	void updateState();
+	
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	int available()
+	{
+		return Serial2.available();
+	}
+	
+	char read()
+	{
+		return Serial2.read();
+	}
+#else
+	int available()
+	{
+		return vSerial.available();
+	}
+	
+	char read()
+	{
+		return vSerial.read();
+	}	
+#endif
 	
 	virtual const char* startupMsg();
 	
@@ -54,6 +78,8 @@ private:
 	byte rawData[10];
 	byte incomingBytes[4];
 	bool T_mode_caps_on;
+
+	int serial2RX;
 };
 #else
 class CDiKeyboardSpy : public ControllerSpy {

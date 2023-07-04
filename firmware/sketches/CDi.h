@@ -53,6 +53,7 @@ public:
 	{
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 		Serial2.setRX(recvpin);
+		serial2RX = recvpin;
 #endif
 	}
 	
@@ -105,6 +106,7 @@ private:
 	uint64_t value;
 	int protocolNum;
 	uint8_t flags;
+	int serial2RX;
 };
 #else
 

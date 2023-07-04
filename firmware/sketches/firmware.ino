@@ -233,7 +233,7 @@ void loop1()
 }
 #endif
 
-#if defined(RS_VISION)
+#if defined(RS_VISION) || defined(RS_VISION_COLECOVISION)
 byte ReadAnalog()
 {
 	byte retVal = PINC;
@@ -429,9 +429,12 @@ bool CreateSpy()
 		currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, CDI_WIRELESS_REMOTE_TIMEOUT, 5);
 		break;
 	case 0x02:
-		currentSpy = new CDiKeyboardSpy();
+		currentSpy = new CDiKeyboardSpy(9);
 		break;
 	case 0x03:
+		currentSpy = new CDiKeyboardSpy(5);
+		break;
+	case 0x04:
 		currentSpy = new CDTVWirelessSpy();
 		break;
 	}
