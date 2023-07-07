@@ -103,6 +103,7 @@ enum VideoOutputType {
 
 #define PIN_READ PIND_READ
 
+#define WAIT_FALLING_EDGE_COUNT( pin ) long count = 0; while( !PIN_READ(pin) ){count++;} while( PIN_READ(pin) ){count++;};
 #define WAIT_FALLING_EDGE( pin ) while( !PIN_READ(pin) ); while( PIN_READ(pin) );
 #define WAIT_LEADING_EDGE( pin ) while( PIN_READ(pin) ); while( !PIN_READ(pin) );
 

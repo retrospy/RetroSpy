@@ -28,6 +28,11 @@
 
 #if defined(ARDUINO_TEENSY35) || defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO) || defined(ARDUINO_AVR_NANO_EVERY) || defined(ARDUINO_AVR_LARDU_328E) || defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 
+#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO)
+#define LOOP_COUNT_THRESHOLD 8000
+#define USE_LOOP_COUNT_THRESHOLD
+#endif
+
 void SNESSpy::setup1() {
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 	// Disable the built-in pull-up and pull-down resistors and input the signals divided by 10kƒ¶ and 20kƒ¶ external resistors.
@@ -80,20 +85,38 @@ void SNESSpy::updateState() {
 #else
 	unsigned char position = 0;
 	unsigned char bits = 0;
+#if	!defined(USE_LOOP_COUNT_THRESHOLD)
 	unsigned long start;
+#endif
 	bytesToReturn = SNES_BITCOUNT;
 
 waiting_for_latch:
+#if	!defined(USE_LOOP_COUNT_THRESHOLD)
 	start = millis();
+#endif
 	position = 0;
 	bits = 0;
-	WAIT_FALLING_EDGE(SNES_LATCH);
+#if	defined(USE_LOOP_COUNT_THRESHOLD)
+	noInterrupts();
+#endif
+	WAIT_FALLING_EDGE_COUNT(SNES_LATCH);
+
+#if	defined(USE_LOOP_COUNT_THRESHOLD)
+	if (count < LOOP_COUNT_THRESHOLD)
+#else
 	if (millis() - start < 10)
+#endif
 	{
+#if	defined(USE_LOOP_COUNT_THRESHOLD)
+		interrupts();
+#endif
 		goto waiting_for_latch;
 	}
 	
+#if	!defined(USE_LOOP_COUNT_THRESHOLD)
 	noInterrupts();
+#endif	
+	
 	do {
 		WAIT_FALLING_EDGE(SNES_CLOCK);
 		rawData[position++] = !PIN_READ(SNES_DATA);

@@ -132,7 +132,7 @@ void sendRawDataDebug(unsigned char rawControllerData[], unsigned char first, un
 		Serial.print(rawControllerData[i] ? "1" : "0");
 		++j;
 	}
-	Serial.print("\n");
+	Serial.println();
 }
 
 int ScaleInteger(float oldValue, float oldMin, float oldMax, float newMin, float newMax)
