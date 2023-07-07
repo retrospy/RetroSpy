@@ -40,7 +40,9 @@ public:
 		, T_mode_caps_on(false)
 		, serial2RX(recvpin)
 	{
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 		Serial2.setRX(recvpin);
+#endif
 	}
 	
 	void setup();
