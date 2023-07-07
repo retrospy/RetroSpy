@@ -54,7 +54,13 @@ static byte lookup[128] = {
 };
 
 void CDiKeyboardSpy::setup() {
-	vSerial.begin(1200);
+
+#if defined(RS_VISION_CDI) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
+	Serial2.begin(1200);
+#else
+	vSerial.begin(1200); 	
+#endif	
+	
 }
 
 void CDiKeyboardSpy::loop() {
@@ -77,20 +83,21 @@ void CDiKeyboardSpy::debugSerial() {
 
 void CDiKeyboardSpy::updateState() {
 
-	if (vSerial.available() >= 2) 
+	if (available() >= 2) 
 	{
+		
 		// clear the pressed keys
-		for(int i = 0 ; i < 10 ; ++i)
-		  rawData[i] = 0;
+		for (int i = 0; i < 10; ++i)
+			rawData[i] = 0;
       
-		incomingBytes[0] = vSerial.read();
-		incomingBytes[1] = vSerial.read();
+		incomingBytes[0] = read();
+		incomingBytes[1] = read();
 
 		if ((incomingBytes[0] & 0b11000000) == 0b11000000 && (incomingBytes[1] & 0b11011111) > 0x5F)
 		{
-			while (vSerial.available() < 2) {}
-			incomingBytes[2] = vSerial.read();
-			incomingBytes[3] = vSerial.read();
+			while (available() < 2) {}
+			incomingBytes[2] = read();
+			incomingBytes[3] = read();
   
 			bool isModifiedFunctionKey = false, blank_f1 = false, caps = false, sshift = false, shift = false, ctrl = false;
       
@@ -165,15 +172,15 @@ void CDiKeyboardSpy::updateState() {
 			if (blank_f1)
 				rawData[67 / 8] &= ~(1 << (67 % 8));
 
-			//    for(int i = 0; i < 4; ++i)
-			//    {
-			//      Serial.print(incomingBytes[i]);
-			//      Serial.print(" ");
-			//      for(int j = 0; j < 8; ++j)
-			//        Serial.print((incomingBytes[i] & (1 << j)) != 0 ? "1" : "0");
-			//      Serial.print("\n");
-			//    }
-			//    Serial.print("\n");
+//			    for(int i = 0; i < 4; ++i)
+//			    {
+//			      Serial.print(incomingBytes[i]);
+//			      Serial.print(" ");
+//			      for(int j = 0; j < 8; ++j)
+//			        Serial.print((incomingBytes[i] & (1 << j)) != 0 ? "1" : "0");
+//			      Serial.print("\n");
+//			    }
+//			    Serial.print("\n");
       
 		}
 		else if ((incomingBytes[0] & 0b10000000) == 0b10000000) // K-Mode
@@ -238,7 +245,16 @@ void CDiKeyboardSpy::updateState() {
 
 #endif
 
+static char startupBuffer[100];
+
 const char* CDiKeyboardSpy::startupMsg()
 {
-	return "CDi Keyboard";
+	char itoaBuff[10];
+	strcpy(startupBuffer, "CDi Keyboard");
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	strcat(startupBuffer, " with Serial2 RX = ");
+	strcat(startupBuffer, itoa(serial2RX, itoaBuff, 10));
+#endif
+
+	return startupBuffer;
 }

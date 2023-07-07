@@ -55,6 +55,8 @@ void CDiSpy::setup() {
 	vSerial_1.begin(1200);
 	Serial2.begin(1200);
 
+	delay(10000);
+	
 	// Initialization of IR to Serial Adapter
 	if (digitalRead(16) == LOW)
 	{
@@ -217,7 +219,7 @@ void CDiSpy::loop1()
 				if (digitalRead(16) == LOW)
 					vSerial.write(output, 8);
 				if (digitalRead(17) == LOW)
-					vSerial_1.Write(output, 8)
+					vSerial_1.write(output, 8);
 			}
 #endif
 			hasOutput = false;
@@ -336,7 +338,7 @@ void CDiSpy::loop1()
 				if (digitalRead(16) == LOW)
 					vSerial.write(output, 3);
 				if (digitalRead(17) == LOW)
-					vSerial_1.Write(output, 3)
+					vSerial_1.write(output, 3);
 			}
 #endif
 			hasOutput = false;
@@ -347,7 +349,7 @@ void CDiSpy::loop1()
 	if (((millis() - wireless_timeout) >= _wireless_timeout))
 	{
 #if defined(RS_VISION_CDI) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
-		if ((digitalRead(17) == LOW || digitalRead(16)) && (wireless_rawData[2] & 0b00000101) != 0)
+		if ((digitalRead(17) == LOW || digitalRead(16) == LOW) && (wireless_rawData[2] & 0b00000101) != 0)
 		{
 			byte output[3];
 			output[0] = 0xC0;
@@ -356,7 +358,7 @@ void CDiSpy::loop1()
 			if (digitalRead(16) == LOW)
 				vSerial.write(output, 3);
 			if (digitalRead(17) == LOW)
-				vSerial_1.Write(output, 3)
+				vSerial_1.write(output, 3);
 		}
 #endif 
 		
@@ -540,7 +542,13 @@ const char* CDiSpy::startupMsg()
 	strcat(startupBuffer, itoa(_wireless_timeout, itoaBuff, 10));
 	strcat(startupBuffer, ",");
 	strcat(startupBuffer, itoa(_wireless_remote_timeout, itoaBuff, 10));
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	strcat(startupBuffer, ") with Serial2 RX = ");
+	strcat(startupBuffer, itoa(serial2RX, itoaBuff, 10));
+#else
 	strcat(startupBuffer, ")");
+#endif
+	
 	return startupBuffer;
 }
 
