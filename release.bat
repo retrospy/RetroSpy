@@ -75,7 +75,7 @@ goto end
 :Vision
 if exist "..\..\..\Vision_Firmware\" (
 cd firmware
-..\sed -i "s/.*\/\/#define.*RS_VISION/#define RS_VISION/" sketches\common.h
+..\sed -i "s/.*\/\/#define.*RS_VISION$/#define RS_VISION/" sketches\common.h
 C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=arduino:avr:nano:cpu=atmega328old -build-path D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools "C:/Program Files (x86)/Arduino/hardware/tools/avr" -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
 ..\sed -i "s/.*#define.*RS_VISION/\/\/#define RS_VISION/" sketches\common.h
 del ..\..\..\..\Vision_Firmware\firmware.ino.hex
