@@ -98,9 +98,40 @@ copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Teensy_4_0\Release\firmw
 cd ..
 )
 
-if errorlevel 0 goto buildOK
+if errorlevel 0 goto CV
 echo Aborting release. Error during Vision Dream Firmware build.
 goto end
+
+:CV
+if exist "..\..\..\CV_Firmware\" (
+cd firmware
+..\sed -i "s/.*\/\/#define.*RS_VISION_COLECOVISION/#define RS_VISION_COLECOVISION/" sketches\common.h
+C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=arduino:avr:nano:cpu=atmega328old -build-path D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools "C:/Program Files (x86)/Arduino/hardware/tools/avr" -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
+..\sed -i "s/.*#define.*RS_VISION_COLECOVISION/\/\/#define RS_VISION_COLECOVISION/" sketches\common.h
+del ..\..\..\..\CV_Firmware\firmware.ino.hex
+copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\CV_Firmware\firmware.ino.hex
+cd ..
+)
+
+if errorlevel 0 goto CDI
+echo Aborting release. Error during Vision ColecoVision Firmware build.
+goto end
+
+:CDI
+if exist "..\..\..\CDi_Firmware\" (
+cd firmware
+..\sed -i "s/.*\/\/#define.*RS_VISION_CDI/#define RS_VISION_CDI/" sketches\common.h
+C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=rp2040:rp2040:rpipico:flash=2097152_0,freq=250,opt=Optimize3,rtti=Disabled,stackprotect=Disabled,exceptions=Disabled,dbgport=Disabled,dbglvl=None,usbstack=picosdk,ipbtstack=ipv4only,uploadmethod=default -build-path D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Raspberry_Pi_Pico\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -hardware C:\Users\Administrator\AppData\Local/Arduino15/packages -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools C:\Users\Administrator\AppData\Local/Arduino15/packages -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.pqt-gcc.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-gcc\1.5.0-b-c7bab52 -prefs=runtime.tools.pqt-python3.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-python3\1.0.1-base-3a57aed -prefs=runtime.tools.pqt-elf2uf2.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-elf2uf2\1.5.0-b-c7bab52 -prefs=runtime.tools.pqt-openocd.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-openocd\1.5.0-b-c7bab52 -prefs=runtime.tools.pqt-picotool.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-picotool\1.5.0-b-03f2812 -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
+..\sed -i "s/.*#define.*RS_VISION_CDI/\/\/#define RS_VISION_CDI/" sketches\common.h
+del ..\..\..\..\CDi_Firmware\firmware.ino.elf
+copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Raspberry_Pi_Pico\Release\firmware.ino.elf ..\..\..\..\CDi_Firmware\firmware.ino.elf
+cd ..
+)
+
+if errorlevel 0 goto buildOK
+echo Aborting release. Error during Vision CDi Firmware build.
+goto end
+
 
 :buildOK
 ;del RetroSpy-Windows.zip
@@ -206,6 +237,26 @@ del Dream_Firmware.zip
 "C:\Program Files\7-Zip\7z.exe" a Dream_Firmware.zip ..\..\..\Dream_Firmware\teensy_loader_cli.exe
 "C:\Program Files\7-Zip\7z.exe" a Dream_Firmware.zip ..\..\..\Dream_Firmware\teensy_loader_cli.mac
 copy Dream_Firmware.zip RetroSpy-Upload
+)
+
+if exist "..\..\..\CV_Firmware\" (
+del CV_Firmware.zip
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\avrdude.exe
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\avrdude.conf
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\firmware.ino.hex
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\libusb0.dll
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\avrdude
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\libusb-1.0.0.dylib
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\libusb-0.1.4.dylib
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\libftdi1.2.dylib
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\libhidapi.0.dylib
+copy CV_Firmware.zip RetroSpy-Upload
+)
+
+if exist "..\..\..\CDi_Firmware\" (
+del Dream_Firmware.zip
+"C:\Program Files\7-Zip\7z.exe" a CDi_Firmware.zip ..\..\..\CDi_Firmware\firmware.ino.elf
+copy CDi_Firmware.zip RetroSpy-Upload
 )
 
 if exist "..\..\..\kernel\kernel.tar.gz" (
