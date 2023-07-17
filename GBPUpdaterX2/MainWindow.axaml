@@ -11,7 +11,10 @@
 			<ComboBox Name="DeviceComboBox" Margin="10,5,5,0" SelectedIndex="0" VerticalAlignment="Top" BorderBrush="#FF252525" Width="250" Height="29.9" FontFamily="Segoe UI" FontSize="12" Background="#efefef" SelectionChanged="DeviceSelectComboBox_SelectionChanged">
 			</ComboBox>
 			<Label x:Name="COMPortLabel" Content="Serial Port" HorizontalAlignment="Left" Margin="275,-61,5,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="false"/>
-			<ComboBox Name="COMPortComboBox" Margin="275,-32,5,0" SelectedIndex="0" VerticalAlignment="Top" BorderBrush="#FF252525" Width="250" Height="29.9" FontFamily="Segoe UI" FontSize="12" Background="#efefef" SelectionChanged="DeviceSelectComboBox_SelectionChanged" IsVisible="false">
+			<Label x:Name="COMPortLabel2" Content="Serial Ports" HorizontalAlignment="Left" Margin="275,-61,5,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="false"/>
+			<ComboBox Name="COMPortComboBox" Margin="275,-32,5,0" SelectedIndex="0" VerticalAlignment="Top" BorderBrush="#FF252525" Width="250" Height="29.9" FontFamily="Segoe UI" FontSize="12" Background="#efefef"  IsVisible="false">
+			</ComboBox>
+			<ComboBox Name="COMPortComboBox2" Margin="275,0,5,0" SelectedIndex="0" VerticalAlignment="Top" BorderBrush="#FF252525" Width="250" Height="29.9" FontFamily="Segoe UI" FontSize="12" Background="#efefef" IsVisible="false">
 			</ComboBox>
 			<Label x:Name="SerialNumberLabel" Content="Serial Number" HorizontalAlignment="Left" Margin="275,-61,5,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="false"/>
 			<TextBox Name="txtboxSerialNumber" Margin="275,-32,5,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="24" Width="191.8" FontSize="16" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" Background="#FF3E3E42" Foreground="#FFCBCBCB" BorderBrush="#FF656565" Text="None" ScrollViewer.VerticalScrollBarVisibility="Hidden" IsVisible="false">
@@ -25,7 +28,7 @@
 					</Style>
 				</TextBox.Styles>
 			</TextBox>
-			<TextBox Name="txtboxData" Margin="10,25,5,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="400" Width="582" FontFamily="Segoe UI" FontSize="12" Background="#FF3E3E42" Foreground="#FFCBCBCB" BorderBrush="#FF656565" ScrollViewer.VerticalScrollBarVisibility="Auto">
+			<TextBox Name="txtboxData" Margin="10,50,5,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="375" Width="582" FontFamily="Segoe UI" FontSize="12" Background="#FF3E3E42" Foreground="#FFCBCBCB" BorderBrush="#FF656565" ScrollViewer.VerticalScrollBarVisibility="Auto">
 				<TextBox.Styles>
 					<Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
 						<Setter Property="Background" Value="#FF3E3E42"/>

@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -179,6 +180,7 @@ namespace GBPUpdaterX2
                         Dispatcher.UIThread.Post(() =>
                         {
                             COMPortComboBox.ItemsSource = ports;
+                            COMPortComboBox2.ItemsSource = ports;
                         });
 
                     }
@@ -187,6 +189,7 @@ namespace GBPUpdaterX2
                         Dispatcher.UIThread.Post(() =>
                         {
                             COMPortComboBox.ItemsSource = ports;
+                            COMPortComboBox2.ItemsSource = ports;
                         });
                     }
 
@@ -195,6 +198,7 @@ namespace GBPUpdaterX2
                         Dispatcher.UIThread.Post(() =>
                         {
                             COMPortComboBox.SelectedIndex = 0;
+                            COMPortComboBox2.SelectedIndex = 0;
                         });
                     }
                 }
@@ -389,6 +393,9 @@ namespace GBPUpdaterX2
                 "RetroSpy Pixel",
                 "RetroSpy Vision",
                 "RetroSpy Vision Dream",
+                "RetroSpy Vision CDi",
+                "RetroSpy Vision ColecoVision",
+                "RetroSpy Vision Pippin",
                 "Serial Debugger"
             };
 
@@ -424,7 +431,7 @@ namespace GBPUpdaterX2
                 txtboxSerialNumber.IsVisible = false;
             }
 
-            if (DeviceComboBox.SelectedIndex == 1 || DeviceComboBox.SelectedIndex == 2 || DeviceComboBox.SelectedIndex == 3)
+            if (DeviceComboBox.SelectedIndex > 0 &&  DeviceComboBox.SelectedIndex < 7)
             {
                 COMPortComboBox.SelectedIndex = 0;
                 COMPortLabel.IsVisible = true;
@@ -436,11 +443,18 @@ namespace GBPUpdaterX2
                 COMPortComboBox.IsVisible = false;
             }
 
-            if (DeviceComboBox.SelectedIndex == 4 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (DeviceComboBox.SelectedIndex == 4)
             {
-                //isClosing = true;
-                //Thread.Sleep(100);
-                //isClosing = false;
+                COMPortComboBox2.SelectedIndex = 0;
+                COMPortComboBox2.IsVisible = true;
+                txtboxData.Margin = new Thickness(10, 23, 5, 0);
+                COMPortLabel.IsVisible = false;
+                COMPortLabel2.IsVisible = true;
+            }
+            else
+            {
+                COMPortComboBox2.IsVisible = false;
+                txtboxData.Margin = new Thickness(10, 55, 5, 0);
             }
         }
 
