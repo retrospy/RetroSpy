@@ -24,6 +24,7 @@
 		<Copyright>Copyright © 2022</Copyright>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<ApplicationIcon>GBPUpdater.ico</ApplicationIcon>
+		<ResolveComReferenceSilent>true</ResolveComReferenceSilent>
 	</PropertyGroup>
   <ItemGroup>
     <None Remove=".gitignore" />

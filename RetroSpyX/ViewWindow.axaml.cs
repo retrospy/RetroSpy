@@ -55,7 +55,7 @@ namespace RetroSpy
             {
                 Properties.Settings.Default.Save();
                 _keybindings?.Finish();
-                _reader.Finish();
+                _reader?.Finish();
             };
 
             if (skin == null)

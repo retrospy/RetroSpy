@@ -65,7 +65,7 @@ public class ListView<T> : IList, IList<T>, INotifyCollectionChanged, INotifyPro
 
             if (Dispatcher.UIThread.CheckAccess())
             {
-                SelectingItemsControl c = _window.FindControl<SelectingItemsControl>(_controlName);
+                SelectingItemsControl? c = _window?.FindControl<SelectingItemsControl>(_controlName ?? String.Empty);
                 if (c != null)
                 {
                     c.SelectedIndex = 0;
@@ -75,7 +75,7 @@ public class ListView<T> : IList, IList<T>, INotifyCollectionChanged, INotifyPro
             {
                 Dispatcher.UIThread.Post(() =>
                 {
-                    SelectingItemsControl c = _window.FindControl<SelectingItemsControl>(_controlName);
+                    SelectingItemsControl? c = _window?.FindControl<SelectingItemsControl>(_controlName ?? String.Empty);
                     if (c != null)
                     {
                         c.SelectedIndex = 0;
@@ -93,7 +93,7 @@ public class ListView<T> : IList, IList<T>, INotifyCollectionChanged, INotifyPro
 
             if (Dispatcher.UIThread.CheckAccess())
             {
-                SelectingItemsControl c = _window.FindControl<SelectingItemsControl>(_controlName);
+                SelectingItemsControl? c = _window?.FindControl<SelectingItemsControl>(_controlName ?? String.Empty);
                 if (c != null)
                 {
                     c.SelectedIndex = id;
@@ -103,7 +103,7 @@ public class ListView<T> : IList, IList<T>, INotifyCollectionChanged, INotifyPro
             {
                 Dispatcher.UIThread.Post(() =>
                 {
-                    SelectingItemsControl c = _window.FindControl<SelectingItemsControl>(_controlName);
+                    SelectingItemsControl? c = _window?.FindControl<SelectingItemsControl>(_controlName ?? String.Empty);
                     if (c != null)
                     {
                         c.SelectedIndex = id;

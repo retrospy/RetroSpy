@@ -153,7 +153,7 @@ namespace GBPemu
         private async void COMPortClicked(object? sender, RoutedEventArgs e)
         {
 
-            string? port = ((MenuItem?)sender)?.Header.ToString();
+            string? port = ((MenuItem?)sender)?.Header?.ToString();
 
             Properties.Settings.Default.Port = _vm.Ports.SelectedItem;
             Properties.Settings.Default.FilterCOMPorts = _vm.FilterCOMPorts;

@@ -21,9 +21,9 @@ namespace UsbUpdaterX2
         {
             try
             {
-                string hostname = txtboxHostname.Text;
-                string username = txtboxUserName.Text;
-                string password = txtboxPassword.Text;
+                string hostname = txtboxHostname.Text ?? "";
+                string username = txtboxUserName.Text ?? "";
+                string password = txtboxPassword.Text ?? "";
 
 
                 Dispatcher.UIThread.Post(() =>
@@ -48,64 +48,62 @@ namespace UsbUpdaterX2
                     }
                 }
 
-                using (SshClient _client = new(strIP,
+                using SshClient _client = new(strIP,
                                     string.IsNullOrEmpty(username) ? "retrospy" : username,
-                                    string.IsNullOrEmpty(password) ? "retrospy" : password))
+                                    string.IsNullOrEmpty(password) ? "retrospy" : password);
+                _client.Connect();
+                ShellStream _data = _client.CreateShellStream("", 0, 0, 0, 0, 1000);
+
+                string token = string.Empty;
+                if (File.Exists("GITHUB_TOKEN"))
                 {
-                    _client.Connect();
-                    ShellStream _data = _client.CreateShellStream("", 0, 0, 0, 0, 1000);
+                    token = File.ReadAllText("GITHUB_TOKEN").Trim();
+                }
 
-                    string token = string.Empty;
-                    if (File.Exists("GITHUB_TOKEN"))
-                    {
-                        token = File.ReadAllText("GITHUB_TOKEN").Trim();
-                    }
+                if (token != string.Empty)
+                {
+                    _data.WriteLine(string.Format("sudo /usr/local/bin/update-usb-retrospy-nightly.sh {0}", token));
+                }
+                else
+                {
+                    _data.WriteLine("sudo /usr/local/bin/update-usb-retrospy.sh");
+                }
 
-                    if (token != string.Empty)
-                    {
-                        _data.WriteLine(string.Format("sudo /usr/local/bin/update-usb-retrospy-nightly.sh {0}", token));
-                    }
-                    else
-                    {
-                        _data.WriteLine("sudo /usr/local/bin/update-usb-retrospy.sh");
-                    }
+                while (true)
+                {
+                    while (!_data.DataAvailable) { };
+                    string line = _data.Read();
 
-                    while (true)
+                    Dispatcher.UIThread.Post(() =>
                     {
-                        while (!_data.DataAvailable) { };
-                        string line = _data.Read();
+                        txtboxData.Text += line;
+                        txtboxData.CaretIndex = int.MaxValue;
+                    });
 
-                        Dispatcher.UIThread.Post(() =>
+                    if (line.Contains("Device needs full image installed!"))
+                    {
+                        Dispatcher.UIThread.Post(async () =>
                         {
-                            txtboxData.Text += line;
-                            txtboxData.CaretIndex = int.MaxValue;
+                            var m = MsBox.Avalonia.MessageBoxManager
+                                .GetMessageBoxStandard("RetroSpy", "Unfortunately, this device requires a full reimage.\nIf you are unsure how to do this please reach out to support@retro-spy.com.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Info);
+                            await m.ShowWindowDialogAsync(this);
+                            goButton.IsEnabled = true;
                         });
 
-                        if (line.Contains("Device needs full image installed!"))
+                        break;
+                    }
+                    else if (line.Contains("Installation complete!"))
+                    {
+
+                        Dispatcher.UIThread.Post(async () =>
                         {
-                            Dispatcher.UIThread.Post(async () =>
-                            {
-                                var m = MsBox.Avalonia.MessageBoxManager
-                                    .GetMessageBoxStandard("RetroSpy", "Unfortunately, this device requires a full reimage.\nIf you are unsure how to do this please reach out to support@retro-spy.com.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Info);
-                                await m.ShowWindowDialogAsync(this);
-                                goButton.IsEnabled = true;
-                            });
+                            var m = MsBox.Avalonia.MessageBoxManager
+                                .GetMessageBoxStandard("RetroSpy", "Installation complete! Please reboot your device.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Info);
+                            await m.ShowWindowDialogAsync(this);
+                            goButton.IsEnabled = true;
+                        });
 
-                            break;
-                        }
-                        else if (line.Contains("Installation complete!"))
-                        {
-
-                            Dispatcher.UIThread.Post(async () =>
-                            {
-                                var m = MsBox.Avalonia.MessageBoxManager
-                                    .GetMessageBoxStandard("RetroSpy", "Installation complete! Please reboot your device.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Info);
-                                await m.ShowWindowDialogAsync(this);
-                                goButton.IsEnabled = true;
-                            });
-
-                            break;
-                        }
+                        break;
                     }
                 }
 

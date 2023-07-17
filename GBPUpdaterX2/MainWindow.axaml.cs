@@ -26,7 +26,7 @@ namespace GBPUpdaterX2
     public partial class MainWindow : Window
     {
         private readonly DispatcherTimer _portListUpdateTimer;
-        private bool letUpdatePortThreadRun = false;
+        private readonly bool letUpdatePortThreadRun = false;
         private bool isClosing;
         private readonly object updatePortLock = new();
 
@@ -285,7 +285,7 @@ namespace GBPUpdaterX2
                 }
                 else if (port.PortName != null && port.FriendlyName != null && (port.FriendlyName.Contains("CH340") || port.FriendlyName.Contains("CH341")))
                 {
-                    ports.Add(port.PortName);
+                    ports.Add(port.PortName ?? String.Empty);
                 }
             }
 
@@ -384,7 +384,7 @@ namespace GBPUpdaterX2
 
             SerialNumberLabel.IsVisible = true;
             txtboxSerialNumber.IsVisible = true;
-            List<string> devices = new List<string>
+            List<string> devices = new()
             {
                 "RetroSpy Pixel",
                 "RetroSpy Vision",
@@ -454,7 +454,7 @@ namespace GBPUpdaterX2
                 {
                     try
                     {
-                        serialNumber = Int32.Parse(txtboxSerialNumber.Text);
+                        serialNumber = Int32.Parse(txtboxSerialNumber.Text ?? "0");
                     }
                     catch (Exception)
                     {
@@ -635,8 +635,8 @@ namespace GBPUpdaterX2
                     Process? p = Process.Start(processInfo);
                     if (p != null)
                     {
-                        p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data);
-                        p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data);
+                        p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                        p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
                         p.BeginOutputReadLine();
                         p.BeginErrorReadLine();
                         p.WaitForExit();
@@ -663,7 +663,7 @@ namespace GBPUpdaterX2
                         {
                             txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
                             var m = MsBox.Avalonia.MessageBoxManager
-                                .GetMessageBoxStandard("RetroSpy", ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                                .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
                             await m.ShowWindowDialogAsync(this);
                             goButton.IsEnabled = true;
                         }
@@ -677,7 +677,7 @@ namespace GBPUpdaterX2
                 {
                     txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
                     var m = MsBox.Avalonia.MessageBoxManager
-                        .GetMessageBoxStandard("RetroSpy", ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                        .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
                      await m.ShowWindowDialogAsync(this);
 
                     goButton.IsEnabled = true;
@@ -793,8 +793,8 @@ namespace GBPUpdaterX2
                 Process? p = Process.Start(processInfo);
                 if (p != null)
                 {
-                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data);
-                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data);
+                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
                     p.BeginOutputReadLine();
                     p.BeginErrorReadLine();
                     p.WaitForExit();
@@ -818,7 +818,7 @@ namespace GBPUpdaterX2
                     {
                         txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
                         var m = MsBox.Avalonia.MessageBoxManager
-                            .GetMessageBoxStandard("RetroSpy", ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                            .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
                         await m.ShowWindowDialogAsync(this);
                         goButton.IsEnabled = true;
                     }
@@ -830,7 +830,7 @@ namespace GBPUpdaterX2
                 {
                     txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
                     var m = MsBox.Avalonia.MessageBoxManager
-                        .GetMessageBoxStandard("RetroSpy", ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                        .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
                     await m.ShowWindowDialogAsync(this);
 
                     goButton.IsEnabled = true;
@@ -947,8 +947,8 @@ namespace GBPUpdaterX2
                 Process? p = Process.Start(processInfo);
                 if (p != null)
                 {
-                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data);
-                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data);
+                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
                     p.BeginOutputReadLine();
                     p.BeginErrorReadLine();
                     p.WaitForExit();
@@ -972,7 +972,7 @@ namespace GBPUpdaterX2
                     {
                         txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
                         var m = MsBox.Avalonia.MessageBoxManager
-                            .GetMessageBoxStandard("RetroSpy", ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                            .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
                         await m.ShowWindowDialogAsync(this);
                         goButton.IsEnabled = true;
                     }
@@ -984,7 +984,7 @@ namespace GBPUpdaterX2
                 {
                     txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
                     var m = MsBox.Avalonia.MessageBoxManager
-                        .GetMessageBoxStandard("RetroSpy", ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                        .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
                     await m.ShowWindowDialogAsync(this);
 
                     goButton.IsEnabled = true;
@@ -1049,7 +1049,7 @@ namespace GBPUpdaterX2
                 {
                     txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
                     var m = MsBox.Avalonia.MessageBoxManager
-                        .GetMessageBoxStandard("RetroSpy", ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                        .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
                     await m.ShowWindowDialogAsync(this);
 
                     goButton.IsEnabled = true;

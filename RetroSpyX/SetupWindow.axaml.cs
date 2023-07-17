@@ -96,6 +96,7 @@ namespace RetroSpy
                 }
             }
 
+        [Obsolete("GetPath is obsolete as it is not compatible with mobile platforms")]
         public async Task<string?> GetPath()
         {
             OpenFolderDialog dialog = new();
@@ -105,6 +106,7 @@ namespace RetroSpy
             return result;
         }
 
+        [Obsolete("GetPath is obsolete as it is not compatible with mobile platforms")]
         private async void CustomSkinPath_Click(object sender, RoutedEventArgs e)
         {
             string? _path = await GetPath();
@@ -179,7 +181,7 @@ namespace RetroSpy
             };
         }
 
-        private bool letUpdatePortThreadRun = false;
+        private readonly bool letUpdatePortThreadRun = false;
         public SetupWindow(bool skipSetup = false)
         {
             try
@@ -381,7 +383,7 @@ namespace RetroSpy
             Properties.Settings.Default.Skin = _vm.Skins.GetSelectedId();
             try
             {
-                _vm.DelayInMilliseconds = Int32.Parse(txtDelay.Text);
+                _vm.DelayInMilliseconds = Int32.Parse(txtDelay.Text ?? "0");
             }
             catch (Exception)
             {
@@ -439,11 +441,11 @@ namespace RetroSpy
                          || _vm.Sources.SelectedItem == InputSource.PS4CRONUS || _vm.Sources.SelectedItem == InputSource.A500MINI || _vm.Sources.SelectedItem == InputSource.PS4USB
                          || _vm.Sources.SelectedItem == InputSource.POCKET))
                 {
-                    reader = _vm.Sources.SelectedItem.BuildReader4(txtHostname.Text, txtUsername.Text, txtPassword.Text);
+                    reader = _vm.Sources.SelectedItem.BuildReader4(txtHostname.Text ?? String.Empty, txtUsername.Text ?? String.Empty, txtPassword.Text ?? String.Empty);
                 }
                 else if (_vm.Sources.SelectedItem != null && _vm.Sources.SelectedItem.BuildReader5 != null && _vm.Sources.SelectedItem == InputSource.MISTER)
                 {
-                    reader = _vm.Sources.SelectedItem.BuildReader5(txtHostname.Text, txtUsername.Text, txtPassword.Text, _vm.MisterGamepad.SelectedItem.ToString(CultureInfo.CurrentCulture));
+                    reader = _vm.Sources.SelectedItem.BuildReader5(txtHostname.Text ?? String.Empty, txtUsername.Text ?? String.Empty, txtPassword.Text ?? String.Empty, _vm.MisterGamepad.SelectedItem.ToString(CultureInfo.CurrentCulture));
                 }
                 else if (_vm.Sources.SelectedItem != null && _vm.Sources.SelectedItem.BuildReader2 != null && (_vm.Sources.SelectedItem == InputSource.PADDLES || _vm.Sources.SelectedItem == InputSource.CD32
                             || _vm.Sources.SelectedItem == InputSource.ATARI5200 || _vm.Sources.SelectedItem == InputSource.COLECOVISION
@@ -602,7 +604,7 @@ namespace RetroSpy
             {
                 ((TextBox)sender).Text = "0";
             }
-            else if (Int32.Parse(((TextBox)sender).Text) > 300000)
+            else if (Int32.Parse(((TextBox)sender).Text ?? String.Empty) > 300000)
             {
                 ((TextBox)sender).Text = 300000.ToString();
             }

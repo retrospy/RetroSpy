@@ -44,7 +44,9 @@ public partial class LinuxMouseAndKeyboardReader : IControllerReader
     }
 
     public event EventHandler<ControllerStateEventArgs>? ControllerStateChanged;
+#pragma warning disable CS0067 // The event 'LinuxMouseAndKeyboardReader.ControllerDisconnected' is never used
     public event EventHandler? ControllerDisconnected;
+#pragma warning restore CS0067 // The event 'LinuxMouseAndKeyboardReader.ControllerDisconnected' is never used
 
 
     public void Finish()
