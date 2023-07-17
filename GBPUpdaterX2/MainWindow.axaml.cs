@@ -1212,7 +1212,7 @@ namespace GBPUpdaterX2
                 thread.Start();
             }
 #if OS_WINDOWS
-            if (DeviceComboBox.SelectedIndex == 4 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (DeviceComboBox.SelectedIndex == DeviceComboBox.ItemCount - 1 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 Thread thread = new(DriverFixThread);
                 thread.Start();
