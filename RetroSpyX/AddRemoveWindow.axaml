@@ -6,7 +6,7 @@
         x:Class="RetroSpy.AddRemoveWindow"
         Title="RetroSpy" CanResize="false" Height="515.015" Width="602" Foreground="White" Background="#FF252526">
 	<Grid>
-		<ListBox Margin="10,31,334,47" Name="IncludedListBox" Width="250" Background="#FF1D1D1D" Foreground="#FFCBCBCB" BorderBrush="#FF3E3E42" BorderThickness="2" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" Items="{Binding IncludedSources}" SelectedItem="{Binding IncludedSources.SelectedItem}"				 >
+		<ListBox Margin="10,31,334,47" Name="IncludedListBox" Width="250" Background="#FF1D1D1D" Foreground="#FFCBCBCB" BorderBrush="#FF3E3E42" BorderThickness="2" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" ItemsSource="{Binding IncludedSources}" SelectedItem="{Binding IncludedSources.SelectedItem}"				 >
 			<ListBox.Styles>
 				<Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
 					<Setter Property="Background" Value="#4a657b"/>
@@ -38,7 +38,7 @@
 				</Style>
 			</Button.Styles>
 		</Button>
-		<ListBox Name="ExcludedListBox" Margin="0,31,10,47" Background="#FF1D1D1D" Foreground="#FFCBCBCB" BorderBrush="#FF3E3E42" BorderThickness="2" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16"  HorizontalAlignment="Right" Width="250" Items="{Binding ExcludedSources}" SelectedItem="{Binding ExcludedSources.SelectedItem}"
+		<ListBox Name="ExcludedListBox" Margin="0,31,10,47" Background="#FF1D1D1D" Foreground="#FFCBCBCB" BorderBrush="#FF3E3E42" BorderThickness="2" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16"  HorizontalAlignment="Right" Width="250" ItemsSource="{Binding ExcludedSources}" SelectedItem="{Binding ExcludedSources.SelectedItem}"
 				 >
 			<ListBox.Styles>
 				<Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
