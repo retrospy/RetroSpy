@@ -103,6 +103,24 @@ namespace RetroSpy
         public float YPrecision { get; set; }
     }
 
+    public class AnalogStickTracker
+    {
+        public ElementConfig? Config { get; set; }
+        public string? XName { get; set; }
+        public string? YName { get; set; }
+        public string? VisibilityName { get; set; }
+        public uint XRange { get; set; }
+        public uint YRange { get; set; }
+        public uint OriginalXRange { get; set; }
+        public uint OriginalYRange { get; set; }
+        public bool XReverse { get; set; }
+        public bool YReverse { get; set; }
+        public float XPrecision { get; set; }
+        public float YPrecision { get; set; }
+        public uint TrackingWidth { get; set; }
+        public uint OriginalTrackingWidth { get; set; }
+    }
+
 
     public class AnalogTrigger
     {
@@ -233,6 +251,9 @@ namespace RetroSpy
 
         private readonly List<AnalogStick> _analogSticks = new();
         public IReadOnlyList<AnalogStick> AnalogSticks => _analogSticks;
+
+        private readonly List<AnalogStickTracker> _analogStickTrackers = new();
+        public IReadOnlyList<AnalogStickTracker> AnalogStickTrackers => _analogStickTrackers;
 
         private readonly List<AnalogTrigger> _analogTriggers = new();
         public IReadOnlyList<AnalogTrigger> AnalogTriggers => _analogTriggers;
@@ -460,6 +481,34 @@ namespace RetroSpy
                     XPrecision = ReadFloatConfig(elem, "xprecision", false),
                     YPrecision = ReadFloatConfig(elem, "yprecision", false)
                 });
+
+                IEnumerable<XAttribute> imageAttr = elem.Attributes("trackingImage");
+                if (imageAttr.Any())
+                {
+                    var tracker = new AnalogStickTracker
+                    {
+                        Config = ParseStandardConfig(skinPath, elem, "trackingImage"),
+                        XName = ReadStringAttr(elem, "xname"),
+                        YName = ReadStringAttr(elem, "yname"),
+                        VisibilityName = ReadStringAttr(elem, "visname", false),
+                        XRange = ReadUintAttr(elem, "xrange"),
+                        OriginalXRange = ReadUintAttr(elem, "xrange"),
+                        YRange = ReadUintAttr(elem, "yrange"),
+                        OriginalYRange = ReadUintAttr(elem, "yrange"),
+                        XReverse = ReadBoolAttr(elem, "xreverse"),
+                        YReverse = ReadBoolAttr(elem, "yreverse"),
+                        XPrecision = ReadFloatConfig(elem, "xprecision", false),
+                        YPrecision = ReadFloatConfig(elem, "yprecision", false),
+                        TrackingWidth = ReadUintAttr(elem, "trackingWidth"),
+                        OriginalTrackingWidth = ReadUintAttr(elem, "trackingWidth")
+                    };
+
+                    tracker.Config.X = tracker.Config.OriginalX = tracker.Config.OriginalX + (tracker.Config.Width / 2) - (uint)Math.Ceiling(tracker.TrackingWidth / 2.0);
+                    tracker.Config.Y = tracker.Config.OriginalY = tracker.Config.OriginalY + (tracker.Config.Height / 2);
+
+                    _analogStickTrackers.Add(tracker);
+
+                }
             }
 
             foreach (XElement elem in doc.Elements("touchpad"))
@@ -645,12 +694,12 @@ namespace RetroSpy
             }
         }
 
-        private static ElementConfig ParseStandardConfig(string skinPath, XElement elem)
+        private static ElementConfig ParseStandardConfig(string skinPath, XElement elem, string imageAttributeName = "image")
         {
-            IEnumerable<XAttribute> imageAttr = elem.Attributes("image");
+            IEnumerable<XAttribute> imageAttr = elem.Attributes(imageAttributeName);
             if (!imageAttr.Any())
             {
-                throw new ConfigParseException("Attribute 'image' missing for element '" + elem.Name + "'.");
+                throw new ConfigParseException("Attribute '" + imageAttributeName + "' missing for element '" + elem.Name + "'.");
             }
 
             Bitmap image = LoadImage(skinPath, imageAttr.First().Value);

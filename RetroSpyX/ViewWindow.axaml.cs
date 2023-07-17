@@ -1,10 +1,13 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
 using DynamicData.Experimental;
+using LibUsbDotNet;
 using MessageBox.Avalonia.Enums;
+using NodaTime;
 using Renci.SshNet.Messages;
 using RetroSpy.Readers;
 using System;
@@ -30,6 +33,7 @@ namespace RetroSpy
         private readonly List<Tuple<TouchPad, Image>> _touchPadWithImages = new();
         private readonly List<Tuple<RangeButton, Image>> _rangeButtonsWithImages = new();
         private readonly List<Tuple<AnalogStick, Image>> _sticksWithImages = new();
+        private readonly List<Tuple<AnalogStickTracker, Image>> _trackersWithImages = new();
         private readonly List<Tuple<AnalogText, Label>> _analogTextBoxes = new();
 
         private readonly Dictionary<string, List<Tuple<Button, Image>>> _dictOfButtonsWithImages = new();
@@ -73,6 +77,7 @@ namespace RetroSpy
             {
                 throw new ArgumentNullException(nameof(skinBackground));
             }
+
 
 
 
@@ -174,6 +179,28 @@ namespace RetroSpy
                         Image image = GetImageForElement(button.Config);
                         _rangeButtonsWithImages.Add(new Tuple<RangeButton, Image>(button, image));
                         image.IsVisible = false;
+                        ControllerGrid.Children.Add(image);
+                    }
+                }
+            }
+
+            foreach (AnalogStickTracker tracker in _skin.AnalogStickTrackers)
+            {
+                if (BgIsActive(skinBackground.Name, tracker.Config?.TargetBackgrounds, tracker.Config?.IgnoreBackgrounds))
+                {
+                    if (tracker.Config != null)
+                    {
+                        tracker.Config.X = tracker.Config.OriginalX;
+                        tracker.Config.Y = tracker.Config.OriginalY;
+                        tracker.XRange = tracker.OriginalXRange;
+                        tracker.YRange = tracker.OriginalYRange;
+                        Image image = GetImageForElement(tracker.Config);
+                        _trackersWithImages.Add(new Tuple<AnalogStickTracker, Image>(tracker, image));
+                        if (tracker?.VisibilityName?.Length > 0)
+                        {
+                            image.IsVisible = false;
+                        }
+
                         ControllerGrid.Children.Add(image);
                     }
                 }
@@ -448,6 +475,56 @@ namespace RetroSpy
                         {
                             image.Margin = new Thickness(x, y, 0, 0);
                             image.IsVisible = visibility;
+                        });
+                    }
+                }
+            }
+
+            foreach (Tuple<AnalogStickTracker, Image> tracker in _trackersWithImages)
+            {
+                AnalogStickTracker skin = tracker.Item1;
+                Image image = tracker.Item2;
+
+                float xrange = (skin.XReverse ? -1 : 1) * skin.XRange;
+                float yrange = (skin.YReverse ? 1 : -1) * skin.YRange;
+
+                if (skin.Config != null)
+                {
+                    float x = e.Analogs.ContainsKey(skin.XName ?? string.Empty)
+                      ? skin.Config.X + (xrange * e.Analogs[skin.XName ?? string.Empty])
+                      : skin.Config.X;
+
+                    if (e.Analogs.ContainsKey(skin.XName ?? string.Empty) && Math.Abs(e.Analogs[skin.XName ?? string.Empty]) < skin.XPrecision)
+                        x = skin.Config.X;
+
+                    float y = e.Analogs.ContainsKey(skin.YName ?? string.Empty)
+                          ? skin.Config.Y + (yrange * e.Analogs[skin.YName ?? string.Empty])
+                          : skin.Config.Y;
+
+                    if (e.Analogs.ContainsKey(skin.YName ?? string.Empty) && Math.Abs(e.Analogs[skin.YName ?? string.Empty]) < skin.YPrecision)
+                        y = skin.Config.Y;
+
+                    double angle = Math.Atan2(y - skin.Config.Y, x - skin.Config.X) * 180 / Math.PI;
+
+                    bool visibility = skin.VisibilityName?.Length == 0 || (e.Buttons.ContainsKey(skin.VisibilityName ?? string.Empty) && e.Buttons[skin.VisibilityName ?? string.Empty]);
+                    if (Dispatcher.UIThread.CheckAccess())
+                    {
+                        image.Margin = new Thickness(skin.Config.X, skin.Config.Y, 0, 0);
+                        image.IsVisible = visibility;
+                        image.Width = skin.TrackingWidth;
+                        image.Height = Math.Abs(Math.Sqrt(Math.Pow(x - skin.Config.X, 2) + Math.Pow(y - skin.Config.Y, 2)));
+                        image.RenderTransform = new RotateTransform(angle - 90 % 360, 0, -image.Height/2);
+                    }
+                    else
+                    {
+                        Dispatcher.UIThread.Post(() =>
+                        {
+                            image.Margin = new Thickness(skin.Config.X, skin.Config.Y, 0, 0);
+                            image.IsVisible = visibility;
+                            image.Width = skin.TrackingWidth;
+                            image.Height = Math.Abs(Math.Sqrt(Math.Pow(x - skin.Config.X, 2) + Math.Pow(y - skin.Config.Y, 2)));
+                            image.RenderTransform = new RotateTransform(angle - 90 % 360, 0, -image.Height / 2);
+
                         });
                     }
                 }
@@ -908,6 +985,20 @@ namespace RetroSpy
             {
                 if (button.Item1.Config != null)
                     AdjustImage(button.Item1.Config, button.Item2, xRatio, yRatio);
+            }
+
+            foreach (Tuple<AnalogStickTracker, Image> tracker in _trackersWithImages)
+            {
+                if (tracker.Item1.Config != null)
+                {
+                    tracker.Item2.IsVisible = false;
+                    AdjustImage(tracker.Item1.Config, tracker.Item2, xRatio, yRatio);
+                    tracker.Item1.TrackingWidth = (uint)(tracker.Item1.OriginalTrackingWidth * xRatio);
+                    if (tracker.Item1.TrackingWidth == 0)
+                        tracker.Item1.TrackingWidth = 1;
+                    tracker.Item1.XRange = (uint)(tracker.Item1.OriginalXRange * xRatio);
+                    tracker.Item1.YRange = (uint)(tracker.Item1.OriginalYRange * yRatio);
+                }
             }
 
             foreach (Tuple<AnalogStick, Image> stick in _sticksWithImages)
