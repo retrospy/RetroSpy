@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" 
         x:Class="GBPUpdaterX2.MainWindow"
-        Title="RetroSpy Vision/Pixel Updater" Width="602" Height="550" MinWidth="602" MinHeight="550" MaxWidth="602" MaxHeight="550" Foreground="#FFFFFF" Background="#FF252526" CanResize="false" Closing="Window_Closing">
+        Title="RetroSpy Vision/Pixel Updater" Width="602" Height="550" MinWidth="602" MinHeight="550" MaxWidth="602" MaxHeight="550" Foreground="#FFFFFF" Background="#FF252526" CanResize="false">
 	<Grid>
 		<StackPanel VerticalAlignment="Top">
 			<Label x:Name="DeviceLabel" Content="Device" HorizontalAlignment="Left" Margin="10,5,5,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16"/>

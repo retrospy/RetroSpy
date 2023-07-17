@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
-using MessageBox.Avalonia.Enums;
+using MsBox.Avalonia.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -178,7 +178,7 @@ namespace GBPUpdaterX2
                         ports[0] = "No Arduino/Teensy Found";
                         Dispatcher.UIThread.Post(() =>
                         {
-                            COMPortComboBox.Items = ports;
+                            COMPortComboBox.ItemsSource = ports;
                         });
 
                     }
@@ -186,7 +186,7 @@ namespace GBPUpdaterX2
                     {
                         Dispatcher.UIThread.Post(() =>
                         {
-                            COMPortComboBox.Items = ports;
+                            COMPortComboBox.ItemsSource = ports;
                         });
                     }
 
@@ -376,6 +376,12 @@ namespace GBPUpdaterX2
         {
             InitializeComponent();
 
+            Closing += (s, e) =>
+            {
+                isClosing = true;
+                Environment.Exit(0);
+            };
+
             SerialNumberLabel.IsVisible = true;
             txtboxSerialNumber.IsVisible = true;
             List<string> devices = new List<string>
@@ -391,7 +397,7 @@ namespace GBPUpdaterX2
                 devices.Add("Bad CH340 Driver Fix");
             }
 
-            DeviceComboBox.Items = devices;
+            DeviceComboBox.ItemsSource = devices;
             DeviceComboBox.SelectedIndex = 0;
 
             UpdatePortList();
@@ -418,7 +424,7 @@ namespace GBPUpdaterX2
                 txtboxSerialNumber.IsVisible = false;
             }
 
-            if (DeviceComboBox.SelectedIndex == 1 || DeviceComboBox.SelectedIndex == 3)
+            if (DeviceComboBox.SelectedIndex == 1 || DeviceComboBox.SelectedIndex == 2 || DeviceComboBox.SelectedIndex == 3)
             {
                 COMPortComboBox.SelectedIndex = 0;
                 COMPortLabel.IsVisible = true;
@@ -432,9 +438,9 @@ namespace GBPUpdaterX2
 
             if (DeviceComboBox.SelectedIndex == 4 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                isClosing = true;
-                Thread.Sleep(1000);
-                isClosing = false;
+                //isClosing = true;
+                //Thread.Sleep(100);
+                //isClosing = false;
             }
         }
 
@@ -550,9 +556,9 @@ namespace GBPUpdaterX2
                     Dispatcher.UIThread.Post(async () =>
                     {
                         txtboxData.Text += "cannot find RetroSpy GameBoy Printer Emulator.\n\n";
-                        var m = MessageBox.Avalonia.MessageBoxManager
-                            .GetMessageBoxStandardWindow("RetroSpy", "Couldn't find RetroSpy Pixel.", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
-                        await m.ShowDialog(this);
+                        var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", "Couldn't find RetroSpy Pixel.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                        await m.ShowWindowDialogAsync(this);
                         txtboxData.CaretIndex = int.MaxValue;
                         this.goButton.IsEnabled = true;
                     });
@@ -647,18 +653,18 @@ namespace GBPUpdaterX2
                             if (sb.ToString().Contains("attempt 10 of 10"))
                                 throw new Exception("Updating Failed.");
 
-                            var m = MessageBox.Avalonia.MessageBoxManager
-                                .GetMessageBoxStandardWindow("RetroSpy", "Update complete! Please reboot your device.", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Info);
-                            await m.ShowDialog(this);
+                            var m = MsBox.Avalonia.MessageBoxManager
+                                .GetMessageBoxStandard("RetroSpy", "Update complete! Please reboot your device.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Info);
+                            await m.ShowWindowDialogAsync(this);
                             goButton.IsEnabled = true;
 
                         }
                         catch (Exception ex)
                         {
                             txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
-                            var m = MessageBox.Avalonia.MessageBoxManager
-                                .GetMessageBoxStandardWindow("RetroSpy", ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
-                            await m.ShowDialog(this);
+                            var m = MsBox.Avalonia.MessageBoxManager
+                                .GetMessageBoxStandard("RetroSpy", ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                            await m.ShowWindowDialogAsync(this);
                             goButton.IsEnabled = true;
                         }
                     });
@@ -670,9 +676,9 @@ namespace GBPUpdaterX2
                 Dispatcher.UIThread.Post(async () =>
                 {
                     txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
-                    var m = MessageBox.Avalonia.MessageBoxManager
-                        .GetMessageBoxStandardWindow("RetroSpy", ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
-                     await m.ShowDialog(this);
+                    var m = MsBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandard("RetroSpy", ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                     await m.ShowWindowDialogAsync(this);
 
                     goButton.IsEnabled = true;
                 });
@@ -802,18 +808,18 @@ namespace GBPUpdaterX2
 
                     try
                     {
-                        var m = MessageBox.Avalonia.MessageBoxManager
-                            .GetMessageBoxStandardWindow("RetroSpy", "Update complete! Please reboot your device.", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Info);
-                        await m.ShowDialog(this);
+                        var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", "Update complete! Please reboot your device.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Info);
+                        await m.ShowWindowDialogAsync(this);
                         goButton.IsEnabled = true;
 
                     }
                     catch (Exception ex)
                     {
                         txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
-                        var m = MessageBox.Avalonia.MessageBoxManager
-                            .GetMessageBoxStandardWindow("RetroSpy", ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
-                        await m.ShowDialog(this);
+                        var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                        await m.ShowWindowDialogAsync(this);
                         goButton.IsEnabled = true;
                     }
                 });
@@ -823,9 +829,9 @@ namespace GBPUpdaterX2
                 Dispatcher.UIThread.Post(async () =>
                 {
                     txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
-                    var m = MessageBox.Avalonia.MessageBoxManager
-                        .GetMessageBoxStandardWindow("RetroSpy", ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
-                    await m.ShowDialog(this);
+                    var m = MsBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandard("RetroSpy", ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                    await m.ShowWindowDialogAsync(this);
 
                     goButton.IsEnabled = true;
                 });
@@ -956,18 +962,18 @@ namespace GBPUpdaterX2
 
                     try
                     {
-                        var m = MessageBox.Avalonia.MessageBoxManager
-                            .GetMessageBoxStandardWindow("RetroSpy", "Update complete! Please reboot your device.", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Info);
-                        await m.ShowDialog(this);
+                        var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", "Update complete! Please reboot your device.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Info);
+                        await m.ShowWindowDialogAsync(this);
                         goButton.IsEnabled = true;
 
                     }
                     catch (Exception ex)
                     {
                         txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
-                        var m = MessageBox.Avalonia.MessageBoxManager
-                            .GetMessageBoxStandardWindow("RetroSpy", ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
-                        await m.ShowDialog(this);
+                        var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                        await m.ShowWindowDialogAsync(this);
                         goButton.IsEnabled = true;
                     }
                 });
@@ -977,9 +983,9 @@ namespace GBPUpdaterX2
                 Dispatcher.UIThread.Post(async () =>
                 {
                     txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
-                    var m = MessageBox.Avalonia.MessageBoxManager
-                        .GetMessageBoxStandardWindow("RetroSpy", ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
-                    await m.ShowDialog(this);
+                    var m = MsBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandard("RetroSpy", ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                    await m.ShowWindowDialogAsync(this);
 
                     goButton.IsEnabled = true;
                 });
@@ -1042,9 +1048,9 @@ namespace GBPUpdaterX2
                 Dispatcher.UIThread.Post(async () =>
                 {
                     txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
-                    var m = MessageBox.Avalonia.MessageBoxManager
-                        .GetMessageBoxStandardWindow("RetroSpy", ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
-                    await m.ShowDialog(this);
+                    var m = MsBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandard("RetroSpy", ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                    await m.ShowWindowDialogAsync(this);
 
                     goButton.IsEnabled = true;
                 });
@@ -1100,9 +1106,9 @@ namespace GBPUpdaterX2
 
                 Dispatcher.UIThread.Post(async () =>
                 {
-                    var m = MessageBox.Avalonia.MessageBoxManager
-                            .GetMessageBoxStandardWindow("RetroSpy", "Update complete! Please reboot your device.", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Info);
-                    await m.ShowDialog(this);
+                    var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", "Update complete! Please reboot your device.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Info);
+                    await m.ShowWindowDialogAsync(this);
                     goButton.IsEnabled = true;
                 });
             }
@@ -1111,9 +1117,9 @@ namespace GBPUpdaterX2
                 Dispatcher.UIThread.Post(async () =>
                 {
                     txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
-                    var m = MessageBox.Avalonia.MessageBoxManager
-                        .GetMessageBoxStandardWindow("RetroSpy", ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
-                    await m.ShowDialog(this);
+                    var m = MsBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandard("RetroSpy", ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                    await m.ShowWindowDialogAsync(this);
 
                     goButton.IsEnabled = true;
                 });

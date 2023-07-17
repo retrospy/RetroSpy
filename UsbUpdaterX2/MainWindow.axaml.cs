@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
-using MessageBox.Avalonia.Enums;
+using MsBox.Avalonia.Enums;
 using Renci.SshNet;
 using System;
 using System.IO;
@@ -85,9 +85,9 @@ namespace UsbUpdaterX2
                         {
                             Dispatcher.UIThread.Post(async () =>
                             {
-                                var m = MessageBox.Avalonia.MessageBoxManager
-                                    .GetMessageBoxStandardWindow("RetroSpy", "Unfortunately, this device requires a full reimage.\nIf you are unsure how to do this please reach out to support@retro-spy.com.", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Info);
-                                await m.ShowDialog(this);
+                                var m = MsBox.Avalonia.MessageBoxManager
+                                    .GetMessageBoxStandard("RetroSpy", "Unfortunately, this device requires a full reimage.\nIf you are unsure how to do this please reach out to support@retro-spy.com.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Info);
+                                await m.ShowWindowDialogAsync(this);
                                 goButton.IsEnabled = true;
                             });
 
@@ -98,9 +98,9 @@ namespace UsbUpdaterX2
 
                             Dispatcher.UIThread.Post(async () =>
                             {
-                                var m = MessageBox.Avalonia.MessageBoxManager
-                                    .GetMessageBoxStandardWindow("RetroSpy", "Installation complete! Please reboot your device.", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Info);
-                                await m.ShowDialog(this);
+                                var m = MsBox.Avalonia.MessageBoxManager
+                                    .GetMessageBoxStandard("RetroSpy", "Installation complete! Please reboot your device.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Info);
+                                await m.ShowWindowDialogAsync(this);
                                 goButton.IsEnabled = true;
                             });
 
@@ -116,9 +116,9 @@ namespace UsbUpdaterX2
                 Dispatcher.UIThread.Post(async() =>
                 {
                     txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
-                    var m = MessageBox.Avalonia.MessageBoxManager
-                        .GetMessageBoxStandardWindow("RetroSpy", ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
-                    await m.ShowDialog(this);
+                    var m = MsBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandard("RetroSpy", ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                    await m.ShowWindowDialogAsync(this);
                     goButton.IsEnabled = true;
                 });
 
