@@ -206,12 +206,12 @@ namespace GBPemu
                     paletteMenu.Icon = paletteCheckbox;
 
                     // This is freaking dangerous!
-                    ((AvaloniaList<object>)gameMenu.Items).Add(paletteMenu);
+                    ((ItemCollection)gameMenu.Items).Add(paletteMenu);
 
                 }
 
                 // Still dangerous!
-                ((AvaloniaList<object>)Palette_Games.Items).Add(gameMenu);
+                ((ItemCollection)Palette_Games.Items).Add(gameMenu);
             }
 
         }
@@ -541,6 +541,13 @@ namespace GBPemu
 
             InitializeComponent();
             DataContext = this;
+
+            Closing += (s, e) =>
+            {
+                Properties.Settings.Default.Save();
+                _reader.Finish();
+                Environment.Exit(0);
+            };
 
             ParseGamePalettes();
 

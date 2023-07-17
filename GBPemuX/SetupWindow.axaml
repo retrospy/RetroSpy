@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="GBPemu.SetupWindow"
-       Title="RetroSpy Pixel Viewer" SizeToContent="WidthAndHeight"  MinWidth="480" MinHeight="432" MaxWidth="480" MaxHeight="432" CanResize="false" Closing="Window_Closing" Opened="Window_Open">
+       Title="RetroSpy Pixel Viewer" SizeToContent="WidthAndHeight"  MinWidth="480" MinHeight="432" MaxWidth="480" MaxHeight="432" CanResize="false" Opened="Window_Open">
 	<Grid Height="432" Width="480">
 		<Image x:Name="SetupImage_png" Source="/Assets/SetupImage.png" Stretch="Fill"/>
 		<Grid.ContextMenu>

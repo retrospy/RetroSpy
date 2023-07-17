@@ -2,7 +2,7 @@ using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
-using MessageBox.Avalonia.Enums;
+using MsBox.Avalonia.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -43,18 +43,23 @@ namespace GBPemu
             thread.Start();
         }
 
-        private static void AvaloniaMessageBox(string? title, string message, ButtonEnum buttonType, MessageBox.Avalonia.Enums.Icon iconType)
+        private static void AvaloniaMessageBox(string? title, string message, ButtonEnum buttonType, MsBox.Avalonia.Enums.Icon iconType)
         {
             using var source = new CancellationTokenSource();
-            _ = MessageBox.Avalonia.MessageBoxManager
-            .GetMessageBoxStandardWindow(title ?? "Unknown Title Argument", message, buttonType, iconType)
-                        .Show().ContinueWith(t => source.Cancel(), TaskScheduler.FromCurrentSynchronizationContext());
+            _ = MsBox.Avalonia.MessageBoxManager
+            .GetMessageBoxStandard(title ?? "Unknown Title Argument", message, buttonType, iconType)
+                        .ShowAsync().ContinueWith(t => source.Cancel(), TaskScheduler.FromCurrentSynchronizationContext());
             Dispatcher.UIThread.MainLoop(source.Token);
         }
 
         public SetupWindow()
         {
             InitializeComponent();
+
+            Closing += (s, e) =>
+            {
+                isClosing = true;
+            };
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
@@ -97,7 +102,7 @@ namespace GBPemu
             if (_vm.FilterCOMPorts == true)
             {
                 COMMenuActive = true;
-                ((AvaloniaList<object>)OptionsMenu.Items).Add(COMMenu);
+                ((ItemCollection)OptionsMenu.Items).Add(COMMenu);
             }
 
             _portListUpdateTimer = new DispatcherTimer
@@ -133,7 +138,7 @@ namespace GBPemu
 
                 COMMenu = menuItem;
 
-                ((AvaloniaList<object>)OptionsMenu.Items).Add(COMMenu);
+                ((ItemCollection)OptionsMenu.Items).Add(COMMenu);
             }
             else if(FilterCOMCheckbox.IsChecked == false)
             {
@@ -141,7 +146,7 @@ namespace GBPemu
                 _vm.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
                 Properties.Settings.Default.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
 
-                ((AvaloniaList<object>)OptionsMenu.Items).Remove(COMMenu);
+                ((ItemCollection)OptionsMenu.Items).Remove(COMMenu);
             }
         }
 
@@ -175,12 +180,12 @@ namespace GBPemu
             }
             catch (UnauthorizedAccessException ex)
             {
-                AvaloniaMessageBox(_resources.GetString("RetroSpy", CultureInfo.CurrentUICulture), ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
+                AvaloniaMessageBox(_resources.GetString("RetroSpy", CultureInfo.CurrentUICulture), ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
                 Show();
             }
             catch (Exception ex)
             {
-                AvaloniaMessageBox(_resources.GetString("RetroSpy", CultureInfo.CurrentUICulture), ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
+                AvaloniaMessageBox(_resources.GetString("RetroSpy", CultureInfo.CurrentUICulture), ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
                 Show();
             }
         }
@@ -271,7 +276,7 @@ namespace GBPemu
                                     }
                                     catch (UnauthorizedAccessException ex)
                                     {
-                                        AvaloniaMessageBox(_resources.GetString("RetroSpy", CultureInfo.CurrentUICulture), ex.Message, ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
+                                        AvaloniaMessageBox(_resources.GetString("RetroSpy", CultureInfo.CurrentUICulture), ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
                                         Show();
                                     }
 
@@ -293,9 +298,9 @@ namespace GBPemu
                     {
                         Dispatcher.UIThread.Post((Action)delegate
                         {
-                            if (((AvaloniaList<object>)COMMenu.Items).Count != arduinoPorts.Count)
+                            if (((ItemCollection)COMMenu.Items).Count != arduinoPorts.Count)
                             {
-                                ((AvaloniaList<object>)COMMenu.Items).Clear();
+                                ((ItemCollection)COMMenu.Items).Clear();
                                 foreach (var port in arduinoPorts)
                                 {
                                     var newMenuItem = new MenuItem
@@ -303,7 +308,7 @@ namespace GBPemu
                                         Header = port
                                     };
                                     newMenuItem.Click += COMPortClicked;
-                                    ((AvaloniaList<object>)COMMenu.Items).Add(newMenuItem);
+                                    ((ItemCollection)COMMenu.Items).Add(newMenuItem);
                                 }
                             }
                         });
