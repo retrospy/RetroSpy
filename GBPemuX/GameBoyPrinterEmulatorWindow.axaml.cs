@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Xml;
@@ -119,7 +120,7 @@ namespace GBPemu
             List<GamePalette> newPalettes = new();
             bool lookingForGame = true;
 
-            baseDir = Path.GetDirectoryName(Environment.ProcessPath);
+            baseDir = Path.GetDirectoryName(Environment.ProcessPath ?? String.Empty);
             if (baseDir == null)
                 return;
 
@@ -195,7 +196,7 @@ namespace GBPemu
 
                     var paletteCheckbox = new CheckBox
                     {
-                        Name = String.Format("{0}{1}", games[i].Palettes[j].Name, "CheckBox"),
+                        Name = String.Format("{0}{1}", games[i].Palettes[j].Name ?? String.Empty, "CheckBox"),
                         Width = 20,
                         BorderThickness = new Thickness(20)
                     };
@@ -206,26 +207,32 @@ namespace GBPemu
                     paletteMenu.Icon = paletteCheckbox;
 
                     // This is freaking dangerous!
-                    ((AvaloniaList<object>)gameMenu.Items).Add(paletteMenu);
+                    ((ItemCollection)gameMenu.Items).Add(paletteMenu);
 
                 }
 
                 // Still dangerous!
-                ((AvaloniaList<object>)Palette_Games.Items).Add(gameMenu);
+                ((ItemCollection)Palette_Games.Items).Add(gameMenu);
             }
 
         }
 
         void ClearGamePalette(MenuItem? menuItem)
         {
-            foreach (MenuItem game in Palette_Games.Items)
+            foreach (MenuItem? game in Palette_Games.Items.Cast<MenuItem?>())
             {
-                foreach (MenuItem palette in game.Items)
+                if (game != null)
                 {
-                    if (palette == menuItem)
-                        ((CheckBox)palette.Icon).IsChecked = true;
-                    else
-                        ((CheckBox)palette.Icon).IsChecked = false;
+                    foreach (MenuItem? palette in game.Items.Cast<MenuItem?>())
+                    {
+                        if (palette != null && palette.Icon != null)
+                        { 
+                            if (palette == menuItem)
+                                ((CheckBox)palette.Icon).IsChecked = true;
+                            else
+                                ((CheckBox)palette.Icon).IsChecked = false;
+                        }
+                    }
                 }
             }
         }
@@ -236,7 +243,7 @@ namespace GBPemu
 
             if (sender is CheckBox box)
             {
-                menuItem = (MenuItem)box.GetLogicalParent();
+                menuItem = (MenuItem?)box.GetLogicalParent();
             }
             else
                 menuItem = (MenuItem?)sender;
@@ -541,6 +548,13 @@ namespace GBPemu
 
             InitializeComponent();
             DataContext = this;
+
+            Closing += (s, e) =>
+            {
+                Properties.Settings.Default.Save();
+                _reader?.Finish();
+                Environment.Exit(0);
+            };
 
             ParseGamePalettes();
 
@@ -1001,6 +1015,7 @@ namespace GBPemu
             Environment.Exit(0);
         }
 
+        [Obsolete]
         private async void SaveAs_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog SaveFileBox = new()

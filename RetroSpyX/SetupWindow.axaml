@@ -5,18 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
-    xmlns:avalonia="clr-namespace:Zafiro.Avalonia;assembly=Zafiro.Avalonia" mc:Ignorable="d" d:DesignWidth="602" d:DesignHeight="515.015" Width="602" Height="515.015" MinWidth="602" MinHeight="515.015" MaxWidth="602" MaxHeight="515.015" Foreground="#FFFFFF" Background="#FF252526" CanResize="false" x:Class="RetroSpy.SetupWindow" Title="RetroSpy" Closing="Window_Closing">
-    <Window.Styles>
-        <Style Selector="TextBox.NumberOnly">
-            <Setter Property="(i:Interaction.Behaviors)">
-                <i:BehaviorCollectionTemplate>
-                    <i:BehaviorCollection>
-                        <avalonia:NumberBoxBehavior/>
-                    </i:BehaviorCollection>
-                </i:BehaviorCollectionTemplate>
-            </Setter>
-        </Style>
-    </Window.Styles>
+    mc:Ignorable="d" d:DesignWidth="602" d:DesignHeight="515.015" Width="602" Height="515.015" MinWidth="602" MinHeight="515.015" MaxWidth="602" MaxHeight="515.015" Foreground="#FFFFFF" Background="#FF252526" CanResize="false" x:Class="RetroSpy.SetupWindow" Title="RetroSpy" >
+
     <Grid HorizontalAlignment="Left">
         <StackPanel VerticalAlignment="Top">
             <Menu Height="20" FontFamily="Segoe UI" FontSize="12" Background="#f0f0f0">
@@ -53,7 +43,7 @@
 		    </Menu>
         </StackPanel>
         <Label Name="MisterControllerIdLabel" Content="Controller:" HorizontalAlignment="Left" Margin="340,140,0,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="{Binding MiSTerGamepadOptionVisibility}"/>
-		<ComboBox Name="MisterControllerIdCombo" Width="86.8" Height="29.9" Margin="425,140,90.2,0" VerticalAlignment="Top" BorderBrush="#FF252525" FontFamily="Segoe UI" FontSize="12" Background="#efefef" IsVisible="{Binding MiSTerGamepadOptionVisibility}" Items="{Binding MisterGamepad}" SelectedItem="{Binding MisterGamepad.SelectedItem}">
+		<ComboBox Name="MisterControllerIdCombo" Width="86.8" Height="29.9" Margin="425,140,90.2,0" VerticalAlignment="Top" BorderBrush="#FF252525" FontFamily="Segoe UI" FontSize="12" Background="#efefef" IsVisible="{Binding MiSTerGamepadOptionVisibility}" ItemsSource="{Binding MisterGamepad}" SelectedItem="{Binding MisterGamepad.SelectedItem}">
 			<ComboBox.ItemTemplate>
 				<DataTemplate>
 					<TextBlock Text="{Binding}"/>
@@ -69,7 +59,7 @@
                 </Style>
             </Button.Styles>
         </Button>
-        <ComboBox Name="SourcesComboBox" Margin="145,37,10,0" SelectedIndex="0" VerticalAlignment="Top" BorderBrush="#FF252525" Width="447" Height="29.9" FontFamily="Segoe UI" FontSize="12" Background="#efefef" SelectionChanged="SourceSelectComboBox_SelectionChanged" Items="{Binding Sources}" SelectedItem="{Binding Sources.SelectedItem}">
+        <ComboBox Name="SourcesComboBox" Margin="145,37,10,0" SelectedIndex="0" VerticalAlignment="Top" BorderBrush="#FF252525" Width="447" Height="29.9" FontFamily="Segoe UI" FontSize="12" Background="#efefef" SelectionChanged="SourceSelectComboBox_SelectionChanged" ItemsSource="{Binding Sources}" SelectedItem="{Binding Sources.SelectedItem}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}"/>
@@ -80,14 +70,14 @@
         <Label Name="ComPortLabel" Content="COM Port:" HorizontalAlignment="Left" Margin="59,70,0,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="{Binding ComPortOptionVisibility}"/>
         <Label Name="ControllerIdLabel" Content="Controller:" HorizontalAlignment="Left" Margin="59,70,0,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="{Binding XIAndGamepadOptionVisibility}"/>
         <Label Name="HostnameLabel" Content="Hostname:" HorizontalAlignment="Left" Margin="59,70,0,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="{Binding SSHOptionVisibility}"/>
-        <ComboBox Name="ComPortCombo" Margin="145,70,10,0" Width="447" Height="29.9" VerticalAlignment="Top" BorderBrush="#FF252525" FontFamily="Segoe UI" FontSize="12" Background="#efefef" IsVisible="{Binding ComPortOptionVisibility}" Items="{Binding Ports}" SelectedItem="{Binding Ports.SelectedItem}" SelectionChanged="ComPortCombo_SelectionChanged">
+        <ComboBox Name="ComPortCombo" Margin="145,70,10,0" Width="447" Height="29.9" VerticalAlignment="Top" BorderBrush="#FF252525" FontFamily="Segoe UI" FontSize="12" Background="#efefef" IsVisible="{Binding ComPortOptionVisibility}" ItemsSource="{Binding Ports}" SelectedItem="{Binding Ports.SelectedItem}" SelectionChanged="ComPortCombo_SelectionChanged">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding}"/>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <ComboBox Name="ControllerIdCombo" Margin="145,70,10,0" VerticalAlignment="Top" BorderBrush="#FF252525" FontFamily="Segoe UI" FontSize="12" Background="#efefef" Width="447" Height="29.96" IsVisible="{Binding XIAndGamepadOptionVisibility}" Items="{Binding XIAndGamepad}" SelectedItem="{Binding XIAndGamepad.SelectedItem}">
+        <ComboBox Name="ControllerIdCombo" Margin="145,70,10,0" VerticalAlignment="Top" BorderBrush="#FF252525" FontFamily="Segoe UI" FontSize="12" Background="#efefef" Width="447" Height="29.96" IsVisible="{Binding XIAndGamepadOptionVisibility}" ItemsSource="{Binding XIAndGamepad}" SelectedItem="{Binding XIAndGamepad.SelectedItem}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding}"/>
@@ -106,7 +96,7 @@
             </TextBox.Styles>
         </TextBox>
         <Label Content="Viewer Skin:" HorizontalAlignment="Left" Margin="10,175,0,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" Height="29.53"/>
-        <ListBox Name="SkinListBox" Margin="10,198,265.333,47" Background="#FF1D1D1D" Foreground="#FFCBCBCB" BorderBrush="#FF3E3E42" BorderThickness="2" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" SelectedIndex="0" Width="326.667" Height="254.055" Items="{Binding Skins}" SelectedItem="{Binding Skins.SelectedItem}" SelectionChanged="Skin_SelectionChanged">
+        <ListBox Name="SkinListBox" Margin="10,198,265.333,47" Background="#FF1D1D1D" Foreground="#FFCBCBCB" BorderBrush="#FF3E3E42" BorderThickness="2" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" SelectedIndex="0" Width="326.667" Height="254.055" ItemsSource="{Binding Skins}" SelectedItem="{Binding Skins.SelectedItem}" SelectionChanged="Skin_SelectionChanged">
             <ListBox.Styles>
                 <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
                     <Setter Property="Background" Value="#4a657b"/>
@@ -147,7 +137,7 @@
                 </Style>
             </Button.Styles>
         </Button>
-        <ListBox Name="BackgroundListBox" Margin="0,198,10.333,47" Background="#FF1D1D1D" Foreground="#FFCBCBCB" BorderBrush="#FF3E3E42" BorderThickness="2" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" SelectedIndex="0" HorizontalAlignment="Right" Width="250" Height="254.055" Items="{Binding Backgrounds}" SelectedItem="{Binding Backgrounds.SelectedItem}">
+        <ListBox Name="BackgroundListBox" Margin="0,198,10.333,47" Background="#FF1D1D1D" Foreground="#FFCBCBCB" BorderBrush="#FF3E3E42" BorderThickness="2" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" SelectedIndex="0" HorizontalAlignment="Right" Width="250" Height="254.055" ItemsSource="{Binding Backgrounds}" SelectedItem="{Binding Backgrounds.SelectedItem}">
             <ListBox.Styles>
                 <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
                     <Setter Property="Background" Value="#4a657b"/>
@@ -176,7 +166,7 @@
             </CheckBox.Styles>
         </CheckBox>
         <Label x:Name="ComPort2Label_Copy" Content="COM Port 2:" HorizontalAlignment="Left" Margin="49,104,0,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="{Binding ComPort2OptionVisibility}"/>
-        <ComboBox Name="ComPort2Combo" Margin="145,104,10.333,0" VerticalAlignment="Top" BorderBrush="#FF252525" Height="29.9" Width="446.667" Background="#efefef" IsVisible="{Binding ComPort2OptionVisibility}" FontFamily="Segoe UI" FontSize="12" Items="{Binding Ports2}" SelectedItem="{Binding Ports2.SelectedItem}" SelectionChanged="ComPortCombo_SelectionChanged"></ComboBox>
+        <ComboBox Name="ComPort2Combo" Margin="145,104,10.333,0" VerticalAlignment="Top" BorderBrush="#FF252525" Height="29.9" Width="446.667" Background="#efefef" IsVisible="{Binding ComPort2OptionVisibility}" FontFamily="Segoe UI" FontSize="12" ItemsSource="{Binding Ports2}" SelectedItem="{Binding Ports2.SelectedItem}" SelectionChanged="ComPortCombo_SelectionChanged"></ComboBox>
         <Label x:Name="UsernameLabel" Content="Username:" HorizontalAlignment="Left" Margin="49,104,0,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="{Binding SSHOptionVisibility}"/>
         <TextBox x:Name="txtUsername" Margin="145,104,266,0" VerticalAlignment="Top" Height="24" FontSize="16" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" Background="#FF3E3E42" Foreground="#FFCBCBCB" BorderBrush="#FF656565" TextAlignment="Left" IsVisible="{Binding SSHOptionVisibility}" ScrollViewer.VerticalScrollBarVisibility="Hidden">
             <TextBox.Styles>

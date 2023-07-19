@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="RetroSpy.ViewWindow"
-        Title="RetroSpy" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterOwner" Closing="Window_Closing" CanResize="true" Opened="Window_Open">
+        Title="RetroSpy" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterOwner" CanResize="true" Opened="Window_Open">
 	<Grid Name="ControllerGrid" VerticalAlignment="Top" HorizontalAlignment="Left" >
 	        <Grid.ContextMenu>
 				<ContextMenu>

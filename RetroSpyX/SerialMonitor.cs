@@ -34,7 +34,7 @@ namespace RetroSpy
         private readonly List<byte> _localBuffer;
         private DispatcherTimer? _timer;
         private readonly bool _printerMode;
-        private Stopwatch _stopWatch;
+        private readonly Stopwatch _stopWatch;
 
         public SerialMonitor(string? portName, bool useLagFix, bool printerMode = false)
         {

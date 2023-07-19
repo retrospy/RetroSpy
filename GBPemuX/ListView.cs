@@ -67,7 +67,7 @@ namespace GBPemu
 
                 if (Dispatcher.UIThread.CheckAccess())
                 {
-                    SelectingItemsControl c = _window.FindControl<SelectingItemsControl>(_controlName);
+                    SelectingItemsControl? c = _window?.FindControl<SelectingItemsControl>(_controlName ?? String.Empty);
                     if (c != null)
                     {
                         c.SelectedIndex = 0;
@@ -77,7 +77,7 @@ namespace GBPemu
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        SelectingItemsControl c = _window.FindControl<SelectingItemsControl>(_controlName);
+                        SelectingItemsControl? c = _window?.FindControl<SelectingItemsControl>(_controlName ?? String.Empty);
                         if (c != null)
                         {
                             c.SelectedIndex = 0;
@@ -95,7 +95,7 @@ namespace GBPemu
 
                 if (Dispatcher.UIThread.CheckAccess())
                 {
-                    SelectingItemsControl c = _window.FindControl<SelectingItemsControl>(_controlName);
+                    SelectingItemsControl? c = _window?.FindControl<SelectingItemsControl>(_controlName ?? String.Empty);
                     if (c != null)
                     {
                         c.SelectedIndex = id;
@@ -105,7 +105,7 @@ namespace GBPemu
                 {
                     Dispatcher.UIThread.Post(() =>
                     {
-                        SelectingItemsControl c = _window.FindControl<SelectingItemsControl>(_controlName);
+                        SelectingItemsControl? c = _window?.FindControl<SelectingItemsControl>(_controlName ?? String.Empty);
                         if (c != null)
                         {
                             c.SelectedIndex = id;

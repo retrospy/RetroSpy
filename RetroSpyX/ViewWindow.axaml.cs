@@ -6,7 +6,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using DynamicData.Experimental;
 using LibUsbDotNet;
-using MessageBox.Avalonia.Enums;
+using MsBox.Avalonia.Enums;
 using NodaTime;
 using Renci.SshNet.Messages;
 using RetroSpy.Readers;
@@ -51,6 +51,13 @@ namespace RetroSpy
 
         public ViewWindow(SetupWindow sw, Skin? skin, Background? skinBackground, IControllerReader? reader, bool staticViewerWindowName)
         {
+            Closing += (s, e) =>
+            {
+                Properties.Settings.Default.Save();
+                _keybindings?.Finish();
+                _reader?.Finish();
+            };
+
             if (skin == null)
                 throw new ArgumentNullException(nameof(skin));
             if (skinBackground == null)
@@ -297,10 +304,10 @@ namespace RetroSpy
 
                 Dispatcher.UIThread.Post(async() =>
                 {
-                    var m = MessageBox.Avalonia.MessageBoxManager
-                        .GetMessageBoxStandardWindow("RetroSpy", "Error parsing keybindings.xml. Not binding any keys to gamepad inputs", ButtonEnum.Ok, MessageBox.Avalonia.Enums.Icon.Error);
+                    var m = MsBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandard("RetroSpy", "Error parsing keybindings.xml. Not binding any keys to gamepad inputs", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
                     this.Topmost = false;
-                    await m.ShowDialog(this);
+                    await m.ShowWindowDialogAsync(this);
                 });
             }
         }
