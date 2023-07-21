@@ -18,9 +18,9 @@
 	</PropertyGroup>
 	
 	<PropertyGroup>
-		<AssemblyVersion>6.2</AssemblyVersion>
-		<FileVersion>6.2</FileVersion>
-		<Version>6.2</Version>
+		<AssemblyVersion>6.3</AssemblyVersion>
+		<FileVersion>6.3</FileVersion>
+		<Version>6.3</Version>
 		<Copyright>Copyright © 2022</Copyright>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<ApplicationIcon>GBPUpdater.ico</ApplicationIcon>
