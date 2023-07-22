@@ -271,6 +271,19 @@ byte ReadAnalog4()
 }
 #endif
 
+#if defined(RS_VISION_PIPPIN)
+byte ReadDigital()
+{
+	byte retVal = 0x00;
+	for (int i = 0; i < 8; ++i)
+	{
+		if (digitalRead(i + 3) == LOW)
+			retVal |= (1 << i);
+	}
+	return retVal;
+}
+#endif
+
 bool CreateSpy()
 {
 	bool customSetup = false;
@@ -455,6 +468,20 @@ bool CreateSpy()
 		customSetup = true;
 		break;	
 	}
+#elif defined(RS_VISION_PIPPIN)
+	byte switchVal = ReadDigital();
+	byte controllerAddress = (switchVal & 0x0F);
+	byte mouseAddress = ((switchVal & 0xF0) >> 4);
+	
+	if (controllerAddress == mouseAddress && controllerAddress != 0x0F)
+	{
+		controllerAddress = PIPPIN_CONTROLLER_SPY_ADDRESS;
+		mouseAddress = PIPPIN_MOUSE_SPY_ADDRESS;
+	}
+		
+	currentSpy = new PippinSpy();
+	((PippinSpy*)currentSpy)->setup(controllerAddress, mouseAddress);
+	customSetup = true;
 #elif defined(MODE_DETECT)
 	if (!PINC_READ(MODEPIN_SNES))
 		currentSpy = new SNESSpy;

@@ -51,6 +51,7 @@ enum VideoOutputType {
 //#define RS_VISION_DREAM
 //#define RS_VISION_CDI
 //#define RS_VISION_COLECOVISION
+//#define RS_VISION_PIPPIN
 
 #ifdef RS_VISION
 #define TP_TIMERONE
@@ -72,6 +73,10 @@ enum VideoOutputType {
 #define TP_PINCHANGEINTERRUPT
 #define COLECOVISION_ROLLER_TIMER_INT_HANDLER
 #endif
+
+#ifdef RS_VISION_PIPPIN
+#define TP_TIMERONE
+#endif
 
 // Uncomment these to enable 3rd party libraries once installed
 //#define TP_IRREMOTE               // Used by MODE_CDI & MODE_CDTV_WIRELESS

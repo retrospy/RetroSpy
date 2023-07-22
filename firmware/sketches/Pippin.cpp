@@ -146,86 +146,116 @@ void PippinSpy::loop()
 		Serial.println(currentReadPacket->dataStop ? "S" : "-");
 		
 #else
-		if (currentReadPacket->HasData && currentReadPacket->numBytes == 4 && currentReadPacket->commandAddress != 0x02) 
+		if (controllerAddress != mouseAddress)
 		{
-			controllerAddress = currentReadPacket->commandAddress;
+			if (currentReadPacket->HasData && currentReadPacket->numBytes == 4 && currentReadPacket->commandAddress != 0x02) 
+			{
+				controllerAddress = currentReadPacket->commandAddress;
 			
-			for (int j = 0; j < 3; ++j)
-			{
-				for (int k = 0; k < 8; ++k)
-					rawData[currentReadPacket->commandAddress][(j * 8) + k] = (currentReadPacket->data[j] & (1 << k)) != 0;
-			}
-			rawData[currentReadPacket->commandAddress][24] = (currentReadPacket->data[3] & 0b00000001) != 0;
-			rawData[currentReadPacket->commandAddress][25] = (currentReadPacket->data[3] & 0b00000010) != 0;
-			rawData[currentReadPacket->commandAddress][26] = (currentReadPacket->data[3] & 0b00000100) != 0;
-		}
-		else if (currentReadPacket->HasData && currentReadPacket->numBytes == 2 && currentReadPacket->commandAddress != 0x02) 
-		{
-			mouseAddress = currentReadPacket->commandAddress;
-			for (int j = 0; j < 2; ++j)
-			{
-				for (int k = 0; k < 8; ++k)
-					rawData[currentReadPacket->commandAddress][(j * 8) + k] = (currentReadPacket->data[j] & (1 << k)) != 0;
-			}  
-		}
-		else if (currentReadPacket->HasData && currentReadPacket->numBytes == 3 && currentReadPacket->commandAddress != 0x02)
-		{
-			joystickAddress = currentReadPacket->commandAddress;
-			for (int j = 0; j < 3; ++j)
-			{
-				for (int k = 0; k < 8; ++k)
-					rawData[currentReadPacket->commandAddress][(j * 8) + k] = (currentReadPacket->data[j] & (1 << k)) != 0;
-			}
-		}
-		else if (currentReadPacket->HasData && currentReadPacket->numBytes == 5)
-		{
-			tabletAddress = currentReadPacket->commandAddress;
-			for (int j = 0; j < 4; ++j)
-			{
-				for (int k = 0; k < 8; ++k)
-					rawData[currentReadPacket->commandAddress][(j * 8) + k] = (currentReadPacket->data[j] & (1 << k)) != 0;
-			}
-			rawData[currentReadPacket->commandAddress][32] = 1;
-			for (int j = 0; j < 7; ++j)
-				rawData[currentReadPacket->commandAddress][33 + j] = 0;
-		}
-		else if (!currentReadPacket->HasData && currentReadPacket->numBytes == 0 && 
-			(currentReadPacket->commandAddress == mouseAddress || currentReadPacket->commandAddress == controllerAddress))
-		{
-			for (int i = 0; i < 7; ++i)
-				rawData[currentReadPacket->commandAddress][i] = 0;
-			for (int i = 8; i < 15; ++i)
-				rawData[currentReadPacket->commandAddress][i] = 0;
-		}
-		else if (!currentReadPacket->HasData && currentReadPacket->numBytes == 0 && currentReadPacket->commandAddress == tabletAddress)
-		{
-			rawData[currentReadPacket->commandAddress][32] = 0;
-		}
-		else if (currentReadPacket->HasData && currentReadPacket->numBytes == 2 && currentReadPacket->commandAddress == 0x02) 
-		{
-      
-			if (currentReadPacket->data[0] == 0x7F && currentReadPacket->data[1] == 0x7F)
-			{
-				rawData[currentReadPacket->commandAddress][currentReadPacket->data[0] / 8] |= (1 << (currentReadPacket->data[0] % 8));
-			}
-			else if (currentReadPacket->data[0] == 0xFF && currentReadPacket->data[1] == 0xFF)
-			{
-				rawData[currentReadPacket->commandAddress][0x7F / 8] &= ~(1 << (0x7F % 8));
-			}
-			else
-			{
-				for (int i = 0; i < 2; ++i)
+				for (int j = 0; j < 3; ++j)
 				{
-					if ((currentReadPacket->data[i] & 0b10000000) != 0 && currentReadPacket->data[i] != 0xFF)
+					for (int k = 0; k < 8; ++k)
+						rawData[currentReadPacket->commandAddress][(j * 8) + k] = (currentReadPacket->data[j] & (1 << k)) != 0;
+				}
+				rawData[currentReadPacket->commandAddress][24] = (currentReadPacket->data[3] & 0b00000001) != 0;
+				rawData[currentReadPacket->commandAddress][25] = (currentReadPacket->data[3] & 0b00000010) != 0;
+				rawData[currentReadPacket->commandAddress][26] = (currentReadPacket->data[3] & 0b00000100) != 0;
+			}
+			else if (currentReadPacket->HasData && currentReadPacket->numBytes == 2 && currentReadPacket->commandAddress != 0x02) 
+			{
+				mouseAddress = currentReadPacket->commandAddress;
+				for (int j = 0; j < 2; ++j)
+				{
+					for (int k = 0; k < 8; ++k)
+						rawData[currentReadPacket->commandAddress][(j * 8) + k] = (currentReadPacket->data[j] & (1 << k)) != 0;
+				}  
+			}
+			else if (currentReadPacket->HasData && currentReadPacket->numBytes == 3 && currentReadPacket->commandAddress != 0x02)
+			{
+				joystickAddress = currentReadPacket->commandAddress;
+				for (int j = 0; j < 3; ++j)
+				{
+					for (int k = 0; k < 8; ++k)
+						rawData[currentReadPacket->commandAddress][(j * 8) + k] = (currentReadPacket->data[j] & (1 << k)) != 0;
+				}
+			}
+			else if (currentReadPacket->HasData && currentReadPacket->numBytes == 5)
+			{
+				tabletAddress = currentReadPacket->commandAddress;
+				for (int j = 0; j < 4; ++j)
+				{
+					for (int k = 0; k < 8; ++k)
+						rawData[currentReadPacket->commandAddress][(j * 8) + k] = (currentReadPacket->data[j] & (1 << k)) != 0;
+				}
+				rawData[currentReadPacket->commandAddress][32] = 1;
+				for (int j = 0; j < 7; ++j)
+					rawData[currentReadPacket->commandAddress][33 + j] = 0;
+			}
+			else if (!currentReadPacket->HasData && currentReadPacket->numBytes == 0 && 
+				(currentReadPacket->commandAddress == mouseAddress || currentReadPacket->commandAddress == controllerAddress))
+			{
+				for (int i = 0; i < 7; ++i)
+					rawData[currentReadPacket->commandAddress][i] = 0;
+				for (int i = 8; i < 15; ++i)
+					rawData[currentReadPacket->commandAddress][i] = 0;
+			}
+			else if (!currentReadPacket->HasData && currentReadPacket->numBytes == 0 && currentReadPacket->commandAddress == tabletAddress)
+			{
+				rawData[currentReadPacket->commandAddress][32] = 0;
+			}
+			else if (currentReadPacket->HasData && currentReadPacket->numBytes == 2 && currentReadPacket->commandAddress == 0x02) 
+			{
+      
+				if (currentReadPacket->data[0] == 0x7F && currentReadPacket->data[1] == 0x7F)
+				{
+					rawData[currentReadPacket->commandAddress][currentReadPacket->data[0] / 8] |= (1 << (currentReadPacket->data[0] % 8));
+				}
+				else if (currentReadPacket->data[0] == 0xFF && currentReadPacket->data[1] == 0xFF)
+				{
+					rawData[currentReadPacket->commandAddress][0x7F / 8] &= ~(1 << (0x7F % 8));
+				}
+				else
+				{
+					for (int i = 0; i < 2; ++i)
 					{
-						rawData[currentReadPacket->commandAddress][(currentReadPacket->data[i] & 0b01111111) / 8] &= ~(1 << ((currentReadPacket->data[i] & 0b01111111) % 8));
-					}
-					else if (currentReadPacket->data[i] != 0xFF)
-					{ 
-						rawData[currentReadPacket->commandAddress][currentReadPacket->data[i] / 8] |= (1 << (currentReadPacket->data[i] % 8));
+						if ((currentReadPacket->data[i] & 0b10000000) != 0 && currentReadPacket->data[i] != 0xFF)
+						{
+							rawData[currentReadPacket->commandAddress][(currentReadPacket->data[i] & 0b01111111) / 8] &= ~(1 << ((currentReadPacket->data[i] & 0b01111111) % 8));
+						}
+						else if (currentReadPacket->data[i] != 0xFF)
+						{ 
+							rawData[currentReadPacket->commandAddress][currentReadPacket->data[i] / 8] |= (1 << (currentReadPacket->data[i] % 8));
+						}
 					}
 				}
 			}
+		}
+		else
+		{
+			Serial.print(currentReadPacket->commandType, HEX);
+			Serial.print(" ");
+			Serial.print(currentReadPacket->commandAddress, HEX);
+			Serial.print(" ");
+			Serial.print(currentReadPacket->commandRegister, HEX);
+			Serial.print(" ");
+			Serial.print(currentReadPacket->syncTiming);
+			Serial.print(" ");
+			Serial.print(currentReadPacket->commandStop ? "S" : "-");
+			Serial.print(" ");
+			Serial.print(currentReadPacket->HasData ? "D" : "N");
+			Serial.print(" ");
+			Serial.print(currentReadPacket->dataStart ? "S" : "-");
+			Serial.print(" ");
+			Serial.print(currentReadPacket->numBytes, HEX);
+			Serial.print(" ");
+			Serial.print(currentReadPacket->count);
+			Serial.print(" ");
+			for (int j = 0; j < currentReadPacket->numBytes; ++j)
+			{
+				Serial.print(currentReadPacket->data[j], HEX);
+				Serial.print(" ");
+			}
+			Serial.println(currentReadPacket->dataStop ? "S" : "-");			
 		}
 #ifdef DEBUG
 		if (currentReadPacket->commandAddress == tabletAddress)
@@ -274,44 +304,47 @@ void PippinSpy::loop()
 			Serial.print("\n");        
 		}
 #else
-		Serial.write((currentReadPacket->commandAddress & 0x0F) << 4);
-		Serial.write(currentReadPacket->commandAddress & 0xF0);
-		if (currentReadPacket->commandAddress == controllerAddress || (currentReadPacket->commandAddress == 0x02 && lastMouseReportID == controllerAddress))
+		if (controllerAddress != mouseAddress)
 		{
-			lastMouseReportID = controllerAddress;
-			for (int j = 0; j < 27; ++j)
-				Serial.write(rawData[controllerAddress][j] == 0 ? 0 : 1);
-		}
-		else if (currentReadPacket->commandAddress == mouseAddress || (currentReadPacket->commandAddress == 0x02 && lastMouseReportID == mouseAddress))
-		{
-			lastMouseReportID = mouseAddress;
-			for (int j = 0; j < 16; ++j)
-				Serial.write(rawData[mouseAddress][j] == 0 ? 0 : 1);
-			for (int j = 16; j < 27; ++j)
-				Serial.write(rawData[controllerAddress][j] == 0 ? 0 : 1);
-		}
-		else if (currentReadPacket->commandAddress == joystickAddress)
-		{
-			for (int j = 0; j < 24; ++j)
-				Serial.write(rawData[joystickAddress][j] == 0 ? 0 : 1);
-			
-			Serial.write("\n");    
-		}
-		else if (currentReadPacket->commandAddress == tabletAddress)
-		{
-			for (int j = 0; j < 40; ++j)
-				Serial.write(rawData[tabletAddress][j] == 0 ? 0 : 1);			
-			Serial.write("\n");    
-		}		
-
-		if (currentReadPacket->commandAddress == 0x02 || currentReadPacket->commandAddress == mouseAddress || currentReadPacket->commandAddress == controllerAddress)
-		{
-			for (int i = 0; i < 16; ++i)
+			Serial.write((currentReadPacket->commandAddress & 0x0F) << 4);
+			Serial.write(currentReadPacket->commandAddress & 0xF0);
+			if (currentReadPacket->commandAddress == controllerAddress || (currentReadPacket->commandAddress == 0x02 && lastMouseReportID == controllerAddress))
 			{
-				Serial.write((rawData[0x02][i] & 0x0F) << 4);
-				Serial.write((rawData[0x02][i] & 0xF0));
+				lastMouseReportID = controllerAddress;
+				for (int j = 0; j < 27; ++j)
+					Serial.write(rawData[controllerAddress][j] == 0 ? 0 : 1);
 			}
-			Serial.write("\n");        
+			else if (currentReadPacket->commandAddress == mouseAddress || (currentReadPacket->commandAddress == 0x02 && lastMouseReportID == mouseAddress))
+			{
+				lastMouseReportID = mouseAddress;
+				for (int j = 0; j < 16; ++j)
+					Serial.write(rawData[mouseAddress][j] == 0 ? 0 : 1);
+				for (int j = 16; j < 27; ++j)
+					Serial.write(rawData[controllerAddress][j] == 0 ? 0 : 1);
+			}
+			else if (currentReadPacket->commandAddress == joystickAddress)
+			{
+				for (int j = 0; j < 24; ++j)
+					Serial.write(rawData[joystickAddress][j] == 0 ? 0 : 1);
+			
+				Serial.write("\n");    
+			}
+			else if (currentReadPacket->commandAddress == tabletAddress)
+			{
+				for (int j = 0; j < 40; ++j)
+					Serial.write(rawData[tabletAddress][j] == 0 ? 0 : 1);			
+				Serial.write("\n");    
+			}		
+
+			if (currentReadPacket->commandAddress == 0x02 || currentReadPacket->commandAddress == mouseAddress || currentReadPacket->commandAddress == controllerAddress)
+			{
+				for (int i = 0; i < 16; ++i)
+				{
+					Serial.write((rawData[0x02][i] & 0x0F) << 4);
+					Serial.write((rawData[0x02][i] & 0xF0));
+				}
+				Serial.write("\n");        
+			}
 		}
 #endif
 #endif
