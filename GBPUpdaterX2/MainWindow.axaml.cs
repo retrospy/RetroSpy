@@ -1206,7 +1206,7 @@ namespace GBPUpdaterX2
                 thread.Start();
             }
 
-            if (DeviceComboBox.SelectedIndex == 3)
+            if (DeviceComboBox.SelectedIndex == DeviceComboBox.ItemCount - 2)
             {
                 Thread thread = new(SerialDebuggerThread);
                 thread.Start();
