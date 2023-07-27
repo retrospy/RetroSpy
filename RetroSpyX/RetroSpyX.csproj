@@ -12,9 +12,9 @@
     <NeutralLanguage>en-US</NeutralLanguage> 
   </PropertyGroup>
 	<PropertyGroup>
-		<AssemblyVersion>6.3.1</AssemblyVersion>
-		<FileVersion>6.3.1</FileVersion>
-		<Version>6.3.1</Version>
+		<AssemblyVersion>6.3.2</AssemblyVersion>
+		<FileVersion>6.3.2</FileVersion>
+		<Version>6.3.2</Version>
 		<Copyright>Copyright © 2022</Copyright>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<UseWindowsForms>False</UseWindowsForms>
