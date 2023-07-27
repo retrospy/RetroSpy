@@ -27,7 +27,7 @@ echo Aborting release. Error during AnyCPU build.
 goto end
 
 :AnyCPUBuildgpbu
-"C:\Program Files\dotnet\dotnet.exe" build GBPUpdaterX2\GBPUpdaterX2.csproj /p:RuntimeIdentifier=win10-x86 /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=..\bin\Release\net7.0
+"C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\amd64\MSBuild.exe" GBPUpdaterX2\GBPUpdaterX2.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=..\bin\Release\net7.0
 
 if errorlevel 0 goto :MiSTer
 echo Aborting release. Error during AnyCPU build.
