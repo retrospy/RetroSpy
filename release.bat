@@ -35,7 +35,7 @@ if exist "..\..\..\GBP_Firmware\" (
   ..\sed -i "s/.*#define.*MODE_GAMEBOY_PRINTER/\/\/#define MODE_GAMEBOY_PRINTER/" sketches\firmware.ino
   if %ERRORLEVEL% NEQ 0 goto :fail
   del ..\..\..\..\GBP_Firmware\firmware.ino.hex
-  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\GBP_Firmware\firmware.ino.hex
+  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\GBP_Firmware\firmware.ino.hex
   if %ERRORLEVEL% NEQ 0 goto :fail
   cd ..
   if %ERRORLEVEL% NEQ 0 goto :fail
@@ -51,7 +51,7 @@ if exist "..\..\..\GBP_Firmware\" (
   ..\sed -i "s/.*#define.*MODE_GAMEBOY_PRINTER/\/\/#define MODE_GAMEBOY_PRINTER/" sketches\firmware.ino
   if %ERRORLEVEL% NEQ 0 goto :fail
   del ..\..\..\..\GBP_Firmware\firmware-old.ino.hex
-  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\GBP_Firmware\firmware-old.ino.hex
+  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\GBP_Firmware\firmware-old.ino.hex
   if %ERRORLEVEL% NEQ 0 goto :fail
   cd ..
   if %ERRORLEVEL% NEQ 0 goto :fail
@@ -67,7 +67,7 @@ if exist "..\..\..\Vision_Firmware\" (
   ..\sed -i "s/.*#define.*RS_VISION/\/\/#define RS_VISION/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
   del ..\..\..\..\Vision_Firmware\firmware.ino.hex
-  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Vision_Firmware\firmware.ino.hex
+  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\Vision_Firmware\firmware.ino.hex
   if %ERRORLEVEL% NEQ 0 goto :fail
   cd ..
   if %ERRORLEVEL% NEQ 0 goto :fail
@@ -83,7 +83,7 @@ if exist "..\..\..\Dream_Firmware\" (
   ..\sed -i "s/.*#define.*RS_VISION_DREAM/\/\/#define RS_VISION_DREAM/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
   del ..\..\..\..\Dream_Firmware\firmware.ino.hex
-  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Teensy_4_0\Release\firmware.ino.hex ..\..\..\..\Dream_Firmware\firmware.ino.hex
+  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Teensy_4_0\Release\firmware.ino.hex ..\..\..\..\Firmware\Dream_Firmware\firmware.ino.hex
   if %ERRORLEVEL% NEQ 0 goto :fail
   cd ..
   if %ERRORLEVEL% NEQ 0 goto :fail
@@ -99,7 +99,7 @@ if exist "..\..\..\CV_Firmware\" (
   ..\sed -i "s/.*#define.*RS_VISION_COLECOVISION/\/\/#define RS_VISION_COLECOVISION/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
   del ..\..\..\..\CV_Firmware\firmware.ino.hex
-  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\CV_Firmware\firmware.ino.hex
+  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\CV_Firmware\firmware.ino.hex
   if %ERRORLEVEL% NEQ 0 goto :fail
   cd ..
   if %ERRORLEVEL% NEQ 0 goto :fail
@@ -115,7 +115,7 @@ if exist "..\..\..\CDi_Firmware\" (
   ..\sed -i "s/.*#define.*RS_VISION_CDI/\/\/#define RS_VISION_CDI/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
   del ..\..\..\..\CDi_Firmware\firmware.ino.elf
-  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Raspberry_Pi_Pico\Release\firmware.ino.elf ..\..\..\..\CDi_Firmware\firmware.ino.elf
+  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Raspberry_Pi_Pico\Release\firmware.ino.elf ..\..\..\..\Firmware\CDi_Firmware\firmware.ino.elf
   if %ERRORLEVEL% NEQ 0 goto :fail
   cd ..
   if %ERRORLEVEL% NEQ 0 goto :fail
@@ -241,97 +241,97 @@ if "%sub%" == "1" (
 )
 copy MiSTer\Release\retrospy RetroSpy-Upload
 if %ERRORLEVEL% NEQ 0 goto :fail
-if exist "..\..\..\GBP_Firmware\" (
+if exist "..\..\..\Firmware\GBP_Firmware\" (
 del GBP_Firmware.zip
-"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\GBP_Firmware\avrdude.exe
+"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\Firmware\GBP_Firmware\avrdude.exe
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\GBP_Firmware\avrdude.conf
+"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\Firmware\GBP_Firmware\avrdude.conf
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\GBP_Firmware\firmware.ino.hex
+"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\Firmware\GBP_Firmware\firmware.ino.hex
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\GBP_Firmware\libusb0.dll
+"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\Firmware\GBP_Firmware\libusb0.dll
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\GBP_Firmware\avrdude
+"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\Firmware\GBP_Firmware\avrdude
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\GBP_Firmware\libusb-1.0.0.dylib
+"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\Firmware\GBP_Firmware\libusb-1.0.0.dylib
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\GBP_Firmware\libusb-0.1.4.dylib
+"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\Firmware\GBP_Firmware\libusb-0.1.4.dylib
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\GBP_Firmware\libftdi1.2.dylib
+"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\Firmware\GBP_Firmware\libftdi1.2.dylib
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\GBP_Firmware\libhidapi.0.dylib
+"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\Firmware\GBP_Firmware\libhidapi.0.dylib
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\GBP_Firmware\firmware-old.ino.hex
+"C:\Program Files\7-Zip\7z.exe" a GBP_Firmware.zip ..\..\..\Firmware\GBP_Firmware\firmware-old.ino.hex
 if %ERRORLEVEL% NEQ 0 goto :fail
 copy GBP_Firmware.zip RetroSpy-Upload
 if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
-if exist "..\..\..\Vision_Firmware\" (
+if exist "..\..\..\Firmware\Vision_Firmware\" (
 del Vision_Firmware.zip
-"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Vision_Firmware\avrdude.exe
+"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Firmware\Vision_Firmware\avrdude.exe
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Vision_Firmware\avrdude.conf
+"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Firmware\Vision_Firmware\avrdude.conf
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Vision_Firmware\firmware.ino.hex
+"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Firmware\Vision_Firmware\firmware.ino.hex
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Vision_Firmware\libusb0.dll
+"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Firmware\Vision_Firmware\libusb0.dll
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Vision_Firmware\avrdude
+"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Firmware\Vision_Firmware\avrdude
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Vision_Firmware\libusb-1.0.0.dylib
+"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Firmware\Vision_Firmware\libusb-1.0.0.dylib
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Vision_Firmware\libusb-0.1.4.dylib
+"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Firmware\Vision_Firmware\libusb-0.1.4.dylib
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Vision_Firmware\libftdi1.2.dylib
+"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Firmware\Vision_Firmware\libftdi1.2.dylib
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Vision_Firmware\libhidapi.0.dylib
+"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Firmware\Vision_Firmware\libhidapi.0.dylib
 if %ERRORLEVEL% NEQ 0 goto :fail
 copy Vision_Firmware.zip RetroSpy-Upload
 if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
-if exist "..\..\..\Dream_Firmware\" (
+if exist "..\..\..\Firmware\Dream_Firmware\" (
 del Dream_Firmware.zip
-"C:\Program Files\7-Zip\7z.exe" a Dream_Firmware.zip ..\..\..\Dream_Firmware\firmware.ino.hex
+"C:\Program Files\7-Zip\7z.exe" a Dream_Firmware.zip ..\..\..\Firmware\Dream_Firmware\firmware.ino.hex
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a Dream_Firmware.zip ..\..\..\Dream_Firmware\teensy_loader_cli.linux
+"C:\Program Files\7-Zip\7z.exe" a Dream_Firmware.zip ..\..\..\Firmware\Dream_Firmware\teensy_loader_cli.linux
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a Dream_Firmware.zip ..\..\..\Dream_Firmware\teensy_loader_cli.exe
+"C:\Program Files\7-Zip\7z.exe" a Dream_Firmware.zip ..\..\..\Firmware\Dream_Firmware\teensy_loader_cli.exe
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a Dream_Firmware.zip ..\..\..\Dream_Firmware\teensy_loader_cli.mac
+"C:\Program Files\7-Zip\7z.exe" a Dream_Firmware.zip ..\..\..\Firmware\Dream_Firmware\teensy_loader_cli.mac
 if %ERRORLEVEL% NEQ 0 goto :fail
 copy Dream_Firmware.zip RetroSpy-Upload
 if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
-if exist "..\..\..\CV_Firmware\" (
+if exist "..\..\..\Firmware\CV_Firmware\" (
 del CV_Firmware.zip
-"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\avrdude.exe
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\Firmware\CV_Firmware\avrdude.exe
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\avrdude.conf
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\Firmware\CV_Firmware\avrdude.conf
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\firmware.ino.hex
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\Firmware\CV_Firmware\firmware.ino.hex
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\libusb0.dll
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\Firmware\CV_Firmware\libusb0.dll
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\avrdude
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\Firmware\CV_Firmware\avrdude
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\libusb-1.0.0.dylib
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\Firmware\CV_Firmware\libusb-1.0.0.dylib
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\libusb-0.1.4.dylib
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\Firmware\CV_Firmware\libusb-0.1.4.dylib
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\libftdi1.2.dylib
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\Firmware\CV_Firmware\libftdi1.2.dylib
 if %ERRORLEVEL% NEQ 0 goto :fail
-"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\CV_Firmware\libhidapi.0.dylib
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\Firmware\CV_Firmware\libhidapi.0.dylib
 if %ERRORLEVEL% NEQ 0 goto :fail
 copy CV_Firmware.zip RetroSpy-Upload
 if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
-if exist "..\..\..\CDi_Firmware\" (
+if exist "..\..\..\Firmware\CDi_Firmware\" (
 del Dream_Firmware.zip
-"C:\Program Files\7-Zip\7z.exe" a CDi_Firmware.zip ..\..\..\CDi_Firmware\firmware.ino.elf
+"C:\Program Files\7-Zip\7z.exe" a CDi_Firmware.zip ..\..\..\Firmware\CDi_Firmware\firmware.ino.elf
 if %ERRORLEVEL% NEQ 0 goto :fail
 copy CDi_Firmware.zip RetroSpy-Upload
 if %ERRORLEVEL% NEQ 0 goto :fail
