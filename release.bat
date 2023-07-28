@@ -25,7 +25,7 @@ if %ERRORLEVEL% NEQ 0 goto :fail
 cd ..
 if %ERRORLEVEL% NEQ 0 goto :fail
 
-if exist "..\..\..\GBP_Firmware\" (
+if exist "..\..\..\Firmware\GBP_Firmware\" (
   cd firmware
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*\/\/#define.*MODE_GAMEBOY_PRINTER/#define MODE_GAMEBOY_PRINTER/" sketches\firmware.ino
@@ -41,7 +41,7 @@ if exist "..\..\..\GBP_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
-if exist "..\..\..\GBP_Firmware\" (
+if exist "..\..\..\Firmware\GBP_Firmware\" (
   cd firmware
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*\/\/#define.*MODE_GAMEBOY_PRINTER/#define MODE_GAMEBOY_PRINTER/" sketches\firmware.ino
@@ -57,7 +57,7 @@ if exist "..\..\..\GBP_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
-if exist "..\..\..\Vision_Firmware\" (
+if exist "..\..\..\Firmware\Vision_Firmware\" (
   cd firmware
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*\/\/#define.*RS_VISION$/#define RS_VISION/" sketches\common.h
@@ -73,7 +73,7 @@ if exist "..\..\..\Vision_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
-if exist "..\..\..\Dream_Firmware\" (
+if exist "..\..\..\Firmware\Dream_Firmware\" (
   cd firmware
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*\/\/#define.*RS_VISION_DREAM/#define RS_VISION_DREAM/" sketches\common.h
@@ -89,7 +89,7 @@ if exist "..\..\..\Dream_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
-if exist "..\..\..\CV_Firmware\" (
+if exist "..\..\..\Firmware\CV_Firmware\" (
   cd firmware
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*\/\/#define.*RS_VISION_COLECOVISION/#define RS_VISION_COLECOVISION/" sketches\common.h
@@ -105,7 +105,7 @@ if exist "..\..\..\CV_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
-if exist "..\..\..\CDi_Firmware\" (
+if exist "..\..\..\Firmware\CDi_Firmware\" (
   cd firmware
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*\/\/#define.*RS_VISION_CDI/#define RS_VISION_CDI/" sketches\common.h
