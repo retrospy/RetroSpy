@@ -110,7 +110,7 @@ security unlock-keychain -p "$keychain_password" /Users/zoggins/Library/Keychain
 find "RetroSpy.app/Contents/MacOS/"|while read fname; do
   if [[ -f $fname ]]; then
     echo "[INFO] Signing $fname"
-    codesign --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "$fname"
+    codesign --deep --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "$fname"
   fi
 done
 echo "[INFO] Signing app file"
@@ -119,7 +119,7 @@ codesign --force --verbose --timestamp --sign "$apple_teamid" --options=runtime 
 find "RetroSpy Pixel Viewer.app/Contents/MacOS/"|while read fname; do
   if [[ -f $fname ]]; then
     echo "[INFO] Signing $fname"
-    codesign --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "$fname"
+    codesign --deep --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "$fname"
   fi
 done
 echo "[INFO] Signing app file"
@@ -128,7 +128,7 @@ codesign --force --verbose --timestamp --sign "$apple_teamid" --options=runtime 
 find "RetroSpy Pixel Updater.app/Contents/MacOS/"|while read fname; do
   if [[ -f $fname ]]; then
     echo "[INFO] Signing $fname"
-    codesign --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "$fname"
+    codesign --deep --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "$fname"
   fi
 done
 echo "[INFO] Signing app file"
@@ -137,7 +137,7 @@ codesign --force --verbose --timestamp --sign "$apple_teamid" --options=runtime 
 find "RetroSpy Vision USB Updater.app/Contents/MacOS/"|while read fname; do
   if [[ -f $fname ]]; then
     echo "[INFO] Signing $fname"
-    codesign --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "$fname"
+    codesign --deep --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "$fname"
   fi
 done
 echo "[INFO] Signing app file"
