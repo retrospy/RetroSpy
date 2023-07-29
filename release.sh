@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 if [ -n "$1" ]; then
   export sub=1
 fi
@@ -9,140 +11,39 @@ rm -rf bin/Release/RetroSpy-Linux
 rm -rf RetroSpy-Linux.tar.gz
 
 dotnet publish RetroSpyX/RetroSpyX.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=../bin/Release/net7.0/ -r linux-x64 --self-contained
+dotnet publish GBPemuX/GBPemuX.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=../bin/Release/net7.0/ -r linux-x64 --self-contained
+dotnet publish GBPUpdaterX2/GBPUpdaterX2.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=../bin/Release/net7.0/ -r linux-x64 --self-contained     
+dotnet publish UsbUpdaterX2/UsbUpdaterX2.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=../bin/Release/net7.0/ -r linux-x64 --self-contained
 
-if [ $? -ne 0 ] 
-then 
-   echo "Aborting release. Error during RetroSpyX build."
+cd bin/Release
+mkdir RetroSpy-Linux
+mkdir RetroSpy-Linux/bin
+cp -r net7.0/publish/* RetroSpy-Linux/bin
+mv RetroSpy-Linux/bin/skins RetroSpy-Linux
+mv RetroSpy-Linux/bin/keybindings.xml RetroSpy-Linux
+mv RetroSpy-Linux/bin/game_palettes.cfg RetroSpy-Linux
+mkdir RetroSpy-Linux/MiSTer
+
+if [ "$sub" = "1" ]
+then
+  sed -e s/RELEASE_TAG/$1/g ../../MiSTer/update-retrospy-nightly.sh > RetroSpy-Linux/MiSTer/update-retrospy.sh
 else
-   dotnet publish GBPemuX/GBPemuX.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=../bin/Release/net7.0/ -r linux-x64 --self-contained
-   if [ $? -ne 0 ] 
-   then 
-     echo "Aborting release. Error during GBPemuX build."
-   else
-     dotnet publish GBPUpdaterX2/GBPUpdaterX2.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=../bin/Release/net7.0/ -r linux-x64 --self-contained
-     if [ $? -ne 0 ] 
-     then 
-       echo "Aborting release. Error during GBPUpdater build."
-     else
-       dotnet publish UsbUpdaterX2/UsbUpdaterX2.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=../bin/Release/net7.0/ -r linux-x64 --self-contained
-       if [ $? -ne 0 ] 
-       then 
-         echo "Aborting release. Error during GBPUpdater build."
-       else
-         cd bin/Release
-         if [ $? -ne 0 ]
-         then
-           exit 1;
-         fi
-	     mkdir RetroSpy-Linux
-         if [ $? -ne 0 ]
-         then
-           exit 1;
-         fi
-         mkdir RetroSpy-Linux/bin
-         if [ $? -ne 0 ]
-         then
-           exit 1;
-         fi
-         cp -r net7.0/publish/* RetroSpy-Linux/bin
-         if [ $? -ne 0 ]
-         then
-           exit 1;
-         fi
-         mv RetroSpy-Linux/bin/skins RetroSpy-Linux
-         if [ $? -ne 0 ]
-         then
-           exit 1;
-         fi
-         mv RetroSpy-Linux/bin/keybindings.xml RetroSpy-Linux
-         if [ $? -ne 0 ]
-         then
-           exit 1;
-         fi
-         mv RetroSpy-Linux/bin/game_palettes.cfg RetroSpy-Linux
-         if [ $? -ne 0 ]
-         then
-           exit 1;
-         fi
-         mkdir RetroSpy-Linux/MiSTer
-         if [ $? -ne 0 ]
-         then
-           exit 1;
-         fi
-
-         if [ "$sub" = "1" ]
-         then
-           sed -e s/RELEASE_TAG/$1/g ../../MiSTer/update-retrospy-nightly.sh > RetroSpy-Linux/MiSTer/update-retrospy.sh
-           if [ $? -ne 0 ]
-           then
-             exit 1;
-           fi
-         else
-           cp ../../MiSTer/update-retrospy.sh RetroSpy-Linux/MiSTer
-           if [ $? -ne 0 ]
-           then
-             exit 1;
-           fi
-         fi
-         dos2unix RetroSpy-Linux/MiSTer/update-retrospy.sh
-         if [ $? -ne 0 ]
-         then
-           exit 1;
-         fi
-
-         cp ../../LICENSE RetroSpy-Linux
-         if [ $? -ne 0 ]
-         then
-           exit 1;
-         fi
-	     mv RetroSpy-Linux/bin/RetroSpy RetroSpy-Linux/bin/retrospy
-         if [ $? -ne 0 ]
-         then
-           exit 1;
-         fi
-	     mv RetroSpy-Linux/bin/GBPemu RetroSpy-Linux/bin/pixelview
-         if [ $? -ne 0 ]
-         then
-           exit 1;
-         fi
-	     mv RetroSpy-Linux/bin/GBPUpdater RetroSpy-Linux/bin/pixelupdate
-         if [ $? -ne 0 ]
-         then
-           exit 1;
-         fi
-	     mv RetroSpy-Linux/bin/UsbUpdater RetroSpy-Linux/bin/visionusbupdate
-         if [ $? -ne 0 ]
-         then
-           exit 1;
-         fi
-         cp -aR net7.0/firmware RetroSpy-Linux/firmware
-         if [ $? -ne 0 ]
-         then
-           exit 1;
-         fi
-	     tar -zcvf ../../RetroSpy-Linux-x64.tar.gz RetroSpy-Linux
-         if [ $? -ne 0 ]
-         then
-           exit 1;
-         fi
-         if [ -d "/mnt/src/upload" ]
-         then
-           cp ../../RetroSpy-Linux-x64.tar.gz /mnt/src/upload  
-           if [ $? -ne 0 ]
-           then
-             exit 1;
-           fi
-         fi
-         cd ../..
-         if [ $? -ne 0 ]
-         then
-           exit 1;
-         fi
-         exit 0;
-	   fi
-     fi
-   fi
+  cp ../../MiSTer/update-retrospy.sh RetroSpy-Linux/MiSTer
 fi
+dos2unix RetroSpy-Linux/MiSTer/update-retrospy.sh
 
-exit 1;
+cp ../../LICENSE RetroSpy-Linux
+mv RetroSpy-Linux/bin/RetroSpy RetroSpy-Linux/bin/retrospy
+mv RetroSpy-Linux/bin/GBPemu RetroSpy-Linux/bin/pixelview
+mv RetroSpy-Linux/bin/GBPUpdater RetroSpy-Linux/bin/pixelupdate
+mv RetroSpy-Linux/bin/UsbUpdater RetroSpy-Linux/bin/visionusbupdate
+cp -aR net7.0/firmware RetroSpy-Linux/firmware
+tar -zcvf ../../RetroSpy-Linux-x64.tar.gz RetroSpy-Linux
+if [ -d "/mnt/src/upload" ]
+then
+  cp ../../RetroSpy-Linux-x64.tar.gz /mnt/src/upload  
+fi
+cd ../..
+
+exit 0;
 
