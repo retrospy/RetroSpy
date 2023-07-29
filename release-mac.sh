@@ -110,38 +110,38 @@ security unlock-keychain -p "$keychain_password" /Users/zoggins/Library/Keychain
 find "RetroSpy.app/Contents/MacOS/"|while read fname; do
   if [[ -f $fname ]]; then
     echo "[INFO] Signing $fname"
-    codesign --deep --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "$fname"
+    codesign --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "$fname"
   fi
 done
 echo "[INFO] Signing app file"
-codesign --deep --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist RetroSpy.app
+codesign --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist RetroSpy.app
 
 find "RetroSpy Pixel Viewer.app/Contents/MacOS/"|while read fname; do
   if [[ -f $fname ]]; then
     echo "[INFO] Signing $fname"
-    codesign --deep --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "$fname"
+    codesign --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "$fname"
   fi
 done
 echo "[INFO] Signing app file"
-codesign --deep --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "RetroSpy Pixel Viewer.app"
+codesign --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "RetroSpy Pixel Viewer.app"
 
 find "RetroSpy Pixel Updater.app/Contents/MacOS/"|while read fname; do
   if [[ -f $fname ]]; then
     echo "[INFO] Signing $fname"
-    codesign --deep --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "$fname"
+    codesign --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "$fname"
   fi
 done
 echo "[INFO] Signing app file"
-codesign --deep --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "RetroSpy Pixel Updater.app"
+codesign --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "RetroSpy Pixel Updater.app"
 
 find "RetroSpy Vision USB Updater.app/Contents/MacOS/"|while read fname; do
   if [[ -f $fname ]]; then
     echo "[INFO] Signing $fname"
-    codesign --deep --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "$fname"
+    codesign --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "$fname"
   fi
 done
 echo "[INFO] Signing app file"
-codesign --deep --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "RetroSpy Vision USB Updater.app"
+codesign --force --verbose --timestamp --sign "$apple_teamid" --options=runtime --entitlements ../../../entitlements.plist "RetroSpy Vision USB Updater.app"
 
 cd ..
 ditto -c --sequesterRsrc -k RetroSpy-macOS/ ../../RetroSpy-macOS.zip
@@ -193,7 +193,7 @@ fi
 
 rm -rf RetroSpyInstall
 
-codesign --deep --force --verbose --timestamp --sign "$apple_teamid" ../../RetroSpyInstall.dmg
+codesign --force --verbose --timestamp --sign "$apple_teamid" ../../RetroSpyInstall.dmg
 
 xcrun notarytool submit ../../RetroSpyInstall.dmg --wait --apple-id "$apple_username" --password "$apple_password" --team-id "$apple_teamid" --output-format json
 xcrun stapler staple ../../RetroSpyInstall.dmg
