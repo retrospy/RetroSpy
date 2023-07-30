@@ -25,6 +25,15 @@
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<ApplicationIcon>GBPUpdater.ico</ApplicationIcon>
 		<ResolveComReferenceSilent>true</ResolveComReferenceSilent>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
 	</PropertyGroup>
   <ItemGroup>
     <None Remove=".gitignore" />
