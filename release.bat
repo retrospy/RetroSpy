@@ -29,12 +29,12 @@ if exist "..\..\..\Firmware\GBP_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*\/\/#define.*MODE_GAMEBOY_PRINTER/#define MODE_GAMEBOY_PRINTER/" sketches\firmware.ino
   if %ERRORLEVEL% NEQ 0 goto :fail
-  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=arduino:avr:nano:cpu=atmega328 -build-path D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools "C:/Program Files (x86)/Arduino/hardware/tools/avr" -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
+  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=arduino:avr:nano:cpu=atmega328 -build-path D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools "C:/Program Files (x86)/Arduino/hardware/tools/avr" -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*#define.*MODE_GAMEBOY_PRINTER/\/\/#define MODE_GAMEBOY_PRINTER/" sketches\firmware.ino
   if %ERRORLEVEL% NEQ 0 goto :fail
   del ..\..\..\..\GBP_Firmware\firmware.ino.hex
-  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\GBP_Firmware\firmware.ino.hex
+  copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\GBP_Firmware\firmware.ino.hex
   if %ERRORLEVEL% NEQ 0 goto :fail
   cd ..
   if %ERRORLEVEL% NEQ 0 goto :fail
@@ -45,12 +45,12 @@ if exist "..\..\..\Firmware\GBP_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*\/\/#define.*MODE_GAMEBOY_PRINTER/#define MODE_GAMEBOY_PRINTER/" sketches\firmware.ino
   if %ERRORLEVEL% NEQ 0 goto :fail
-  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=arduino:avr:nano:cpu=atmega328old -build-path D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools "C:/Program Files (x86)/Arduino/hardware/tools/avr" -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
+  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=arduino:avr:nano:cpu=atmega328old -build-path D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools "C:/Program Files (x86)/Arduino/hardware/tools/avr" -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*#define.*MODE_GAMEBOY_PRINTER/\/\/#define MODE_GAMEBOY_PRINTER/" sketches\firmware.ino
   if %ERRORLEVEL% NEQ 0 goto :fail
   del ..\..\..\..\GBP_Firmware\firmware-old.ino.hex
-  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\GBP_Firmware\firmware-old.ino.hex
+  copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\GBP_Firmware\firmware-old.ino.hex
   if %ERRORLEVEL% NEQ 0 goto :fail
   cd ..
   if %ERRORLEVEL% NEQ 0 goto :fail
@@ -61,12 +61,12 @@ if exist "..\..\..\Firmware\Vision_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*\/\/#define.*RS_VISION$/#define RS_VISION/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
-  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=arduino:avr:nano:cpu=atmega328old -build-path D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools "C:/Program Files (x86)/Arduino/hardware/tools/avr" -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
+  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=arduino:avr:nano:cpu=atmega328old -build-path D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools "C:/Program Files (x86)/Arduino/hardware/tools/avr" -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*#define.*RS_VISION/\/\/#define RS_VISION/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
   del ..\..\..\..\Vision_Firmware\firmware.ino.hex
-  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\Vision_Firmware\firmware.ino.hex
+  copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\Vision_Firmware\firmware.ino.hex
   if %ERRORLEVEL% NEQ 0 goto :fail
   cd ..
   if %ERRORLEVEL% NEQ 0 goto :fail
@@ -77,12 +77,12 @@ if exist "..\..\..\Firmware\Dream_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*\/\/#define.*RS_VISION_DREAM/#define RS_VISION_DREAM/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
-  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=teensy:avr:teensy40:usb=serial,speed=816,opt=o3std,keys=en-us -build-path D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Teensy_4_0\Release -verbose -hardware "C:\Program Files (x86)\Arduino/hardware" -tools "C:\Program Files (x86)\Arduino/tools-builder" -tools "C:\Program Files (x86)\Arduino/hardware/tools/avr" -built-in-libraries "C:\Program Files (x86)\Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
+  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=teensy:avr:teensy40:usb=serial,speed=816,opt=o3std,keys=en-us -build-path D:\src\Repos\retrospy\RetroSpy\firmware\Output\Teensy_4_0\Release -verbose -hardware "C:\Program Files (x86)\Arduino/hardware" -tools "C:\Program Files (x86)\Arduino/tools-builder" -tools "C:\Program Files (x86)\Arduino/hardware/tools/avr" -built-in-libraries "C:\Program Files (x86)\Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*#define.*RS_VISION_DREAM/\/\/#define RS_VISION_DREAM/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
   del ..\..\..\..\Dream_Firmware\firmware.ino.hex
-  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Teensy_4_0\Release\firmware.ino.hex ..\..\..\..\Firmware\Dream_Firmware\firmware.ino.hex
+  copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Teensy_4_0\Release\firmware.ino.hex ..\..\..\..\Firmware\Dream_Firmware\firmware.ino.hex
   if %ERRORLEVEL% NEQ 0 goto :fail
   cd ..
   if %ERRORLEVEL% NEQ 0 goto :fail
@@ -93,12 +93,12 @@ if exist "..\..\..\Firmware\CV_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*\/\/#define.*RS_VISION_COLECOVISION/#define RS_VISION_COLECOVISION/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
-  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=arduino:avr:nano:cpu=atmega328old -build-path D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools "C:/Program Files (x86)/Arduino/hardware/tools/avr" -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
+  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=arduino:avr:nano:cpu=atmega328old -build-path D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools "C:/Program Files (x86)/Arduino/hardware/tools/avr" -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*#define.*RS_VISION_COLECOVISION/\/\/#define RS_VISION_COLECOVISION/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
   del ..\..\..\..\CV_Firmware\firmware.ino.hex
-  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\CV_Firmware\firmware.ino.hex
+  copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\CV_Firmware\firmware.ino.hex
   if %ERRORLEVEL% NEQ 0 goto :fail
   cd ..
   if %ERRORLEVEL% NEQ 0 goto :fail
@@ -109,12 +109,12 @@ if exist "..\..\..\Firmware\CDi_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*\/\/#define.*RS_VISION_CDI/#define RS_VISION_CDI/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
-  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=rp2040:rp2040:rpipico:flash=2097152_0,freq=250,opt=Optimize3,rtti=Disabled,stackprotect=Disabled,exceptions=Disabled,dbgport=Disabled,dbglvl=None,usbstack=picosdk,ipbtstack=ipv4only,uploadmethod=default -build-path D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Raspberry_Pi_Pico\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -hardware C:\Users\Administrator\AppData\Local/Arduino15/packages -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools C:\Users\Administrator\AppData\Local/Arduino15/packages -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.pqt-gcc.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-gcc\1.5.0-b-c7bab52 -prefs=runtime.tools.pqt-python3.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-python3\1.0.1-base-3a57aed -prefs=runtime.tools.pqt-elf2uf2.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-elf2uf2\1.5.0-b-c7bab52 -prefs=runtime.tools.pqt-openocd.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-openocd\1.5.0-b-c7bab52 -prefs=runtime.tools.pqt-picotool.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-picotool\1.5.0-b-03f2812 -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
+  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=rp2040:rp2040:rpipico:flash=2097152_0,freq=250,opt=Optimize3,rtti=Disabled,stackprotect=Disabled,exceptions=Disabled,dbgport=Disabled,dbglvl=None,usbstack=picosdk,ipbtstack=ipv4only,uploadmethod=default -build-path D:\src\Repos\retrospy\RetroSpy\firmware\Output\Raspberry_Pi_Pico\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -hardware C:\Users\Administrator\AppData\Local/Arduino15/packages -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools C:\Users\Administrator\AppData\Local/Arduino15/packages -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.pqt-gcc.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-gcc\1.5.0-b-c7bab52 -prefs=runtime.tools.pqt-python3.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-python3\1.0.1-base-3a57aed -prefs=runtime.tools.pqt-elf2uf2.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-elf2uf2\1.5.0-b-c7bab52 -prefs=runtime.tools.pqt-openocd.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-openocd\1.5.0-b-c7bab52 -prefs=runtime.tools.pqt-picotool.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-picotool\1.5.0-b-03f2812 -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*#define.*RS_VISION_CDI/\/\/#define RS_VISION_CDI/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
   del ..\..\..\..\CDi_Firmware\firmware.ino.elf
-  copy D:\pub\src\Repos\retrospy\RetroSpy\firmware\Output\Raspberry_Pi_Pico\Release\firmware.ino.elf ..\..\..\..\Firmware\CDi_Firmware\firmware.ino.elf
+  copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Raspberry_Pi_Pico\Release\firmware.ino.elf ..\..\..\..\Firmware\CDi_Firmware\firmware.ino.elf
   if %ERRORLEVEL% NEQ 0 goto :fail
   cd ..
   if %ERRORLEVEL% NEQ 0 goto :fail
