@@ -76,7 +76,8 @@ enum VideoOutputType {
 
 #ifdef RS_VISION_PIPPIN
 #define TP_TIMERONE
-#endif
+#endif
+
 
 // Uncomment these to enable 3rd party libraries once installed
 //#define TP_IRREMOTE               // Used by MODE_CDI & MODE_CDTV_WIRELESS
