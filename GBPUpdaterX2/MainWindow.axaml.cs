@@ -376,7 +376,19 @@ namespace GBPUpdaterX2
             }
         }
 
-        public MainWindow()
+        public enum Devices
+        { 
+            PIXEL = 0,
+            VISION,
+            VISION_DREAM,
+            VISION_CDI,
+            VISION_COLECO,
+            VISION_PIPPIN,
+            SERIAL_DEBUG
+        }
+
+
+    public MainWindow()
         {
             InitializeComponent();
 
@@ -420,7 +432,7 @@ namespace GBPUpdaterX2
 
         private void DeviceSelectComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
         {
-            if (DeviceComboBox.SelectedIndex == 0)
+            if (DeviceComboBox.SelectedIndex == ((int)Devices.PIXEL))
             {
                 SerialNumberLabel.IsVisible = true;
                 txtboxSerialNumber.IsVisible = true;
@@ -431,7 +443,9 @@ namespace GBPUpdaterX2
                 txtboxSerialNumber.IsVisible = false;
             }
 
-            if (DeviceComboBox.SelectedIndex > 0 &&  DeviceComboBox.SelectedIndex < 7)
+            if (DeviceComboBox.SelectedIndex == ((int)Devices.VISION) || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_DREAM)
+                || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_COLECO) || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_PIPPIN)
+                || DeviceComboBox.SelectedIndex == ((int)Devices.SERIAL_DEBUG))
             {
                 COMPortComboBox.SelectedIndex = 0;
                 COMPortLabel.IsVisible = true;
@@ -443,7 +457,7 @@ namespace GBPUpdaterX2
                 COMPortComboBox.IsVisible = false;
             }
 
-            if (DeviceComboBox.SelectedIndex == 4)
+            if (DeviceComboBox.SelectedIndex == ((int)Devices.VISION_COLECO))
             {
                 COMPortComboBox2.SelectedIndex = 0;
                 COMPortComboBox2.IsVisible = true;
@@ -455,6 +469,7 @@ namespace GBPUpdaterX2
             {
                 COMPortComboBox2.IsVisible = false;
                 txtboxData.Margin = new Thickness(10, 55, 5, 0);
+                COMPortLabel2.IsVisible = false;
             }
         }
 
