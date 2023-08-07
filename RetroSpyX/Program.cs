@@ -26,7 +26,8 @@ namespace RetroSpy
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && disableGPU)
                 return AppBuilder.Configure<App>()
-                    .UsePlatformDetect().With(new Win32PlatformOptions { RenderingMode = new List<Win32RenderingMode> { Win32RenderingMode.Software } })
+                    .UsePlatformDetect()
+                    .With(new Win32PlatformOptions { RenderingMode = new List<Win32RenderingMode> { Win32RenderingMode.Software } })
                     .LogToTrace();
             else
                 return AppBuilder.Configure<App>()
