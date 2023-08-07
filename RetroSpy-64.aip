@@ -1,4 +1,4 @@
-[Setup]
+﻿[Setup]
 AIVersion=9.3
 AIEdition=0
 GUID={664FB1C2-C4B5-4970-B5C9-8D49236CB416}
@@ -163,6 +163,7 @@ LogoTransparent=0
 9=<ProgramGroup>*?RetroSpy Pixel Updater*?<InstallDir>\GBPUpdater.exe*?*?*?<InstallDir>*?*?0*?Normal*?No
 10=<ProgramGroup>*?Uninstall <AppName>*?<InstallDir>\Uninstall.exe*?*?*?<InstallDir>*?*?0*?Normal*?No
 11=<Desktop>*?<AppName>*?<InstallDir>\RetroSpy.exe*?*?*?<InstallDir>*?*?0*?Normal*?No
+12=<ProgramGroup>*?RetroSpy (No GPU)*?<InstallDir>RetroSpy.exe*?*?DisableGPU*?<InstallDir>*?*?0*?Normal*?No
 
 [Commands]
 0=<InstallDir>\drivers\dpinst-amd64.exe*?*?Normal*?After Installation*?Yes*?64-bit*?Yes
