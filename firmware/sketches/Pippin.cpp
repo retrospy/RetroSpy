@@ -454,6 +454,9 @@ void PippinSpy::updateState() {}
 
 void PippinSpy::setup(byte controllerAddress, byte mouseAddress)
 {
+	for (int i = 3; i < 11; ++i)
+		pinMode(i, INPUT_PULLUP);
+	
 	for (int i = 0; i < 27; ++i)
 	{
 		rawData[controllerAddress][i] = 1;
