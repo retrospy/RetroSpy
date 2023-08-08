@@ -146,7 +146,7 @@ void PippinSpy::loop()
 		Serial.println(currentReadPacket->dataStop ? "S" : "-");
 		
 #else
-		if (controllerAddress != mouseAddress)
+		if (initialControllerAddress != initialMouseAddress)
 		{
 			if (currentReadPacket->HasData && currentReadPacket->numBytes == 4 && currentReadPacket->commandAddress != 0x02) 
 			{
@@ -304,7 +304,7 @@ void PippinSpy::loop()
 			Serial.print("\n");        
 		}
 #else
-		if (controllerAddress != mouseAddress)
+		if (initialControllerAddress != initialMouseAddress)
 		{
 			Serial.write((currentReadPacket->commandAddress & 0x0F) << 4);
 			Serial.write(currentReadPacket->commandAddress & 0xF0);
@@ -465,8 +465,8 @@ void PippinSpy::setup(byte controllerAddress, byte mouseAddress)
 	}
 	
 	lastMouseReportID = controllerAddress;
-	this->controllerAddress = controllerAddress;
-	this->mouseAddress = mouseAddress;
+	initialControllerAddress = this->controllerAddress = controllerAddress;
+	initialMouseAddress = this->mouseAddress = mouseAddress;
 	pinMode(ADB_PIN, INPUT_PULLUP);
 	attachInterrupt(digitalPinToInterrupt(ADB_PIN), adbStateChanged, CHANGE);
 	Timer1.initialize(10000);
@@ -480,9 +480,9 @@ const char* PippinSpy::startupMsg()
 {
 	char itoaBuff[10];
 	strcpy(startupBuffer, "Pippin (");
-	strcat(startupBuffer, itoa(controllerAddress, itoaBuff, 16));
+	strcat(startupBuffer, itoa(initialControllerAddress, itoaBuff, 16));
 	strcat(startupBuffer, ",");
-	strcat(startupBuffer, itoa(mouseAddress, itoaBuff, 16));
+	strcat(startupBuffer, itoa(initialMouseAddress, itoaBuff, 16));
 	strcat(startupBuffer, ")");
 	return startupBuffer;
 }
