@@ -699,9 +699,14 @@
     <None Remove="skins\Tron-V2 with D-Pad\X fill.png" />
     <None Remove="skins\Tron-V2 with D-Pad\Y fill.png" />
     <None Remove="skins\Tron-V2 with D-Pad\Z fill.png" />
+    <None Remove="skins\vflash-controller\circle.png" />
+    <None Remove="skins\vflash-controller\skin.xml" />
+    <None Remove="skins\vflash-controller\vflash-background.png" />
+    <None Remove="skins\vflash-controller\vflash-knob.png" />
     <None Remove="skins\virtualboy-default\circle.png" />
     <None Remove="skins\virtualboy-default\skin.xml" />
     <None Remove="skins\virtualboy-default\VBcontroller.png" />
+    <None Remove="skins\vsmile-controller\circle.png" />
     <None Remove="skins\wii-classic\circle.png" />
     <None Remove="skins\wii-classic\classic.png" />
     <None Remove="skins\wii-classic\disconnect.png" />
@@ -2509,6 +2514,18 @@
     <Content Include="skins\Tron-V2 with D-Pad\Z fill.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="skins\vflash-controller\circle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="skins\vflash-controller\skin.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="skins\vflash-controller\vflash-background.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="skins\vflash-controller\vflash-knob.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="skins\virtualboy-default\circle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2518,6 +2535,7 @@
     <Content Include="skins\virtualboy-default\VBcontroller.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="skins\vsmile-controller\circle.png" />
     <Content Include="skins\wii-classic\circle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
