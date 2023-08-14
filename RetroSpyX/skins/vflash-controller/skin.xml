@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin name="V.Flash Controller" author="zoggins" type="vflash">
+
+    <background name="Default" image="vflash-background.png" />
+
+    <button name="blue" image="circle.png" x="591" y="233" width="48" height="48" />
+    <button name="green" image="circle.png" x="634" y="181" width="48" height="48" />
+    <button name="red" image="circle.png" x="536" y="181" width="48" height="48" />
+    <button name="yellow" image="circle.png" x="591" y="126" width="48" height="48" />
+
+    <button name="enter" image="circle.png" x="345" y="86" width="75" height="40" />
+
+    <button name="help"    image="circle.png" x="275" y="34" width="48" height="48" />
+    <button name="menu"  image="circle.png" x="361" y="22" width="48" height="48" />
+    <button name="exit"  image="circle.png" x="447" y="26" width="48" height="48" />
+	
+	<button name="stick"  image="circle.png" x="82" y="147" width="150" height="150" />
+
+	<button name="l"  image="circle.png" x="100" y="16" width="48" height="48" />
+	<button name="r"  image="circle.png" x="599" y="3" width="48" height="48" />
+
+    <button name="a"    image="circle.png" x="286" y="288" width="48" height="48" />
+    <button name="b"  image="circle.png" x="345" y="297" width="48" height="48" />
+    <button name="c"  image="circle.png" x="405" y="293" width="48" height="48" />
+	<button name="d"  image="circle.png" x="465" y="283" width="48" height="48" />
+
+    <stick xname="lstick_x" yname="lstick_y" image="vflash-knob.png"
+           x="100" y="165" width="114" height="114" xrange="20" yrange="20" />
+
+</skin>
