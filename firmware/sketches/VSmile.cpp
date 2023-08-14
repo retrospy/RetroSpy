@@ -86,9 +86,9 @@ void VSmileSpy::debugSerial() {
 }
 
 void VSmileSpy::updateState() {
-	if (Serial1.available())
+	if (Serial2.available())
 	{
-		char c = Serial1.read();
+		char c = Serial2.read();
 		if ((c & 0b11110000) == 0b11000000)
 		{
 			x = (c & 0b00001111);
@@ -136,9 +136,9 @@ void VSmileSpy::updateState() {
 			}
 		}
 	}
-	if (Serial2.available())
+	if (Serial1.available())
 	{
-		char c = Serial2.read();
+		char c = Serial1.read();
 		if ((c & 0b11110000) == 0b01100000)
 		{
 			redButton = ((c & 0b00001000) != 0) ? true : false;

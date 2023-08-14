@@ -70,7 +70,7 @@ FASTRUN void NuonSpy::debugSerial()
 	Serial.print(waitTmp);
 	Serial.print("|");
 	Serial.print(tmp);
-	Serial.print("\n"); 
+	Serial.println(); 
 }
 
 FASTRUN void NuonSpy::updateState()
