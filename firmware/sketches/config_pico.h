@@ -44,4 +44,8 @@
 #define CDI_SENDSER				11
 #define CDI_SENDSER_1			12
 
+#define CD32_LATCH    5
+#define CD32_DATA     7
+#define CD32_CLOCK    6
+
 #define FASTRUN

@@ -33,6 +33,7 @@ class AmigaCd32Spy : public ControllerSpy {
 public:
 	void setup();
 	void loop();
+	void loop1();
 	void writeSerial();
 	void debugSerial();
 	void updateState();
@@ -40,7 +41,9 @@ public:
 	virtual const char* startupMsg();
 
 private:
+	bool	  sendRequest = false;
 	byte      rawData[16000];
+	byte	  sendData[9];
 };
 
 #endif

@@ -26,8 +26,18 @@
 
 #include "AmigaCd32.h"
 
-#if defined(__arm__) && defined(CORE_TEENSY) && defined(ARDUINO_TEENSY35)
+#if defined(__arm__) && defined(CORE_TEENSY) && defined(ARDUINO_TEENSY35) || (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
+
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#define READ_PINS gpio_get_all()
+#define READB_PINS (gpio_get_all() >> 8)
+#elif defined(__arm__) && defined(CORE_TEENSY) && defined(ARDUINO_TEENSY35)
+#define READ_PINS GPIOD_PDIR
+#define READB_PINS GPIOB_PDIR
+#endif
+
 void AmigaCd32Spy::setup() {
+#if defined(ARDUINO_TEENSY35)
 	// GPIOD_PDIR & 0xFF;
 	pinMode(2, INPUT_PULLUP);
 	pinMode(14, INPUT_PULLUP);
@@ -43,23 +53,56 @@ void AmigaCd32Spy::setup() {
 	pinMode(17, INPUT_PULLUP);
 	pinMode(19, INPUT_PULLUP);
 	pinMode(18, INPUT_PULLUP);
+#else	pinMode(0, INPUT_PULLUP);
+	pinMode(1, INPUT_PULLUP);
+	pinMode(2, INPUT_PULLUP);
+	pinMode(3, INPUT_PULLUP);
+	pinMode(4, INPUT_PULLUP);
+	pinMode(5, INPUT);
+	pinMode(6, INPUT_PULLUP);
+	pinMode(7, INPUT);
+
+	// GPIOB_PDIR & 0xF;
+	pinMode(8, INPUT_PULLUP);
+	pinMode(9, INPUT_PULLUP);
+	pinMode(10, INPUT_PULLUP);
+	pinMode(11, INPUT_PULLUP);
+#endif
 }
 
-void AmigaCd32Spy::loop() {
+void AmigaCd32Spy::loop1() 
+{
+	while (sendRequest)
+	{
+	}
 	noInterrupts();
 	updateState();
+	sendRequest = true;
 	interrupts();
-#if !defined(DEBUG)
-	writeSerial();
-#else
-	debugSerial();
+}
+
+void AmigaCd32Spy::loop() 
+{
+#if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
+	loop1();
 #endif
-	delay(5);
+
+	if (sendRequest)
+	{
+		memcpy(sendData, rawData, 9);
+		sendRequest = false;
+#ifdef DEBUG
+		debugSerial();
+#else
+		writeSerial();
+#endif
+		T_DELAY(5);
+	}
 }
 
 void AmigaCd32Spy::writeSerial() {
 	for (unsigned char i = 0; i < 9; i++) {
-		Serial.write((rawData[i] & 0b11111101));
+		Serial.write((sendData[i] & 0b11111101));
 	}
 	Serial.write(SPLIT);
 }
@@ -67,29 +110,29 @@ void AmigaCd32Spy::writeSerial() {
 void AmigaCd32Spy::debugSerial() {
 	for (unsigned char i = 1; i < 8; i++)
 	{
-		Serial.print((rawData[i] & 0b10000000) == 0 ? 0 : 1);
+		Serial.print((sendData[i] & 0b10000000) == 0 ? 0 : 1);
 	}
-	Serial.print((rawData[8] & 0b00000001) == 0 ? 0 : 1);
-	Serial.print((rawData[0] & 0b00000100) == 0 ? 0 : 1);
-	Serial.print((rawData[0] & 0b00001000) == 0 ? 0 : 1);
-	Serial.print((rawData[0] & 0b00010000) == 0 ? 0 : 1);
-	Serial.print("\n");
+	Serial.print((sendData[8] & 0b00000001) == 0 ? 0 : 1);
+	Serial.print((sendData[0] & 0b00000100) == 0 ? 0 : 1);
+	Serial.print((sendData[0] & 0b00001000) == 0 ? 0 : 1);
+	Serial.print((sendData[0] & 0b00010000) == 0 ? 0 : 1);
+	Serial.println();
 }
 
 void AmigaCd32Spy::updateState() {
 	WAIT_FALLING_EDGE(CD32_LATCH);
-	rawData[1] = (GPIOD_PDIR & 0xFF);
+	rawData[1] = (READ_PINS & 0xFF);
 
 	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
 
 	for (int i = 2; i < 8; ++i)
 	{
 		WAIT_FALLING_EDGE(CD32_CLOCK);
-		rawData[i] = (GPIOD_PDIR & 0xFF);
+		rawData[i] = (READ_PINS & 0xFF);
 	}
 
-	rawData[0] = (GPIOD_PDIR & 0xFF);
-	rawData[8] = (GPIOB_PDIR & 0xFF);
+	rawData[0] = (byte)(READ_PINS & 0xFF);
+	rawData[8] = (byte)(READB_PINS & 0xFF);
 }
 #else
 void AmigaCd32Spy::setup() {
