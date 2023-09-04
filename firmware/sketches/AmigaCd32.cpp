@@ -53,7 +53,8 @@ void AmigaCd32Spy::setup() {
 	pinMode(17, INPUT_PULLUP);
 	pinMode(19, INPUT_PULLUP);
 	pinMode(18, INPUT_PULLUP);
-#else	pinMode(0, INPUT_PULLUP);
+#else
+	pinMode(0, INPUT_PULLUP);
 	pinMode(1, INPUT_PULLUP);
 	pinMode(2, INPUT_PULLUP);
 	pinMode(3, INPUT_PULLUP);
