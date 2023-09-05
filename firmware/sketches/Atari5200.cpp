@@ -43,9 +43,7 @@ static volatile int count = 0;
 
 static byte rawData[17];
 
-#if defined(ATARI5200_ADC_INT_HANDLER)
-// Interrupt service routine for the ADC completion
-ISR(ADC_vect)
+void Atari5200ADCInt()
 {
 	// Must read low first
 	analogVal = ADCL | (ADCH << 8);
@@ -66,6 +64,13 @@ ISR(ADC_vect)
 	// Not needed because free-running mode is enabled.
 	// Set ADSC in ADCSRA (0x7A) to start another ADC conversion
 	// ADCSRA |= B01000000;
+}
+
+#if defined(ATARI5200_ADC_INT_HANDLER)
+// Interrupt service routine for the ADC completion
+ISR(ADC_vect)
+{
+	Atari5200ADCInt();
 }
 #endif
 

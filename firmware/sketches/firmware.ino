@@ -151,6 +151,10 @@ bool CreateSpy();
 ControllerSpy* currentSpy = NULL;
 bool muteStartupMessage;
 
+#ifdef VISION_ANALOG_ADC_INT_HANDLER
+extern byte adcint_mode;
+#endif
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // General initialization, just sets all pins to input and starts serial communication.
 void setup()
@@ -242,6 +246,15 @@ byte ReadAnalog()
 }
 #endif
 
+#if defined(VISION_ANALOG_ADC_INT_HANDLER) && (defined(RS_VISION_ANALOG_1) || defined(RS_VISION_ANALOG_2))
+byte ReadAnalog()
+{
+	adcint_mode = (~PINC & 0b00111110) >> 1;
+	
+	return adcint_mode;
+}
+#endif
+
 #if defined(RS_VISION_CDI)
 byte ReadAnalog()
 {
@@ -250,6 +263,21 @@ byte ReadAnalog()
 	for (int i = 0; i < 4; ++i)
 	{
 		if (digitalRead(21 - i) == LOW)
+			retVal |= (1 << i);
+	}
+	
+	return retVal;
+}
+#endif 
+
+#if defined(RS_VISION_FLEX)
+byte ReadAnalog()
+{
+	byte retVal = 0x00;
+	
+	for (int i = 0; i < 6; ++i)
+	{
+		if (digitalRead(16 + i) == LOW)
 			retVal |= (1 << i);
 	}
 	
@@ -482,6 +510,53 @@ bool CreateSpy()
 	currentSpy = new PippinSpy();
 	((PippinSpy*)currentSpy)->setup(controllerAddress, mouseAddress);
 	customSetup = true;
+#elif defined(RS_VISION_ANALOG_1)
+	switch (ReadAnalog())
+	{
+	case 0x00:
+		currentSpy = new AtariPaddlesSpy();
+		break;
+	case 0x01:
+		currentSpy = new AmigaAnalogSpy();
+		((AmigaAnalogSpy*)currentSpy)->setup(false);
+		customSetup = true;
+		break;	
+	case 0x02:
+		currentSpy = new Atari5200Spy();
+		((Atari5200Spy*)currentSpy)->setup(false);
+		customSetup = true;
+		break;	
+	}
+#elif defined(RS_VISION_ANALOG_2)
+	switch (ReadAnalog())
+	{
+	case 0x00:
+		currentSpy = new AtariPaddlesSpy();
+		break;
+	case 0x01:
+		currentSpy = new AmigaAnalogSpy();
+		((AmigaAnalogSpy*)currentSpy)->setup(true);
+		customSetup = true;
+		break;	
+	case 0x02:
+		currentSpy = new Atari5200Spy();
+		((Atari5200Spy*)currentSpy)->setup(true);
+		customSetup = true;
+		break;	
+	}
+#elif defined(RS_VISION_FLEX)
+	switch (ReadAnalog())
+	{
+	case 0x00:
+		currentSpy = new SNESSpy();
+		break;
+	case 0x01:
+		currentSpy = new WiiSpy();
+		break;	
+	case 0x02:
+		currentSpy = new AmigaCd32Spy();
+		break;	
+	}
 #elif defined(MODE_DETECT)
 	if (!PINC_READ(MODEPIN_SNES))
 		currentSpy = new SNESSpy;

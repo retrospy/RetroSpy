@@ -38,10 +38,31 @@ static volatile int readFlag;
 static int window[3];
 static int windowPosition = 0;
 
-#if defined(ATARIPADDLES_ADC_INT_HANDLER)
+#ifdef VISION_ANALOG_ADC_INT_HANDLER
+byte adcint_mode = 0;
+
+extern void PaddlesADCInt();
+extern void AmigaAnalogADCInt();
+extern void Atari5200ADCInt();
 ISR(ADC_vect)
 {
-	
+	switch (adcint_mode)
+	{	
+	case 0x00:
+		PaddlesADCInt();
+		break;
+	case 0x01:
+		AmigaAnalogADCInt();
+		break;
+	case 0x03:
+		Atari5200ADCInt();
+		break;
+	}
+}
+#endif
+
+void PaddlesADCInt()
+{
 	// Must read low first
 	analogVal = ADCL | (ADCH << 8);
 
@@ -59,6 +80,12 @@ ISR(ADC_vect)
 	// Not needed because free-running mode is enabled.
 	// Set ADSC in ADCSRA (0x7A) to start another ADC conversion
 	// ADCSRA |= B01000000;
+}
+
+#if defined(ATARIPADDLES_ADC_INT_HANDLER)
+ISR(ADC_vect)
+{
+	ADCInt();
 }
 #endif
 
