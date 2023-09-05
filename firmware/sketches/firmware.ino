@@ -178,6 +178,8 @@ void setup()
 #elif defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 	pinMode(MODEPIN_SNES, INPUT_PULLUP);
 	pinMode(MODEPIN_WII, INPUT_PULLUP);
+	for (int i = 16; i < 22; ++i)
+		pinMode(i, INPUT_PULLUP);
 #elif defined(RS_VISION)
 	for (int i = A0; i <= A7; ++i)
 		pinMode(i, INPUT_PULLUP);
@@ -192,6 +194,8 @@ void setup()
 	Serial.begin(115200);
 #endif
 
+	while (!Serial) ; 
+	
 	if (!CreateSpy() && currentSpy != NULL)	
 	{
 		currentSpy->setup();
@@ -633,7 +637,7 @@ bool CreateSpy()
 #elif defined(MODE_WII)
 	currentSpy = new WiiSpy();
 #elif defined(MODE_CD32)
-	currentSpy = new Cd32Spy();
+	currentSpy = new AmigaCd32Spy();
 #elif defined(MODE_DRIVING_CONTROLLER)
 	currentSpy = new DrivingControllerSpy();
 #elif defined(MODE_PIPPIN)

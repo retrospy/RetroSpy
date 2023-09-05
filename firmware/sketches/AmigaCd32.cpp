@@ -121,15 +121,22 @@ void AmigaCd32Spy::debugSerial() {
 }
 
 void AmigaCd32Spy::updateState() {
-	WAIT_FALLING_EDGE(CD32_LATCH);
-	rawData[1] = (READ_PINS & 0xFF);
 
-	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
+	//WAIT_FALLING_EDGE(CD32_LATCH)
+	while (!PIN_READ(CD32_LATCH)) ;
+	do 
+	{ 
+		rawData[1] = (READ_PINS & 0xFF); 
+	} while ((rawData[1] & (1 << CD32_LATCH)) != 0);
 
 	for (int i = 2; i < 8; ++i)
 	{
-		WAIT_FALLING_EDGE(CD32_CLOCK);
-		rawData[i] = (READ_PINS & 0xFF);
+		//WAIT_FALLING_EDGE_CD32(CD32_CLOCK)
+		while (!PIN_READ(CD32_CLOCK));
+		do 
+		{ 
+			rawData[i] = (READ_PINS & 0xFF); 
+		} while ((rawData[i] & (1 << CD32_CLOCK)) != 0);
 	}
 
 	rawData[0] = (byte)(READ_PINS & 0xFF);
