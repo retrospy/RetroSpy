@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 #include "GC.h"
+#include <elapsedMillis.h>
 
 #if (defined(__arm__) && defined(CORE_TEENSY) && (defined(ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41))) || (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
 static int show = 0;

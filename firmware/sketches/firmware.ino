@@ -584,14 +584,20 @@ bool CreateSpy()
 		currentSpy = new Saturn3DSpy();
 		break;
 	case 0x0A:
-		currentSpy = new PlayStationSpy();
+		currentSpy = new DreamcastSpy();
 		break;
 	case 0x0B:
-		currentSpy = new GBASpy();
+		currentSpy = new PlayStationSpy();
 		break;
 	case 0x0C:
+		currentSpy = new GBASpy();
+		break;
+	case 0x0D:
 		currentSpy = new AmigaCd32Spy();
-		break;	
+		break;
+	case 0x0E:
+		currentSpy = new FMTownsKeyboardAndMouseSpy();
+		break;
 	}
 #elif defined(MODE_DETECT)
 	if (!PINC_READ(MODEPIN_SNES))

@@ -26,7 +26,7 @@
 
 #include "Saturn3D.h"
 
-#if defined(ARDUINO_TEENSY35) || defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO) || defined(ARDUINO_AVR_NANO_EVERY) || defined(ARDUINO_AVR_LARDU_328E)
+#if defined(ARDUINO_TEENSY35) || defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO) || defined(ARDUINO_AVR_NANO_EVERY) || defined(ARDUINO_AVR_LARDU_328E) || defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 
 static bool isKeyboard = false;
 static byte keyboardData[18];
@@ -67,7 +67,9 @@ void Saturn3DSpy::setup()
 	
 	PORTD.OUT = 0x00;
 	PORTA.OUT = 0x00;
-	
+#elif defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)	
+	for (int i = 0; i <= 8; ++i)
+		pinMode(i, INPUT_PULLUP);
 #else
 	PORTD = 0x00;
 	PORTB = 0x00;

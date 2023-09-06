@@ -26,6 +26,9 @@
 
 #define PINC_READ( pin ) (gpio_get(pin))
 #define PIND_READ( pin ) (gpio_get(pin))
+#define PINB_READ( pin ) (gpio_get(pin+8))
+#define READ_PORTD( mask ) ((gpio_get_all() << 2) & mask)
+#define READ_PORTB( mask ) ((gpio_get_all() >> 8) & mask)
 
 #define MICROSECOND_NOPS "nop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\n"
 #define T_DELAY( ms ) delay(0)
@@ -56,5 +59,32 @@
 #define CD32_LATCH    5
 #define CD32_DATA     7
 #define CD32_CLOCK    6
+
+#define SMSONGEN_INPUT_PIN_0    0
+#define SMSONGEN_INPUT_PIN_1    1
+#define SMSONGEN_INPUT_PIN_2    2
+#define SMSONGEN_INPUT_PIN_3    3
+#define SMSONGEN_INPUT_PIN_4    4
+#define SMSONGEN_INPUT_PIN_5    5
+
+#define PS_ATT             0
+#define PS_CLOCK           1
+#define PS_ACK             2
+#define PS_CMD             3
+#define PS_DATA            4
+
+#define SS_SELECT0         4
+#define SS_SEL             4
+#define SS_SELECT1         5
+#define SS_REQ             5
+#define SS_ACK             6
+#define SS_DATA0           0
+#define SS_DATA1           1
+#define SS_DATA2           2
+#define SS_DATA3           3
+
+#define FMTOWNS_MOUSE_STROBE	9
+#define FMTOWNS_MOUSE_BUTTON_1	7
+#define FMTOWNS_MOUSE_BUTTON_2	8
 
 #define FASTRUN

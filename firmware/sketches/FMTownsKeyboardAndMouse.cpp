@@ -29,7 +29,7 @@
 
 #include "FMTownsKeyboardAndMouse.h"
 
-#if defined(__arm__) && defined(CORE_TEENSY) && defined(ARDUINO_TEENSY35)
+#if (defined(__arm__) && defined(CORE_TEENSY) && defined(ARDUINO_TEENSY35)) || defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 
 static byte rawData[32];
 static byte mouseData[4];
@@ -166,16 +166,16 @@ void strobe() {
 		++strobeCount;
 
 	if (strobeCount == 0)
-		mouseData[0] |= ((GPIOD_PDIR & 0b00111100) >> 2);
+		mouseData[0] |= ((READ_PORTD(0b00111100)) >> 2);
 	else if (strobeCount == 1)
-		mouseData[1] |= ((GPIOD_PDIR & 0b00111100) << 2);
+		mouseData[1] |= ((READ_PORTD(0b00111100)) << 2);
 	else if (strobeCount == 2)
-		mouseData[1] |= ((GPIOD_PDIR & 0b00111100) >> 2);
+		mouseData[1] |= ((READ_PORTD(0b00111100)) >> 2);
 	else if (strobeCount == 3)
 	{
-		mouseData[2] = digitalRead(5) == HIGH ? 0 : 1;
-		mouseData[3] = digitalRead(16) == HIGH ? 0 : 1;
-		mouseData[0] |= ((GPIOD_PDIR & 0b00111100) << 2);
+		mouseData[2] = digitalRead(FMTOWNS_MOUSE_BUTTON_1) == HIGH ? 0 : 1;
+		mouseData[3] = digitalRead(FMTOWNS_MOUSE_BUTTON_2) == HIGH ? 0 : 1;
+		mouseData[0] |= ((READ_PORTD(0b00111100)) << 2);
 	}
 
 	lastStrobe = currentStrobe;
@@ -186,6 +186,7 @@ void FMTownsKeyboardAndMouseSpy::setup()
 	for (int i = 0; i < 32; ++i)
 		rawData[i] = 0;
 
+#if (defined(__arm__) && defined(CORE_TEENSY) && defined(ARDUINO_TEENSY35))	
 	// GPIOD_PDIR & 0xFF;
 	pinMode(2, INPUT_PULLUP);
 	pinMode(14, INPUT_PULLUP);
@@ -201,8 +202,12 @@ void FMTownsKeyboardAndMouseSpy::setup()
 	pinMode(17, INPUT_PULLUP);
 	pinMode(19, INPUT_PULLUP);
 	pinMode(18, INPUT_PULLUP);
-
-	attachInterrupt(digitalPinToInterrupt(17), strobe, CHANGE);
+#else
+	for (int i = 0; i < 12; ++i)
+		pinMode(i, INPUT_PULLUP);
+#endif
+	
+	attachInterrupt(digitalPinToInterrupt(FMTOWNS_MOUSE_STROBE), strobe, CHANGE);
 
 	Serial1.begin(9600, SERIAL_8E1);
 

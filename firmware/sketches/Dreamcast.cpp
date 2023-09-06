@@ -29,12 +29,14 @@
 
 
 
-#if defined(__arm__) && defined(CORE_TEENSY) && (defined (ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41))
+#if (defined(__arm__) && defined(CORE_TEENSY) && (defined (ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41))) || defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 
 #if defined (ARDUINO_TEENSY35)
 #define DETECT_FALLING_EDGE rawData[byteCount] = (GPIOD_PDIR & 0x3); do { prevPin = rawData[byteCount]; rawData[byteCount] = (GPIOD_PDIR & 0x3); } while( rawData[byteCount] >= prevPin);
 #elif defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41)
 #define DETECT_FALLING_EDGE rawData[byteCount] = (GPIO6_PSR >> 2) & 0x03; do { prevPin = rawData[byteCount]; rawData[byteCount] = (GPIO6_PSR >> 2) & 0x03; } while( rawData[byteCount] >= prevPin);
+#elif defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#define DETECT_FALLING_EDGE rawData[byteCount] = gpio_get_all() & 0x03; if ((rawData[byteCount] & 1) ^ ((rawData[byteCount] & 2) >> 1)) { rawData[byteCount] ^= 1; rawData[byteCount] ^= 2; } do { prevPin = rawData[byteCount]; rawData[byteCount] = gpio_get_all() & 0x03; if ((rawData[byteCount] & 1) ^ ((rawData[byteCount] & 2) >> 1)) { rawData[byteCount] ^= 1; rawData[byteCount] ^= 2; } } while( rawData[byteCount] >= prevPin);
 #endif
 
 void DreamcastSpy::setup() {

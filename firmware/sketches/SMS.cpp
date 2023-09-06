@@ -26,7 +26,7 @@
 
 #include "SMS.h"
 
-#if defined(ARDUINO_TEENSY35) || defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO) || defined(ARDUINO_AVR_NANO_EVERY) || defined(ARDUINO_AVR_LARDU_328E)
+#if defined(ARDUINO_TEENSY35) || defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO) || defined(ARDUINO_AVR_NANO_EVERY) || defined(ARDUINO_AVR_LARDU_328E) || defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 
 void SMSSpy::setup(uint8_t cableType, uint8_t outputType) {
 	this->cableType = cableType;
@@ -38,6 +38,7 @@ void SMSSpy::setup() {
 	// Set pins
 	// TODO: Move these to config.h
 	switch (cableType) {
+#if !defined(RS_VISION_FLEX)
 	case CABLE_SMS:
 		inputPins[0] = SMS_INPUT_PIN_0;
 		inputPins[1] = SMS_INPUT_PIN_1;
@@ -46,6 +47,7 @@ void SMSSpy::setup() {
 		inputPins[4] = SMS_INPUT_PIN_4;
 		inputPins[5] = SMS_INPUT_PIN_5;
 		break;
+#endif
 	case CABLE_GENESIS:
 		// I don't know why these are different.
 		inputPins[0] = SMSONGEN_INPUT_PIN_0;
