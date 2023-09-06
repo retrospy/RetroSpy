@@ -84,6 +84,16 @@ enum VideoOutputType {
 #if defined(RS_VISION_ANALOG_1) || defined(RS_VISION_ANALOG_2)
 #define VISION_ANALOG_ADC_INT_HANDLER
 #endif
+
+#if defined(RS_VISION_FLEX)
+#undef SNES_LATCH
+#undef SNES_DATA
+#undef SNES_LATCH
+#define SNES_LATCH         1
+#define SNES_DATA          2
+#define SNES_CLOCK         4
+#endif
+
 // Uncomment these to enable 3rd party libraries once installed
 //#define TP_IRREMOTE               // Used by MODE_CDI & MODE_CDTV_WIRELESS
 // Used by MODE_PIPPIN & MODE_CDTV_WIRED

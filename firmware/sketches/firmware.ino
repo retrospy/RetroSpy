@@ -552,12 +552,44 @@ bool CreateSpy()
 	switch (ReadAnalog())
 	{
 	case 0x00:
-		currentSpy = new SNESSpy();
+		currentSpy = new NESSpy();
 		break;
 	case 0x01:
+		currentSpy = new SNESSpy();
+		break;
+	case 0x02:
+		currentSpy = new N64Spy();
+		break;
+	case 0x03:
+		currentSpy = new GCSpy();
+		break;
+	case 0x04:
 		currentSpy = new WiiSpy();
 		break;	
-	case 0x02:
+	case 0x05:
+		currentSpy = new SMSSpy();		
+		((SMSSpy*)currentSpy)->setup(SMSSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;	
+	case 0x06:
+		currentSpy = new GenesisSpy();
+		break;
+	case 0x07:
+		currentSpy = new SaturnSpy();
+		break;
+	case 0x08:
+		currentSpy = new Saturn3DSpy();
+		break;
+	case 0x09:
+		currentSpy = new Saturn3DSpy();
+		break;
+	case 0x0A:
+		currentSpy = new PlayStationSpy();
+		break;
+	case 0x0B:
+		currentSpy = new GBASpy();
+		break;
+	case 0x0C:
 		currentSpy = new AmigaCd32Spy();
 		break;	
 	}

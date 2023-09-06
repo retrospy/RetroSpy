@@ -38,6 +38,16 @@
 #define SNES_DATA          16
 #define SNES_CLOCK         18
 
+#define NES_LATCH          1
+#define NES_CLOCK          4
+#define NES_DATA           2
+#define NES_DATA0          0
+#define NES_DATA1          3
+
+#define N64_PIN	           0
+
+#define GC_PIN             3
+
 #define CDI_IRPIN				15
 #define CDI_RECVSER				0xFF
 #define CDI_SENDSER				11
