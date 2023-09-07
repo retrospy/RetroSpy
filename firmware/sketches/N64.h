@@ -32,6 +32,7 @@
 class N64Spy : public ControllerSpy {
 public:
 	void loop();
+	void loop1();
 	void writeSerial();
 	void debugSerial();
 	void updateState();
@@ -44,7 +45,10 @@ private:
 	unsigned char rawData[100];
 #else
 	unsigned char rawData[300];
+	unsigned char sendData[300];
+	bool sendRequest = false;
 #endif
+	
 	unsigned short readBits;
 };
 

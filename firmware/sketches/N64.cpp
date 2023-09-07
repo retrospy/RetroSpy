@@ -29,6 +29,22 @@
 
 #if (defined(__arm__) && defined(CORE_TEENSY) && (defined(ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41))) || (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
 
+void N64Spy::loop1()
+{
+	if (sendRequest)
+	{
+		memcpy(sendData, rawData, 9 + N64_BITCOUNT);
+		sendRequest = false;
+	
+#if !defined(DEBUG)
+		writeSerial();
+#else
+		debugSerial();
+#endif
+
+	}
+}
+
 void N64Spy::loop() 
 {
 	unsigned char *rawDataPtr = rawData;
@@ -39,6 +55,10 @@ void N64Spy::loop()
 findcmdinit:
 	interrupts();
 
+	while (sendRequest)
+	{
+	}
+	
 	rawDataPtr = rawData;
 	
 	// Wait for the line to go high then low.
@@ -55,7 +75,12 @@ findcmdinit:
 		
 		noInterrupts();
 		// Wait ~2us between line reads
-		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+		for (int i = 0; i < 25; ++i)  // This is trial and error'd.  
+		asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
+#else
+		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS)
+#endif
 
 		// Read a bit from the line and store as a byte in "rawData"
 		*rawDataPtr = PIN_READ(N64_PIN);
@@ -73,8 +98,12 @@ readCmd:
 	WAIT_FALLING_EDGE(N64_PIN);
 
 	// Wait ~2us between line reads
-	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
-
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	for (int i = 0; i < 25; ++i)  // This is trial and error'd.  
+	asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
+#else
+	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS)
+#endif
 	// Read a bit from the line and store as a byte in "rawData"
 	*rawDataPtr = PIN_READ(N64_PIN);
 	
@@ -126,7 +155,12 @@ readData:
 	WAIT_FALLING_EDGE(N64_PIN);
 	
 	// Wait ~2us between line reads
-	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	for (int i = 0; i < 25; ++i)  // This is trial and error'd.  
+	asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
+#else
+	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS)
+#endif
 
 	// Read a bit from the line and store as a byte in "rawData"
 	*rawDataPtr = PIN_READ(N64_PIN);
@@ -144,14 +178,12 @@ printData:
 	interrupts();
 	if (headerVal == 0x01)
 	{
-		
-	
-#if !defined(DEBUG)
-	
-		writeSerial();
-#else
-		debugSerial();
+		sendRequest = true;
+
+#if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
+		loop1();
 #endif
+		
 	}
 	betweenLowSignal = 0;
 	goto findcmdinit;
@@ -165,7 +197,7 @@ void N64Spy::writeSerial() {
 	const unsigned char first = 9;
 
 	for (unsigned char i = first; i < first + N64_BITCOUNT; i++) {
-		Serial.write(rawData[i] ? ONE : ZERO);
+		Serial.write(sendData[i] ? ONE : ZERO);
 	}
 	Serial.write(SPLIT);
 }
@@ -177,7 +209,7 @@ void N64Spy::debugSerial() {
 	for (unsigned char i = first; i < first + N64_BITCOUNT; i++) {
 		if (j % 8 == 0 && j != 0)
 			Serial.print("|");
-		Serial.print(rawData[i] ? "1" : "0");
+		Serial.print(sendData[i] ? "1" : "0");
 		j++;
 	}
 	Serial.print("\n");
