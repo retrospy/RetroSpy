@@ -1038,7 +1038,7 @@ namespace GBPUpdaterX2
                 string? port = (string?)COMPortComboBox.SelectedItem;
                 port ??= "No Arduino/Teensy Found";
 
-                using (_serialPort = new SerialPort(port, 115200, Parity.None, 8, StopBits.One)
+                using (_serialPort = new SerialPort(port != null ? port.Split(' ')[0] : "", 115200, Parity.None, 8, StopBits.One)
                 {
                     Handshake = Handshake.None,
 
