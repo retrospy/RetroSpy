@@ -584,18 +584,15 @@ bool CreateSpy()
 		currentSpy = new Saturn3DSpy();
 		break;
 	case 0x0A:
-		currentSpy = new DreamcastSpy();
-		break;
-	case 0x0B:
 		currentSpy = new PlayStationSpy();
 		break;
-	case 0x0C:
+	case 0x0B:
 		currentSpy = new GBASpy();
 		break;
-	case 0x0D:
+	case 0x0C:
 		currentSpy = new AmigaCd32Spy();
 		break;
-	case 0x0E:
+	case 0x0D:
 		currentSpy = new FMTownsKeyboardAndMouseSpy();
 		break;
 	}
