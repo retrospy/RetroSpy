@@ -32,6 +32,7 @@
 class GCSpy : public ControllerSpy {
 public:
 	void loop();
+	void loop1();
 	void writeSerial();
 	void debugSerial();
 	void updateState();
@@ -53,6 +54,10 @@ private:
 	
 	unsigned char rawData[34 + GC_PREFIX + GC_BITCOUNT];
 	unsigned char readBits;
+	
+	unsigned char sendData[34 + GC_PREFIX + GC_BITCOUNT];
+	volatile bool sendRequest = false;
+	short sendHeaderVal = 0;
 };
 
 #endif
