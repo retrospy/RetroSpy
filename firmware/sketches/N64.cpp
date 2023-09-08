@@ -371,6 +371,10 @@ void N64Spy::debugSerial() {
 	Serial.print("\n");
 }
 
+void N64Spy::loop1()
+{
+}
+
 #else
 
 void N64Spy::loop() {}

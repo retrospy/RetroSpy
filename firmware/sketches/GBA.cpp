@@ -60,7 +60,7 @@ void GBASpy::updateState() {
 	for (int i = 0; i < 12; ++i)  // This is trial and error'd.  
 		asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
 #else
-	asm volatile(MICROSECOND_NOPS)
+	asm volatile(MICROSECOND_NOPS);
 #endif
 	rawData[position++] = !PIN_READ(SNES_DATA);
 	do {

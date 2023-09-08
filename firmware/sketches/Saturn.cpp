@@ -49,7 +49,7 @@ void SaturnSpy::updateState() {
 	for (int i = 0; i < 12; ++i)  // This is trial and error'd.  
 		asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
 #else
-	asm volatile(MICROSECOND_NOPS)
+	asm volatile(MICROSECOND_NOPS);
 #endif
 	pincache |= READ_PORTD(0xFF);
 	if ((pincache & 0b11000000) == 0b10000000) {
@@ -62,7 +62,7 @@ void SaturnSpy::updateState() {
 	for (int i = 0; i < 12; ++i)  // This is trial and error'd.  
 		asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
 #else
-	asm volatile(MICROSECOND_NOPS)
+	asm volatile(MICROSECOND_NOPS);
 #endif
 	pincache |= READ_PORTD(0xFF);
 	if ((pincache & 0b11000000) == 0b01000000) {
@@ -75,7 +75,7 @@ void SaturnSpy::updateState() {
 	for (int i = 0; i < 12; ++i)  // This is trial and error'd.  
 		asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
 #else
-	asm volatile(MICROSECOND_NOPS)
+	asm volatile(MICROSECOND_NOPS);
 #endif
 	pincache |= READ_PORTD(0xFF);
 	if ((pincache & 0b11000000) == 0) {
@@ -88,7 +88,7 @@ void SaturnSpy::updateState() {
 	for (int i = 0; i < 12; ++i)  // This is trial and error'd.  
 		asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
 #else
-	asm volatile(MICROSECOND_NOPS)
+	asm volatile(MICROSECOND_NOPS);
 #endif
 	pincache |= READ_PORTD(0xFF);
 	if ((pincache & 0b11000000) == 0b11000000) {

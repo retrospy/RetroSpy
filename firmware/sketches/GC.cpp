@@ -740,6 +740,10 @@ void GCSpy::writeKeyboard()
 	Serial.write(SPLIT);
 }
 
+void GCSpy::loop1()
+{
+}
+
 #else
 
 void GCSpy::loop() {}
