@@ -52,6 +52,12 @@
 #define WAIT_FOR_LINES_TO_SETTLE asm volatile (MICROSECOND_NOPS)
 #endif
 
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#define WORKING_WAIT for (int i = 0; i < 25; ++i) { asm volatile("nop\n"); }
+#else
+#define WORKING_WAIT
+#endif
+
 class GenesisSpy : public ControllerSpy {
 public:
 	void setup();
