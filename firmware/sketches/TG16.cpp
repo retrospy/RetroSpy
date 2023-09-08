@@ -26,7 +26,7 @@
 
 #include "TG16.h"
 
-#if !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
+#if !(defined(__arm__) && defined(CORE_TEENSY)) 
 
 void TG16Spy::loop() {
 
@@ -47,7 +47,13 @@ void TG16Spy::updateState() {
 	currentState = 0;
 
 	while ((READ_PORTD(0b01000000)) == 0) {}
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	for (int i = 0; i < 50; ++i)  // This is trial and error'd.  
+	asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
+#else
 	asm volatile("nop\nnop\n");
+#endif
+	
 	temp = ((READ_PORTD(0b00111100)) >> 2);
 	if ((temp & 0b00001111) == 0b00000000) {
 		currentState |= lastDirections;

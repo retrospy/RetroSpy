@@ -60,6 +60,13 @@
 #define CD32_DATA     7
 #define CD32_CLOCK    6
 
+#define SMS_INPUT_PIN_0    0
+#define SMS_INPUT_PIN_1    1
+#define SMS_INPUT_PIN_2    2
+#define SMS_INPUT_PIN_3    3
+#define SMS_INPUT_PIN_4    5
+#define SMS_INPUT_PIN_5    6
+
 #define SMSONGEN_INPUT_PIN_0    0
 #define SMSONGEN_INPUT_PIN_1    1
 #define SMSONGEN_INPUT_PIN_2    2
@@ -86,5 +93,39 @@
 #define FMTOWNS_MOUSE_STROBE	9
 #define FMTOWNS_MOUSE_BUTTON_1	7
 #define FMTOWNS_MOUSE_BUTTON_2	8
+
+#define AJ_COLUMN1         6
+#define AJ_COLUMN2         7
+#define AJ_COLUMN3		   8
+#define AJ_COLUMN4         9
+
+//PORTD
+#define NEOGEO_SELECT      0
+#define NEOGEO_D           1
+#define NEOGEO_B           2
+#define NEOGEO_RIGHT       3
+#define NEOGEO_DOWN        4
+#define NEOGEO_START       5
+//PORTB
+#define NEOGEO_C           6
+#define NEOGEO_A           7
+#define NEOGEO_LEFT        8
+#define NEOGEO_UP          9
+
+#define BOOSTER_GRIP_INPUT_PIN_0 0;
+#define BOOSTER_GRIP_INPUT_PIN_1 1;
+#define BOOSTER_GRIP_INPUT_PIN_2 2;
+#define BOOSTER_GRIP_INPUT_PIN_3 3;
+#define BOOSTER_GRIP_INPUT_PIN_4 4;
+#define BOOSTER_GRIP_INPUT_PIN_5 5;
+#define BOOSTER_GRIP_INPUT_PIN_6 6;
+
+#define BOOSTER_GRIP_ONGEN_INPUT_PIN_0 0;
+#define BOOSTER_GRIP_ONGEN_INPUT_PIN_1 1;
+#define BOOSTER_GRIP_ONGEN_INPUT_PIN_2 2;
+#define BOOSTER_GRIP_ONGEN_INPUT_PIN_3 3;
+#define BOOSTER_GRIP_ONGEN_INPUT_PIN_4 7;
+#define BOOSTER_GRIP_ONGEN_INPUT_PIN_5 4;
+#define BOOSTER_GRIP_ONGEN_INPUT_PIN_6 5;
 
 #define FASTRUN

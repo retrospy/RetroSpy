@@ -26,7 +26,7 @@
 
 #include "Jaguar.h"
 
-#if !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
+#if !(defined(__arm__) && defined(CORE_TEENSY))
 
 void JaguarSpy::loop() {
 	noInterrupts();
@@ -42,19 +42,39 @@ void JaguarSpy::loop() {
 
 void JaguarSpy::updateState() {
 	WAIT_FALLING_EDGEB(AJ_COLUMN1);
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	for (int i = 0; i < 50; ++i)  // This is trial and error'd.  
+	asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
+#else
 	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS);
+#endif
 	rawData[3] = (READ_PORTD(0b11111000));
 
 	WAIT_FALLING_EDGEB(AJ_COLUMN2);
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	for (int i = 0; i < 50; ++i)  // This is trial and error'd.  
+	asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
+#else
 	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS);
+#endif
 	rawData[2] = (READ_PORTD(0b11111000));
 
 	WAIT_FALLING_EDGEB(AJ_COLUMN3);
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	for (int i = 0; i < 50; ++i)  // This is trial and error'd.  
+	asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
+#else
 	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS);
+#endif
 	rawData[1] = (READ_PORTD(0b11111000));
 
 	WAIT_FALLING_EDGEB(AJ_COLUMN4);
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	for (int i = 0; i < 50; ++i)  // This is trial and error'd.  
+	asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
+#else
 	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS);
+#endif
 	rawData[0] = (READ_PORTD(0b11111100));
 }
 

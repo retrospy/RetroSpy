@@ -38,7 +38,6 @@ void SMSSpy::setup() {
 	// Set pins
 	// TODO: Move these to config.h
 	switch (cableType) {
-#if !defined(RS_VISION_FLEX)
 	case CABLE_SMS:
 		inputPins[0] = SMS_INPUT_PIN_0;
 		inputPins[1] = SMS_INPUT_PIN_1;
@@ -47,7 +46,6 @@ void SMSSpy::setup() {
 		inputPins[4] = SMS_INPUT_PIN_4;
 		inputPins[5] = SMS_INPUT_PIN_5;
 		break;
-#endif
 	case CABLE_GENESIS:
 		// I don't know why these are different.
 		inputPins[0] = SMSONGEN_INPUT_PIN_0;
