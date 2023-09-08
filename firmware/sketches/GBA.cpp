@@ -56,7 +56,12 @@ void GBASpy::updateState() {
 	bytesToReturn = SNES_BITCOUNT;
 
 	WAIT_FALLING_EDGE(SNES_LATCH);
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	for (int i = 0; i < 12; ++i)  // This is trial and error'd.  
+		asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
+#else
 	asm volatile(MICROSECOND_NOPS);
+#endif
 	rawData[position++] = !PIN_READ(SNES_DATA);
 	do {
 		WAIT_FALLING_EDGE(SNES_CLOCK);

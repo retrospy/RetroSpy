@@ -82,16 +82,47 @@ static u_int8_t dummyStickData[] = {
 	SPLIT
 };
 
+static short headerVal = 0;
+
+void GCSpy::loop1()
+{
+	if (sendRequest)
+	{
+		memcpy(sendData, rawData, 34 + GC_PREFIX + GC_BITCOUNT);
+		sendHeaderVal = headerVal;
+		sendRequest = false;
+	
+#if !defined(DEBUG)
+		if (sendHeaderVal == 0x40)
+			sendRawData(sendData, GC_PREFIX, (sendData[14] | sendData[15]) == 0 ? GC_BITCOUNT - 8 : GC_BITCOUNT);
+		else if (sendHeaderVal == 0x14 && ++show % 2 == 0)  // Gameboy Player polls too damn many times, slows down display.
+			writeSerial(); // This doesn't seem to negatively affect other games.
+		else if(sendHeaderVal == 0x54)
+			writeKeyboard();
+#else
+		if (sendHeaderVal == 0x54)
+			debugKeyboard();
+		else if (sendHeaderVal == 0x14)
+			debugSerial();
+		else
+			sendRawDataDebug(sendData, 0, GC_BITCOUNT + GC_PREFIX);
+#endif
+	}
+}
+
 void GCSpy::loop() 
 {
 	unsigned char *rawDataPtr = rawData;
 	elapsedMicros betweenLowSignal = 0;
-	short headerVal = 0;
 	int headerBits = 8;
-	
+
 findcmdinit:
 	interrupts();
 
+	while (sendRequest)
+	{
+	}
+	headerVal = 0;
 	rawDataPtr = rawData;
 	
 	// Wait for the line to go high then low.
@@ -108,8 +139,12 @@ findcmdinit:
 		
 		noInterrupts();
 		// Wait ~2us between line reads
-		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
-
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+		for (int i = 0; i < 25; ++i)  // This is trial and error'd.  
+			asm volatile("nop\n");    // NOP isn't consistent enough on an optimized Pi Pico
+#else		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS)
+#endif
+			
 		// Read a bit from the line and store as a byte in "rawData"
 		*rawDataPtr = PIN_READ(GC_PIN);
 		headerVal = (*rawDataPtr != 0 ? 0x80 : 0x00);
@@ -126,7 +161,11 @@ readCmd:
 	WAIT_FALLING_EDGE(GC_PIN);
 
 	// Wait ~2us between line reads
-	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	for (int i = 0; i < 25; ++i)  
+		asm volatile("nop\n");
+#else	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS)
+#endif
 
 	// Read a bit from the line and store as a byte in "rawData"
 	*rawDataPtr = PIN_READ(GC_PIN);
@@ -169,7 +208,11 @@ readData:
 	WAIT_FALLING_EDGE(GC_PIN);
 	
 	// Wait ~2us between line reads
-	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	for (int i = 0; i < 25; ++i)
+		asm volatile("nop\n");
+#else	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS)
+#endif
 
 	// Read a bit from the line and store as a byte in "rawData"
 	*rawDataPtr = PIN_READ(GC_PIN);
@@ -185,21 +228,12 @@ readData:
 	
 printData:
 	interrupts();
-#if !defined(DEBUG)
-	if (headerVal == 0x40)
-		sendRawData(rawData, GC_PREFIX, (rawData[14] | rawData[15]) == 0 ? GC_BITCOUNT - 8 : GC_BITCOUNT);
-	else if (headerVal == 0x14 && ++show % 2 == 0)  // Gameboy Player polls too damn many times, slows down display.
-		writeSerial();  								// This doesn't seem to negatively affect other games.
-	else if(headerVal == 0x54)
-		writeKeyboard();
-#else
-	if (headerVal == 0x54)
-		debugKeyboard();
-	else if (headerVal == 0x14)
-		debugSerial();
-	else
-		sendRawDataDebug(rawData, 0, GC_BITCOUNT + GC_PREFIX);
+	sendRequest = true;
+
+#if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
+	loop1();
 #endif
+	
 	betweenLowSignal = 0;
 	goto findcmdinit;
 }
@@ -212,19 +246,19 @@ void GCSpy::writeSerial() {
 	Serial.write(ZERO);
 	Serial.write(ZERO);
 	Serial.write(ZERO);
-	Serial.write(rawData[21] ? ONE : ZERO);
+	Serial.write(sendData[21] ? ONE : ZERO);
 	Serial.write(ZERO);
 	Serial.write(ZERO);
-	Serial.write(rawData[23] ? ONE : ZERO);
-	Serial.write(rawData[24] ? ONE : ZERO);
+	Serial.write(sendData[23] ? ONE : ZERO);
+	Serial.write(sendData[24] ? ONE : ZERO);
 	Serial.write(ZERO);
-	Serial.write(rawData[31] ? ONE : ZERO);
-	Serial.write(rawData[32] ? ONE : ZERO);
-	Serial.write(rawData[22] ? ONE : ZERO);
-	Serial.write(rawData[18] ? ONE : ZERO);
-	Serial.write(rawData[17] ? ONE : ZERO);
-	Serial.write(rawData[20] ? ONE : ZERO);
-	Serial.write(rawData[19] ? ONE : ZERO);
+	Serial.write(sendData[31] ? ONE : ZERO);
+	Serial.write(sendData[32] ? ONE : ZERO);
+	Serial.write(sendData[22] ? ONE : ZERO);
+	Serial.write(sendData[18] ? ONE : ZERO);
+	Serial.write(sendData[17] ? ONE : ZERO);
+	Serial.write(sendData[20] ? ONE : ZERO);
+	Serial.write(sendData[19] ? ONE : ZERO);
 	Serial.write(dummyStickData, 49);
 }
 
@@ -232,19 +266,19 @@ void GCSpy::debugSerial() {
 	Serial.print("0");
 	Serial.print("0");
 	Serial.print("0");
-	Serial.print(rawData[21] ? "t" : "0");
+	Serial.print(sendData[21] ? "t" : "0");
 	Serial.print("0");
 	Serial.print("0");
-	Serial.print(rawData[23] ? "b" : "0");
-	Serial.print(rawData[24] ? "a" : "0");
+	Serial.print(sendData[23] ? "b" : "0");
+	Serial.print(sendData[24] ? "a" : "0");
 	Serial.print("0");
-	Serial.print(rawData[31] ? "L" : "0");
-	Serial.print(rawData[32] ? "R" : "0");
-	Serial.print(rawData[22] ? "s" : "0");
-	Serial.print(rawData[18] ? "u" : "0");
-	Serial.print(rawData[17] ? "d" : "0");
-	Serial.print(rawData[20] ? "l" : "0");
-	Serial.print(rawData[19] ? "r" : "0");
+	Serial.print(sendData[31] ? "L" : "0");
+	Serial.print(sendData[32] ? "R" : "0");
+	Serial.print(sendData[22] ? "s" : "0");
+	Serial.print(sendData[18] ? "u" : "0");
+	Serial.print(sendData[17] ? "d" : "0");
+	Serial.print(sendData[20] ? "l" : "0");
+	Serial.print(sendData[19] ? "r" : "0");
 	Serial.print(128);
 	Serial.print(128);
 	Serial.print(128);
@@ -263,7 +297,7 @@ void GCSpy::debugKeyboard()
 		vals[j] = 0;
 		for (int i = 0; i < 8; ++i)
 		{
-			if (rawData[GC_PREFIX + i + 32 + (j * 8)] != 0)
+			if (sendData[GC_PREFIX + i + 32 + (j * 8)] != 0)
 			{
 				vals[j] |= (byte)(1 << (7 - i));
 			}
@@ -285,7 +319,7 @@ void GCSpy::writeKeyboard()
 		vals[j] = 0;
 		for (int i = 0; i < 8; ++i)
 		{
-			if (rawData[GC_PREFIX + i + 32 + (j * 8)] != 0)
+			if (sendData[GC_PREFIX + i + 32 + (j * 8)] != 0)
 			{
 				vals[j] |= (byte)(1 << (7 - i));
 			}
@@ -704,6 +738,10 @@ void GCSpy::writeKeyboard()
 	Serial.write(vals[1]);
 	Serial.write(vals[2]);
 	Serial.write(SPLIT);
+}
+
+void GCSpy::loop1()
+{
 }
 
 #else

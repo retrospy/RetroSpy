@@ -44,10 +44,18 @@
 #define STATE_SEVEN READ_PORTB(1) == 1 && READ_PORTD(MASK_PINS_TWO_THREE_FOUR_FIVE) != 0
 #define WAIT_FOR_STATE_SEVEN READ_PORTB(1) != 1 || READ_PORTD(MASK_PINS_TWO_THREE_FOUR_FIVE) == 0
 
-#if defined(__arm__) && defined(CORE_TEENSY)
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#define WAIT_FOR_LINES_TO_SETTLE for (int i = 0; i < 25; ++i) { asm volatile("nop\n"); }
+#elif defined(__arm__) && defined(CORE_TEENSY)
 #define WAIT_FOR_LINES_TO_SETTLE asm volatile (MICROSECOND_NOPS MICROSECOND_NOPS)
 #else
 #define WAIT_FOR_LINES_TO_SETTLE asm volatile (MICROSECOND_NOPS)
+#endif
+
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#define WORKING_WAIT for (int i = 0; i < 25; ++i) { asm volatile("nop\n"); }
+#else
+#define WORKING_WAIT
 #endif
 
 class GenesisSpy : public ControllerSpy {

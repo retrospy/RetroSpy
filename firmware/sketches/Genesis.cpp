@@ -80,33 +80,39 @@ void GenesisSpy::updateState() {
 	noInterrupts();
 
 	do {
+		WORKING_WAIT
 	} while (WAIT_FOR_STATE_TWO);
 	WAIT_FOR_LINES_TO_SETTLE;
 	currentState &= SHIFT_A_AND_START;
 
 	do {
+		WORKING_WAIT
 	} while (WAIT_FOR_STATE_THREE);
 	WAIT_FOR_LINES_TO_SETTLE;
 	currentState &= SHIFT_UDLRBC;
 
 	// Six Button
 	do {
+		WORKING_WAIT
 	} while (WAIT_FOR_STATE_FOUR_OR_SIX);
 
 	if (NOT_STATE_SIX)
 	{
 		//currentState &= SHIFT_A_AND_START;
 		do {
+			WORKING_WAIT
 		} while (WAIT_FOR_STATE_THREE);
 		//currentState &= SHIFT_UDLRBC;
 
 		do {
+			WORKING_WAIT
 		} while (WAIT_FOR_STATE_FOUR_OR_SIX);
 	}
 
 	if (STATE_SIX)
 	{
 		do {
+			WORKING_WAIT
 		} while (WAIT_FOR_STATE_SEVEN);
 		WAIT_FOR_LINES_TO_SETTLE;
 		currentState &= SHIFT_ZYXM;
