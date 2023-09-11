@@ -31,6 +31,7 @@
 static int nominal_min = 1024;
 static int nominal_max = 0;
 static volatile int lastVal = 0;
+static volatile int lastValInfo = 0;
 static volatile int currentVal = 0;
 static volatile int analogVal = 0;
 static volatile int readFlag;
@@ -61,16 +62,22 @@ ISR(ADC_vect)
 }
 #endif
 
+unsigned long voltageDropTime;
+unsigned long startTime = millis();
 void PaddlesADCInt()
 {
 	// Must read low first
 	analogVal = ADCL | (ADCH << 8);
 
-	if (analogVal < lastVal && (lastVal - analogVal) > 20)
-	{
+	
+	if (analogVal < lastVal && (lastVal - analogVal) > 20 && (millis() - startTime) > 10)
+	{				
+		lastValInfo = lastVal;
+		voltageDropTime = millis() - startTime;
 		currentVal = lastVal;
 		lastVal = analogVal;
 		readFlag = 1;
+		startTime = millis();
 	}
 	else
 	{
@@ -85,7 +92,7 @@ void PaddlesADCInt()
 #if defined(ATARIPADDLES_ADC_INT_HANDLER)
 ISR(ADC_vect)
 {
-	ADCInt();
+	PaddlesADCInt();
 }
 #endif
 
@@ -151,7 +158,6 @@ void AtariPaddlesSpy::loop()
 {
 	if (readFlag == 1)
 	{
-
 		byte pins = 0;
 		pins |= (PIND >> 2);
       
@@ -175,7 +181,11 @@ void AtariPaddlesSpy::loop()
 		Serial.print(nominal_min);
 		Serial.print("|");
 		Serial.print(nominal_max);
-		Serial.print("\n");
+		Serial.print("|");
+		Serial.print(voltageDropTime);
+		Serial.print("|");
+		Serial.print(lastValInfo);
+		Serial.println();
 #else
 		int sil = ScaleInteger(smoothedValue, nominal_min, nominal_max, 0, 255);
 		Serial.write(0);
@@ -187,7 +197,7 @@ void AtariPaddlesSpy::loop()
 		Serial.write('\n');
 #endif
 		readFlag = 0;
-		delay(5);	
+		//delay(5);	
 	}
 }
 
