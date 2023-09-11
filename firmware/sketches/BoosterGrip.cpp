@@ -37,22 +37,22 @@ void BoosterGripSpy::setup() {
 	
 	switch (cableType) {
 	case CABLE_SMS:
-		inputPins[0] = 2;
-		inputPins[1] = 3;
-		inputPins[2] = 4;
-		inputPins[3] = 5;
-		inputPins[4] = 6;
-		inputPins[5] = 7;
-		inputPins[6] = 8;
+		inputPins[0] = BOOSTER_GRIP_INPUT_PIN_0;
+		inputPins[1] = BOOSTER_GRIP_INPUT_PIN_1;
+		inputPins[2] = BOOSTER_GRIP_INPUT_PIN_2;
+		inputPins[3] = BOOSTER_GRIP_INPUT_PIN_3;
+		inputPins[4] = BOOSTER_GRIP_INPUT_PIN_4;
+		inputPins[5] = BOOSTER_GRIP_INPUT_PIN_5;
+		inputPins[6] = BOOSTER_GRIP_INPUT_PIN_6;
 		break;
 	case CABLE_GENESIS:
-		inputPins[0] = 2;
-		inputPins[1] = 3;
-		inputPins[2] = 4;
-		inputPins[3] = 5;
-		inputPins[4] = 9;
-		inputPins[5] = 6;
-		inputPins[6] = 7;
+		inputPins[0] = BOOSTER_GRIP_ONGEN_INPUT_PIN_0;
+		inputPins[1] = BOOSTER_GRIP_ONGEN_INPUT_PIN_1;
+		inputPins[2] = BOOSTER_GRIP_ONGEN_INPUT_PIN_2;
+		inputPins[3] = BOOSTER_GRIP_ONGEN_INPUT_PIN_3;
+		inputPins[4] = BOOSTER_GRIP_ONGEN_INPUT_PIN_4;
+		inputPins[5] = BOOSTER_GRIP_ONGEN_INPUT_PIN_5;
+		inputPins[6] = BOOSTER_GRIP_ONGEN_INPUT_PIN_6;
 		break;
 	}
 

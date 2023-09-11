@@ -595,6 +595,20 @@ bool CreateSpy()
 	case 0x0D:
 		currentSpy = new FMTownsKeyboardAndMouseSpy();
 		break;
+	case 0x0E:
+		currentSpy = new TG16Spy();
+		break;
+	case 0x0F:
+		currentSpy = new NeoGeoSpy();
+		break;
+	case 0x10:
+		currentSpy = new BoosterGripSpy();
+		((BoosterGripSpy*)currentSpy)->setup(BoosterGripSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;
+	case 0x11:
+		currentSpy = new JaguarSpy();
+		break;
 	}
 #elif defined(MODE_DETECT)
 	if (!PINC_READ(MODEPIN_SNES))
