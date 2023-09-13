@@ -79,7 +79,7 @@ findcmdinit:
 		for (int i = 0; i < 25; ++i)  // This is trial and error'd.  
 		asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
 #else
-		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS)
+		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
 #endif
 
 		// Read a bit from the line and store as a byte in "rawData"
@@ -102,7 +102,7 @@ readCmd:
 	for (int i = 0; i < 25; ++i)  // This is trial and error'd.  
 	asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
 #else
-	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS)
+	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
 #endif
 	// Read a bit from the line and store as a byte in "rawData"
 	*rawDataPtr = PIN_READ(N64_PIN);
@@ -159,7 +159,7 @@ readData:
 	for (int i = 0; i < 25; ++i)  // This is trial and error'd.  
 	asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
 #else
-	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS)
+	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
 #endif
 
 	// Read a bit from the line and store as a byte in "rawData"
