@@ -154,7 +154,11 @@ void FMTownsKeyboardAndMouseSpy::writeSerial() {}
 void FMTownsKeyboardAndMouseSpy::debugSerial() {}
 void FMTownsKeyboardAndMouseSpy::updateState() {}
 
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 #define READ_PORTD_NO_SHIFT(mask) (gpio_get_all() & mask)
+#else
+#define READ_PORTD_NO_SHIFT(mask) (GPIOD_PDIR & mask)
+#endif
 
 void strobe() {
 	unsigned long currentStrobe = micros();
