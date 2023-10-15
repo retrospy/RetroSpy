@@ -191,8 +191,14 @@ void AmigaAnalogSpy::loop()
 		Serial.print(triggerButton ? "3" : "-");
 		Serial.print(thumbButton ? "4" : "-");
 		Serial.print("|");
+		Serial.print(lockedCalibration ? "L" : "U");
+		Serial.print("|");
+		Serial.print(nominal_min);
+		Serial.print("|");
+		Serial.print(nominal_max);
+		Serial.print("|");
 		Serial.print(ScaleInteger(smoothedValue, nominal_min, nominal_max, 0, 30));
-		Serial.print("\n");
+		Serial.println();
 #else
 		int sil = ScaleInteger(smoothedValue, nominal_min, nominal_max, 0, 30);
 		Serial.write(topButton1 ? 1 : 0);
@@ -210,7 +216,7 @@ void AmigaAnalogSpy::loop()
 void AmigaAnalogSpy::writeSerial() {}
 void AmigaAnalogSpy::debugSerial() {}
 void AmigaAnalogSpy::updateState() {}
-
+ 
 #else
 
 void AmigaAnalogSpy::setup(bool isSecondArduino) {}
