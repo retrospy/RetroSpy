@@ -55,7 +55,7 @@ ISR(ADC_vect)
 	case 0x01:
 		AmigaAnalogADCInt();
 		break;
-	case 0x03:
+	case 0x02:
 		Atari5200ADCInt();
 		break;
 	}
