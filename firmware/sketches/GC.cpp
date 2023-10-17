@@ -142,8 +142,7 @@ findcmdinit:
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 		for (int i = 0; i < 25; ++i)  // This is trial and error'd.  
 			asm volatile("nop\n");    // NOP isn't consistent enough on an optimized Pi Pico
-#else
-		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
+#else		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
 #endif
 			
 		// Read a bit from the line and store as a byte in "rawData"
@@ -165,8 +164,7 @@ readCmd:
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 	for (int i = 0; i < 25; ++i)  
 		asm volatile("nop\n");
-#else
-	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
+#else	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
 #endif
 
 	// Read a bit from the line and store as a byte in "rawData"
@@ -213,8 +211,7 @@ readData:
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 	for (int i = 0; i < 25; ++i)
 		asm volatile("nop\n");
-#else
-	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
+#else	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
 #endif
 
 	// Read a bit from the line and store as a byte in "rawData"

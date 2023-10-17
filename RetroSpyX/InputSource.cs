@@ -31,7 +31,7 @@ namespace RetroSpy
         public static readonly InputSource COLECOVISION = new("colecovision", "ColecoVision", true, false, false, true, false, (port, port2, useLagFix) => new SerialControllerReader2(port, port2, useLagFix, ColecoVision.ReadFromPacket, ColecoVision.ReadFromSecondColecoVisionController));
 
         public static readonly InputSource CDTV = new("cdtv", "Commodore CDTV", true, false, false, false, false, (port, useLagFix) => new SerialControllerReader(port, useLagFix, Amiga.ReadFromPacket));
-        public static readonly InputSource CD32 = new("cd32", "Commodore Amiga CD32", true, false, false, false, false, (port, port2, useLagFix) => new SerialControllerReader2(port, port2, useLagFix, Amiga.ReadFromPacket, Amiga.ReadFromPacket2));
+        public static readonly InputSource CD32 = new("cd32", "Commodore Amiga CD32", true, false, false, true, false, (port, port2, useLagFix) => new SerialControllerReader2(port, port2, useLagFix, Amiga.ReadFromPacket, Amiga.ReadFromPacket2));
         public static readonly InputSource C64MINI = new("c64mini", "The C64 Mini", false, false, true, false, false, (hostname, username, password) => new SSHControllerReader(hostname, "sudo pkill -9 usb-mitm ; sudo usb-mitm 2> /dev/null -z", C64mini.ReadFromPacket, username, password, null, 0));
         public static readonly InputSource A500MINI = new("a500", "The A500 Mini", false, false, true, false, false, (hostname, username, password) => new SSHControllerReader(hostname, "sudo pkill -9 usb-mitm ; sudo usb-mitm 2> /dev/null -5", A500.ReadFromPacket, username, password, null, 0));
 

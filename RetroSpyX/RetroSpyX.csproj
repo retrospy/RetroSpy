@@ -707,6 +707,9 @@
     <None Remove="skins\virtualboy-default\skin.xml" />
     <None Remove="skins\virtualboy-default\VBcontroller.png" />
     <None Remove="skins\vsmile-controller\circle.png" />
+    <None Remove="skins\vsmile-controller\skin.xml" />
+    <None Remove="skins\vsmile-controller\vsmile-background.png" />
+    <None Remove="skins\vsmile-controller\vsmile-knob.png" />
     <None Remove="skins\wii-classic\circle.png" />
     <None Remove="skins\wii-classic\classic.png" />
     <None Remove="skins\wii-classic\disconnect.png" />
@@ -2535,7 +2538,18 @@
     <Content Include="skins\virtualboy-default\VBcontroller.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="skins\vsmile-controller\circle.png" />
+    <Content Include="skins\vsmile-controller\circle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="skins\vsmile-controller\skin.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="skins\vsmile-controller\vsmile-background.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="skins\vsmile-controller\vsmile-knob.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="skins\wii-classic\circle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
