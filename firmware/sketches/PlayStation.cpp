@@ -136,6 +136,7 @@ void PlayStationSpy::debugSerial() {
 void PlayStationSpy::loop() {}
 void PlayStationSpy::debugSerial() {}
 void PlayStationSpy::updateState() {}
+void PlayStationSpy::writeSerial() {}
 #endif
 
 const char* PlayStationSpy::startupMsg()
