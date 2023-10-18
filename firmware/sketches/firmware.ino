@@ -530,6 +530,87 @@ bool CreateSpy()
 		((Atari5200Spy*)currentSpy)->setup(false);
 		customSetup = true;
 		break;	
+	case 0x03:
+		currentSpy = new NESSpy();
+		break;
+	case 0x04:
+		currentSpy = new PowerGloveSpy();
+		break;
+	case 0x05:
+		currentSpy = new SNESSpy();
+		break;
+	case 0x06:
+		currentSpy = new N64Spy();
+		break;
+	case 0x07:
+		currentSpy = new GCSpy();
+		break;
+	case 0x08:
+		currentSpy = new SMSSpy();		
+		((SMSSpy*)currentSpy)->setup(SMSSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;	
+	case 0x09:
+		currentSpy = new SMSPaddleSpy();
+		((SMSPaddleSpy*)currentSpy)->setup(SMSPaddleSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;
+	case 0x0A:
+		currentSpy = new SMSSportsPadSpy();
+		break;
+	case 0x0B:
+		currentSpy = new GenesisSpy();
+		break;
+	case 0x0C:
+		currentSpy = new GenesisMouseSpy();
+		break;
+	case 0x0D:
+		currentSpy = new SaturnSpy();
+		break;
+	case 0x0E:
+		currentSpy = new Saturn3DSpy();
+		break;
+	case 0x0F:
+		currentSpy = new PlayStationSpy();
+		break;
+	case 0x10:
+		currentSpy = new GBASpy();
+		break;
+	case 0x11:
+		currentSpy = new BoosterGripSpy();
+		((BoosterGripSpy*)currentSpy)->setup(BoosterGripSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;
+	case 0x12:
+		currentSpy = new TG16Spy();
+		break;
+	case 0x13:
+		currentSpy = new NeoGeoSpy();
+		break;
+	case 0x14:
+		currentSpy = new ThreeDOSpy();
+		((ThreeDOSpy*)currentSpy)->setup(ThreeDOSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;
+	case 0x16:
+		currentSpy = new JaguarSpy();
+		break;
+	case 0x17:
+		currentSpy = new FMTownsSpy();
+		break;
+	case 0x18:
+		currentSpy = new PCFXSpy();
+		break;
+	case 0x1B:
+		currentSpy = new DrivingControllerSpy();
+		((DrivingControllerSpy*)currentSpy)->setup(DrivingControllerSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;		
+	case 0x1C:
+		currentSpy = new SMSSpy();		
+		((SMSSpy*)currentSpy)->setup(SMSSpy::CABLE_GX4000);
+		customSetup = true;
+		break;	
 	}
 #elif defined(RS_VISION_ANALOG_2)
 	switch (ReadAnalog())
