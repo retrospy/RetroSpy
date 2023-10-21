@@ -310,7 +310,22 @@ namespace RetroSpy.Properties {
                 this["UseLagFix"] = value;
             }
         }
-        
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseUSB2
+        {
+            get
+            {
+                return ((bool)(this["UseUSB2"]));
+            }
+            set
+            {
+                this["UseUSB2"] = value;
+            }
+        }
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("3")]

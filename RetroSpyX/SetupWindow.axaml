@@ -36,6 +36,11 @@
                             <CheckBox Name="LagFixCheckbox" Width="20" BorderThickness="0" IsChecked="{Binding UseLagFix}" Click="LagFix_Checked"/>
                         </MenuItem.Icon>
                     </MenuItem>
+					<MenuItem x:Name="UseUSB2" Header="Use USB II" FontFamily="Segoe UI" FontSize="12" HorizontalAlignment="Left" Click="UseUSB2_Checked">
+						<MenuItem.Icon>
+							<CheckBox Name="UseUSB2Checkbox" Width="20" BorderThickness="0" IsChecked="{Binding UseUSB2}" Click="UseUSB2_Checked"/>
+						</MenuItem.Icon>
+					</MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Help" FontFamily="Segoe UI" FontSize="12">
                     <MenuItem FontFamily="Segoe UI" FontSize="12" x:Name="About" Header="About" HorizontalAlignment="Left" Click="About_Click"/>

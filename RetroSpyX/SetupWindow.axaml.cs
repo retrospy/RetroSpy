@@ -87,7 +87,18 @@ namespace RetroSpy
             Properties.Settings.Default.UseLagFix = LagFixCheckbox.IsChecked ?? false;
         }
 
-            private void UpdatePortListThread()
+        private void UseUSB2_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem)
+                UseUSB2Checkbox.IsChecked = !UseUSB2Checkbox.IsChecked;
+
+            _vm.UseUSB2 = UseUSB2Checkbox.IsChecked ?? false;
+            Properties.Settings.Default.UseUSB2 = UseUSB2Checkbox.IsChecked ?? false;
+
+            PopulateSources();
+        }
+
+        private void UpdatePortListThread()
             {
                 if (letUpdatePortThreadRun)
                 {
@@ -256,6 +267,9 @@ namespace RetroSpy
                     }
                 }
 
+                _vm.UseUSB2 = Properties.Settings.Default.UseUSB2;
+                UseUSB2Checkbox.IsChecked = _vm.UseUSB2;
+
                 PopulateSources();
 
                 _vm.Username = _vm.Sources.SelectedItem == InputSource.MISTER
@@ -397,6 +411,7 @@ namespace RetroSpy
             Properties.Settings.Default.FilterCOMPorts = _vm.FilterCOMPorts;
             Properties.Settings.Default.DontSavePassword = _vm.DontSavePassword;
             Properties.Settings.Default.UseLagFix = _vm.UseLagFix;
+            Properties.Settings.Default.UseUSB2 = _vm.UseUSB2;
 
             if (_vm.Sources.SelectedItem == InputSource.MISTER)
             {
@@ -516,13 +531,17 @@ namespace RetroSpy
         private void PopulateSources()
         {
             List<InputSource> prunedSources = new();
+
             foreach (InputSource source in InputSource.GetAllSources())
             {
-                if (!_excludedSources.Contains(source.Name))
+                if (!_excludedSources.Contains(source.Name) 
+                    && !(source.UseUSB2 == 0 && _vm.UseUSB2 == true) 
+                    && !(source.UseUSB2 == 1 && _vm.UseUSB2 == false))
                 {
                     prunedSources.Add(source);
                 }
             }
+         
             _vm.Sources.UpdateContents(prunedSources);
         }
 
@@ -1031,6 +1050,7 @@ namespace RetroSpy
         public bool FilterCOMPorts { get; set; }
         public bool DontSavePassword { get; set; }
         public bool UseLagFix { get; set; }
+        public bool UseUSB2 { get; set; }
 
         public string? Username { get; set; }
 
