@@ -547,7 +547,7 @@ namespace RetroSpy
 
         private static void AvaloniaMessageBox(string? title, string message, ButtonEnum buttonType, MsBox.Avalonia.Enums.Icon iconType)
         {
-            using var source = new CancellationTokenSource();
+            var source = new CancellationTokenSource();
             _ = MsBox.Avalonia.MessageBoxManager
             .GetMessageBoxStandard(title ?? "Unknown Title Argument", message, buttonType, iconType)
                         .ShowAsync().ContinueWith(t => source.Cancel(), TaskScheduler.FromCurrentSynchronizationContext());
@@ -557,7 +557,7 @@ namespace RetroSpy
 
         private void AvaloniaMessageBoxDialog(string? title, string message, ButtonEnum buttonType, MsBox.Avalonia.Enums.Icon iconType)
         {
-            using var source = new CancellationTokenSource();
+            var source = new CancellationTokenSource();
             var m = MsBox.Avalonia.MessageBoxManager
                     .GetMessageBoxStandard(title ?? "Unknown Title Argument", message, buttonType, iconType);
             m.ShowWindowDialogAsync(this).ContinueWith(t => source.Cancel(), TaskScheduler.FromCurrentSynchronizationContext());

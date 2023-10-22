@@ -62,7 +62,7 @@ namespace RetroSpy
         public static readonly InputSource N64 = new("n64", "Nintendo 64", true, false, false, false, false, 3,  (port, useLagFix) => new SerialControllerReader(port, useLagFix, Nintendo64.ReadFromPacket));
         public static readonly InputSource GAMECUBE = new("gamecube", "Nintendo GameCube", true, false, false, true, false, 3,  (port, port2, useLagFix) => new SerialControllerReader2(port, port2, useLagFix, GameCube.ReadFromPacket, GameCube.ReadFromSecondPacket));
         public static readonly InputSource WII = new("wii", "Nintendo Wii", true, false, false, false, false, 3,  (port, useLagFix) => new SerialControllerReader(port, useLagFix, WiiReaderV2.ReadFromPacket));
-        public static readonly InputSource SWITCH = new("switch", "Nintendo Switch", false, false, true, false, false,3,  (hostname, username, password) => new SSHControllerReader(hostname, "sudo pkill -9 usb-mitm ; sudo usb-mitm 2> /dev/null -z", SwitchReader.ReadFromPacket, username, password, null, 0));
+        public static readonly InputSource SWITCH = new("switch", "Nintendo Switch", false, false, true, false, false,0,  (hostname, username, password) => new SSHControllerReader(hostname, "sudo pkill -9 usb-mitm ; sudo usb-mitm 2> /dev/null -z", SwitchReader.ReadFromPacket, username, password, null, 0));
 
         public static readonly InputSource THREEDO = new("3do", "Panasonic 3DO", true, false, false, false, false, 3,  (port, useLagFix) => new SerialControllerReader(port, useLagFix, ThreeDO.ReadFromPacket));
 
@@ -84,10 +84,10 @@ namespace RetroSpy
         public static readonly InputSource NEOGEOMINI = new("neogeomini", "SNK NeoGeo Mini", false, false, true, false, false,3,  (hostname, username, password) => new SSHControllerReader(hostname, "sudo pkill -9 usb-mitm ; sudo usb-mitm 2> /dev/null -g", NeoGeoMini.ReadFromPacket, username, password, null, 0));
 
         public static readonly InputSource PLAYSTATION2 = new("playstation", "Sony Playstation 1/2", true, false, false, false, false, 3,  (port, useLagFix) => new SerialControllerReader(port, useLagFix, Playstation2.ReadFromPacket));
-        public static readonly InputSource PS3 = new("playstation3", "Sony PlayStation 3", false, false, true, false, false,3,  (hostname, username, password) => new SSHControllerReader(hostname, "sudo pkill -9 usb-mitm ; sleep 1 ; sudo usb-mitm 2> /dev/null -u", PS3Reader.ReadFromPacket, username, password, null, 0));
-        public static readonly InputSource PS4 = new("playstation4", "Sony PlayStation 4", false, false, true, false, false,3,  (hostname, username, password) => new SSHControllerReader(hostname, "sudo pkill -9 ds4drv ; sudo ds4drv --hidraw --dump-reports", PS4Reader.ReadFromPacket, username, password, null, 0));
-        public static readonly InputSource PS4CRONUS = new("playstation4", "Sony PlayStation 4 via Cronus Zen", false, false, true, false, false,3,  (hostname, username, password) => new SSHControllerReader(hostname, "sudo pkill -9 usb-mitm ; sleep 1 ; sudo usb-mitm 2> /dev/null -q", PS4Reader.ReadFromPacket, username, password, null, 0));
-        public static readonly InputSource PS4USB = new("playstation4", "Sony PlayStation 4 Wired Controllers", false, false, true, false, false,3,  (hostname, username, password) => new SSHControllerReader(hostname, "sudo pkill -9 usb-mitm ; sleep 1 ; sudo usb-mitm 2> /dev/null -7", PS4Reader.ReadFromPacket, username, password, null, 0));
+        public static readonly InputSource PS3 = new("playstation3", "Sony PlayStation 3", false, false, true, false, false,0,  (hostname, username, password) => new SSHControllerReader(hostname, "sudo pkill -9 usb-mitm ; sleep 1 ; sudo usb-mitm 2> /dev/null -u", PS3Reader.ReadFromPacket, username, password, null, 0));
+        public static readonly InputSource PS4 = new("playstation4", "Sony PlayStation 4", false, false, true, false, false,0,  (hostname, username, password) => new SSHControllerReader(hostname, "sudo pkill -9 ds4drv ; sudo ds4drv --hidraw --dump-reports", PS4Reader.ReadFromPacket, username, password, null, 0));
+        public static readonly InputSource PS4CRONUS = new("playstation4", "Sony PlayStation 4 via Cronus Zen", false, false, true, false, false,0,  (hostname, username, password) => new SSHControllerReader(hostname, "sudo pkill -9 usb-mitm ; sleep 1 ; sudo usb-mitm 2> /dev/null -q", PS4Reader.ReadFromPacket, username, password, null, 0));
+        public static readonly InputSource PS4USB = new("playstation4", "Sony PlayStation 4 Wired Controllers", false, false, true, false, false,0,  (hostname, username, password) => new SSHControllerReader(hostname, "sudo pkill -9 usb-mitm ; sleep 1 ; sudo usb-mitm 2> /dev/null -7", PS4Reader.ReadFromPacket, username, password, null, 0));
         public static readonly InputSource PSCLASSIC = new("psclassic", "Sony PlayStation Classic", false, false, true, false, false,3,  (hostname, username, password) => new SSHControllerReader(hostname, "sudo pkill -9 usb-mitm ; sudo usb-mitm 2> /dev/null -y", SuperNESandNES.ReadFromPacketPSClassic, username, password, null, 0));
 
         public static readonly InputSource NUON = new("nuon", "VM Labs Nuon", true, false, false, false, false, 3,  (port, useLagFix) => new SerialControllerReader(port, useLagFix, Nuon.ReadFromPacket));
@@ -96,6 +96,9 @@ namespace RetroSpy
         public static readonly InputSource VFLASH = new("vflash", "VTech V.Flash", true, false, false, false, false, 3,  (port, useLagFix) => new SerialControllerReader(port, useLagFix, VFlash.ReadFromPacket));
 
         public static readonly InputSource XBOX360_II = new("xbox360", "Microsoft Xbox 360", true, false, false, false, false, 1,  (port, useLagFix) => new SuperSerialControllerReader(port, useLagFix, true,  XBox360Reader_II.ReadFromPacket));
+        public static readonly InputSource SWITCH_II = new("switch", "Nintendo Switch", true, false, false, false, false, 1, (port, useLagFix) => new SuperSerialControllerReader(port, useLagFix, true, SwitchReader_II.ReadFromPacket));
+        public static readonly InputSource PS4_II = new("playstation4", "Sony PlayStation 4", true, false, false, false, false, 1, (port, useLagFix) => new SuperSerialControllerReader(port, useLagFix, true, PS4Reader_II.ReadFromPacket));
+        public static readonly InputSource PS3_II = new("playstation3", "Sony PlayStation 3", true, false, false, false, false, 1, (port, useLagFix) => new SuperSerialControllerReader(port, useLagFix, true, PS3Reader_II.ReadFromPacket));
 
 
         // Retired/Non-Functional
@@ -107,18 +110,18 @@ namespace RetroSpy
 
         public static readonly IReadOnlyList<InputSource> ALL = new List<InputSource> {
 #pragma warning disable CS8604 // Possible null reference argument.
-            MISTER, POCKET, CLASSIC, DRIVINGCONTROLLER, ATARIKEYBOARD, PADDLES, ATARI5200, JAGUAR, ATARIVCS, PIPPIN, EVERCADE, COLECOVISION, CDTV, CD32, C64MINI, A500MINI, FMTOWNS, INTELLIVISION, DOLPHIN, XBOX, XBOX360, XBOX360_II, TG16, PCFX, TG16MINI, NES, SNES, VIRTUALBOY, N64, GAMECUBE, WII, SWITCH, THREEDO, PC360, PAD, PCKEYBOARD, CDI, SEGA, SATURN3D, DREAMCAST, GENMINI, GENMINI2, NEOGEO, NEOGEOMINI, PLAYSTATION2, PS3, PS4, PS4CRONUS, PS4USB, PSCLASSIC, NUON, VSMILE, VFLASH
+            MISTER, POCKET, CLASSIC, DRIVINGCONTROLLER, ATARIKEYBOARD, PADDLES, ATARI5200, JAGUAR, ATARIVCS, PIPPIN, EVERCADE, COLECOVISION, CDTV, CD32, C64MINI, A500MINI, FMTOWNS, INTELLIVISION, DOLPHIN, XBOX, XBOX360, XBOX360_II, TG16, PCFX, TG16MINI, NES, SNES, VIRTUALBOY, N64, GAMECUBE, WII, SWITCH, SWITCH_II, THREEDO, PC360, PAD, PCKEYBOARD, CDI, SEGA, SATURN3D, DREAMCAST, GENMINI, GENMINI2, NEOGEO, NEOGEOMINI, PLAYSTATION2, PS3_II, PS3, PS4_II, PS4, PS4CRONUS, PS4USB, PSCLASSIC, NUON, VSMILE, VFLASH
 #pragma warning restore CS8604 // Possible null reference argument.
         };
 
         public static readonly IReadOnlyList<InputSource> ALL_LINUX = new List<InputSource> {
 #pragma warning disable CS8604 // Possible null reference argument.
-            MISTER, POCKET, CLASSIC, DRIVINGCONTROLLER, ATARIKEYBOARD, PADDLES, ATARI5200, JAGUAR, ATARIVCS, PIPPIN, EVERCADE, COLECOVISION, CDTV, CD32, C64MINI, A500MINI, FMTOWNS, INTELLIVISION, LINUX, LINUXKEY, DOLPHIN, XBOX, XBOX360, TG16, PCFX, TG16MINI, NES, SNES, VIRTUALBOY, N64, GAMECUBE, WII, SWITCH, THREEDO, CDI, SEGA, SATURN3D, DREAMCAST, GENMINI, GENMINI2, NEOGEO, NEOGEOMINI, PLAYSTATION2, PS3, PS4, PS4CRONUS, PS4USB, PSCLASSIC, NUON, VSMILE, VFLASH
+            MISTER, POCKET, CLASSIC, DRIVINGCONTROLLER, ATARIKEYBOARD, PADDLES, ATARI5200, JAGUAR, ATARIVCS, PIPPIN, EVERCADE, COLECOVISION, CDTV, CD32, C64MINI, A500MINI, FMTOWNS, INTELLIVISION, LINUX, LINUXKEY, DOLPHIN, XBOX, XBOX360, XBOX360_II, TG16, PCFX, TG16MINI, NES, SNES, VIRTUALBOY, N64, GAMECUBE, WII, SWITCH, SWITCH_II, THREEDO, CDI, SEGA, SATURN3D, DREAMCAST, GENMINI, GENMINI2, NEOGEO, NEOGEOMINI, PLAYSTATION2,PS3_II, PS3, PS4, PS4_II, PS4CRONUS, PS4USB, PSCLASSIC, NUON, VSMILE, VFLASH
 #pragma warning restore CS8604 // Possible null reference argument.
         };
 
         public static readonly IReadOnlyList<InputSource> ALL_MACOS = new List<InputSource> {
-            MISTER, POCKET, CLASSIC, DRIVINGCONTROLLER, ATARIKEYBOARD, PADDLES, ATARI5200, JAGUAR, ATARIVCS, PIPPIN, EVERCADE, COLECOVISION, CDTV, CD32, C64MINI, A500MINI, FMTOWNS, INTELLIVISION, DOLPHIN, XBOX, XBOX360, TG16, PCFX, TG16MINI, NES, SNES, VIRTUALBOY, N64, GAMECUBE, WII, SWITCH, THREEDO, CDI, SEGA, SATURN3D, DREAMCAST, GENMINI, GENMINI2, NEOGEO, NEOGEOMINI, PLAYSTATION2, PS3, PS4, PS4CRONUS, PS4USB, PSCLASSIC, NUON, VSMILE, VFLASH
+            MISTER, POCKET, CLASSIC, DRIVINGCONTROLLER, ATARIKEYBOARD, PADDLES, ATARI5200, JAGUAR, ATARIVCS, PIPPIN, EVERCADE, COLECOVISION, CDTV, CD32, C64MINI, A500MINI, FMTOWNS, INTELLIVISION, DOLPHIN, XBOX, XBOX360, XBOX360_II, TG16, PCFX, TG16MINI, NES, SNES, VIRTUALBOY, N64, GAMECUBE, WII, SWITCH, SWITCH_II, THREEDO, CDI, SEGA, SATURN3D, DREAMCAST, GENMINI, GENMINI2, NEOGEO, NEOGEOMINI, PLAYSTATION2, PS3_II, PS3, PS4_II, PS4, PS4CRONUS, PS4USB, PSCLASSIC, NUON, VSMILE, VFLASH
         };
 
         public static IReadOnlyList<InputSource> GetAllSources()
