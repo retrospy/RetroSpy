@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace RetroSpy.Readers
 {
@@ -48,6 +49,47 @@ namespace RetroSpy.Readers
             return state.Build();
         }
 
+        public static byte[] StringToByteArray(String hex)
+        {
+            int NumberChars = hex.Length;
+            byte[] bytes = new byte[NumberChars / 2];
+            for (int i = 0; i < NumberChars; i += 2)
+                bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+            return bytes;
+        }
+
+        private static ControllerStateEventArgs? ReadPacketButtonsPS_binary(byte[]? packet, string?[] buttons)
+        {
+            if (packet == null)
+            {
+                return null;
+            }
+
+            byte[] binaryPacket = StringToByteArray(Encoding.UTF8.GetString(packet, 0, packet.Length).Trim());
+       
+            if ((packet.Length * 8) < buttons.Length)
+                return null;
+
+            ControllerStateBuilder state = new();
+
+            for (int i = 0; i < buttons.Length; ++i)
+            {
+                if (string.IsNullOrEmpty(buttons[i]))
+                {
+                    continue;
+                }
+
+                if(i == 10 || i == 12)
+                {
+                    state.SetButton(buttons[i], (binaryPacket[i / 8] & (1 << (i % 8))) == 0 && (binaryPacket[i / 8] & (1 << ((i+1) % 8))) == 0);
+                }
+                else
+                    state.SetButton(buttons[i], (binaryPacket[i/8] & (1 << (i%8)))  != 0);
+            }
+
+            return state.Build();
+        }
+
         private static readonly string?[] BUTTONS_NES = {
             "a", "b", "select", "start", "up", "down", "left", "right", "2", "1", "5", "9", "6", "10", "11", "7", "4", "3", "12", "8", null, null, null, null
         };
@@ -79,6 +121,11 @@ namespace RetroSpy.Readers
         private static readonly string?[] BUTTONS_PSCLASSIC =
         {
             "r1", "l1", "r2", "l2", "square", "x", "circle", "triangle", null, null, "down", "up", "right", "left", "start", "select"
+        };
+
+        private static readonly string?[] BUTTONS_PSCLASSIC_II =
+{
+            "triangle", "circle", "x", "square", "l2", "r2", "l1", "r1", "select", "start", "left", "right", "up", "down", null, null
         };
 
         private static readonly string?[] BUTTONS_ATARI5200 =
@@ -247,6 +294,11 @@ namespace RetroSpy.Readers
         public static ControllerStateEventArgs? ReadFromPacketPSClassic(byte[]? packet)
         {
             return packet == null ? throw new ArgumentNullException(nameof(packet)) : ReadPacketButtons_ascii(packet, BUTTONS_PSCLASSIC);
+        }
+
+        public static ControllerStateEventArgs? ReadFromPacketPSClassic_II(byte[]? packet)
+        {
+            return packet == null ? throw new ArgumentNullException(nameof(packet)) : ReadPacketButtonsPS_binary(packet, BUTTONS_PSCLASSIC_II);
         }
 
         public static ControllerStateEventArgs? ReadFromPacketSNES(byte[]? packet)

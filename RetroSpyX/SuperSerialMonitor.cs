@@ -70,6 +70,8 @@ namespace RetroSpy
             _datPort?.Write("z");
             _datPort?.Write("z");
             _datPort?.Write(_isFullSpeed ? "x" : "y");
+            _datPort?.Write(_isFullSpeed ? "x" : "y");
+            _datPort?.Write(_isFullSpeed ? "x" : "y");
             _datPort?.Write("s");
 
             _timer = new DispatcherTimer(DispatcherPriority.Normal)
