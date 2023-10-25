@@ -693,6 +693,12 @@ bool CreateSpy()
 	case 0x12:
 		currentSpy = new DreamcastSpy();
 		break;
+	case 0x13:
+		currentSpy = new VSmileSpy();
+		break;
+	case 0x14:
+		currentSpy = new VFlashSpy();
+		break;
 	}
 #elif defined(MODE_DETECT)
 	if (!PINC_READ(MODEPIN_SNES))
