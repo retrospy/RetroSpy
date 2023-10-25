@@ -29,14 +29,11 @@
 
 
 
-#if (defined(__arm__) && defined(CORE_TEENSY) && (defined (ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41))) || defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-
+#if (defined(__arm__) && defined(CORE_TEENSY) && (defined (ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41)))
 #if defined (ARDUINO_TEENSY35)
 #define DETECT_FALLING_EDGE rawData[byteCount] = (GPIOD_PDIR & 0x3); do { prevPin = rawData[byteCount]; rawData[byteCount] = (GPIOD_PDIR & 0x3); } while( rawData[byteCount] >= prevPin);
 #elif defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41)
 #define DETECT_FALLING_EDGE rawData[byteCount] = (GPIO6_PSR >> 2) & 0x03; do { prevPin = rawData[byteCount]; rawData[byteCount] = (GPIO6_PSR >> 2) & 0x03; } while( rawData[byteCount] >= prevPin);
-#elif defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-#define DETECT_FALLING_EDGE rawData[byteCount] = gpio_get_all() & 0x03; if ((rawData[byteCount] & 1) ^ ((rawData[byteCount] & 2) >> 1)) { rawData[byteCount] ^= 1; rawData[byteCount] ^= 2; } do { prevPin = rawData[byteCount]; rawData[byteCount] = gpio_get_all() & 0x03; if ((rawData[byteCount] & 1) ^ ((rawData[byteCount] & 2) >> 1)) { rawData[byteCount] ^= 1; rawData[byteCount] ^= 2; } } while( rawData[byteCount] >= prevPin);
 #endif
 
 void DreamcastSpy::setup() {
@@ -378,6 +375,150 @@ state5:                             // Phase 1
 
 state7:
 	interrupts();
+}
+#elif defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+
+#include "MapleBusInterface.hpp"
+#include "maple_in.pio.h"
+#include "maple_out.pio.h"
+
+static std::shared_ptr<MapleBusInterface> bus;
+MaplePacket mPacketIn;
+
+void DreamcastSpy::setup() {
+	
+	mPacketIn.reservePayload(256);
+	
+	// Create the bus for client-mode operation
+	bus = create_maple_bus(2, P1_DIR_PIN, DIR_OUT_HIGH);
+}
+
+static int len;
+FASTRUN void DreamcastSpy::loop1()
+{
+	if (sendRequest)
+	{
+		len = rawData[0];
+		memcpy(sendData, &rawData[1], len);
+		sendRequest = false;
+
+#ifdef DEBUG
+		debugSerial();
+#else
+		writeSerial();
+#endif
+	}
+}
+
+static const uint64_t READ_TIMEOUT_US = 1000000;
+
+FASTRUN void DreamcastSpy::loop()
+{
+	while (sendRequest)
+	{
+	}
+	
+	MapleBusInterface::Status status = bus->processEvents(micros());
+	switch (status.phase)
+	{
+	case MapleBusInterface::Phase::WAITING_FOR_READ_START: // Fall through
+	case MapleBusInterface::Phase::READ_IN_PROGRESS:
+		{
+			// Nothing to do (waiting for current process to complete)
+		}
+		break;
+
+	case MapleBusInterface::Phase::READ_COMPLETE:
+		{
+			mPacketIn.set(status.readBuffer, status.readBufferLen);
+			if (mPacketIn.frame.command == 8)
+			{
+				rawData[0] = mPacketIn.payload.size() * 4;
+				for (int i = 0; i < mPacketIn.payload.size(); ++i)
+				{
+					rawData[(i * 4 + 0) + 1] = ((mPacketIn.payload[i] & 0xFF000000) >> 24);
+					rawData[(i * 4 + 1) + 1] = ((mPacketIn.payload[i] & 0x00FF0000) >> 16);
+					rawData[(i * 4 + 2) + 1] = ((mPacketIn.payload[i] & 0x0000FF00) >> 8);
+					rawData[(i * 4 + 3) + 1] = ((mPacketIn.payload[i] & 0x000000FF) >> 0);
+				}
+				sendRequest = true;
+			}
+		}
+		break;
+	default:
+		{
+			(void)bus->startRead(READ_TIMEOUT_US);
+		}
+		break;
+	}
+}
+
+FASTRUN void DreamcastSpy::writeSerial()
+{
+	for (int i = 0; i < len; i++)
+	{
+		Serial.write((sendData[i] & 0x0F) << 4);
+		Serial.write(sendData[i] & 0xF0);
+	}
+	Serial.write(SPLIT);
+}
+
+FASTRUN void DreamcastSpy::debugSerial() {
+	
+	uint16_t controllerType = (sendData[2] << 8) | sendData[3];
+
+	if (controllerType == 0x01 && len == 12)
+	{
+		Serial.print(sendData[7]);
+		Serial.print("|");
+		Serial.print(sendData[6]);
+		Serial.print("|");
+			
+		for (int i = 0; i < 16; ++i)
+		{
+			Serial.print((sendData[i / 8 + 4] & (1 << (i % 8))) == 0 ? "1" : "0");
+		}
+			
+		Serial.print("|");
+		Serial.print(sendData[9]);
+		Serial.print("|");
+		Serial.println(sendData[8]);
+	}
+	else if (controllerType == 0x200 && len == 24)
+	{
+		for (int i = 0; i < 8; ++i)
+		{
+			Serial.print((sendData[4] & (1 << i)) == 0 ? "1" : "0");
+		}
+		Serial.print("|");
+		Serial.print(sendData[11] << 8 | sendData[10]);
+		Serial.print("|");
+		Serial.print(sendData[9] << 8 | sendData[8]);
+		Serial.print("|");
+		Serial.println(sendData[13] << 8 | sendData[12]);
+	}
+	else if (controllerType == 0x40 && len == 12)
+	{
+		for (int i = 0; i < 8; ++i)
+		{
+			Serial.print((sendData[4] & (1 << i)) == 0 ? "1" : "0");
+		}
+		Serial.print("|");
+		Serial.print(sendData[6]);
+		Serial.print("|");
+		Serial.print(sendData[7]);
+		Serial.print("|");
+		Serial.print(sendData[8]);
+		Serial.print("|");
+		Serial.print(sendData[9]);
+		Serial.print("|");
+		Serial.print(sendData[10]);
+		Serial.print("|");
+		Serial.println(sendData[11]);
+	}
+}
+FASTRUN void DreamcastSpy::updateState() {
+
 }
 #else
 void DreamcastSpy::setup() {

@@ -33,6 +33,7 @@ class DreamcastSpy : public ControllerSpy {
 public:
 	void setup();
 	FASTRUN void loop();
+	FASTRUN void loop1();
 	FASTRUN void writeSerial();
 	FASTRUN void debugSerial();
 	FASTRUN void updateState();
@@ -41,8 +42,10 @@ public:
 
 private:
 	byte rawData[16000];
+	byte sendData[32];
 	byte* p;
 	int byteCount;
+	volatile bool sendRequest = false;
 };
 
 #endif

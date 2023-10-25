@@ -11,6 +11,11 @@ namespace RetroSpy.Readers
             null, null, null, null, null, null, null, null, "RightWindowsKey" /*S2*/, "RightAlt", "RightShift", "RightControl", "LeftWindowsKey" /*S1*/,  "LeftAlt", "LeftShift", "LeftControl"
         };
 
+        private static readonly string?[] MODIFER_KEYS_PI =
+{
+            "LeftControl", "LeftShift", "LeftAlt", "LeftWindowsKey" /*S1*/, "RightControl", "RigthShift", "RightAlt", "RightWindowsKey" /*S2*/, null, null, null, null, null, null, null, null
+        };
+
         private static readonly string?[] KEYS =
         {
             null, null, null, null, "A", "B", "C", "D",
@@ -41,8 +46,16 @@ namespace RetroSpy.Readers
             "right2", "left2", "down2", "up2", "d", "x", "y", "z", "right", "left", "down", "up", "start", "a", "b", "c"
         };
 
+        private static readonly string[] BUTTONS_PI = {
+            "c", "b", "a", "start", "up", "down", "left", "right", "z", "y", "x", "d", "up2", "down2", "left2", "right2"
+        };
+
         private static readonly string?[] MOUSE_BUTTONS = {
             null, null, null, null, "start", "left", "right", "middle"
+        };
+
+        private static readonly string?[] MOUSE_BUTTONS_PI = {
+            "middle", "right", "left", "start", null, null, null, null
         };
 
         private static float ReadTrigger(byte input)
@@ -60,6 +73,94 @@ namespace RetroSpy.Readers
             if (packet == null)
             {
                 throw new ArgumentNullException(nameof(packet));
+            }
+
+            if (packet.Length == 24 || packet.Length == 48)
+            {
+                byte[] reconstructedPacket = new byte[24];
+                for (int i = 0; i < packet.Length / 2; ++i)
+                {
+                    reconstructedPacket[i] = (byte)((packet[i * 2] >> 4) | packet[(i * 2) + 1]);
+                }
+
+                ushort controllerType = (ushort)((reconstructedPacket[2] << 8) | reconstructedPacket[3]);
+
+                if (controllerType == 0x01 && packet.Length == 24)
+                {
+                    ControllerStateBuilder pistate = new();
+
+                    for (int i = 0; i < BUTTONS_PI.Length; ++i)
+                    {
+                        if (!string.IsNullOrEmpty(BUTTONS_PI[i]))
+                        {
+                            pistate.SetButton(BUTTONS_PI[i], (reconstructedPacket[i / 8 + 4] & (1 << (i % 8))) == 0x0);
+                        }
+                    }
+
+                    pistate.SetAnalog("trig_l", ReadTrigger(reconstructedPacket[7]), reconstructedPacket[7]);
+                    pistate.SetAnalog("trig_r", ReadTrigger(reconstructedPacket[6]), reconstructedPacket[6]);
+                    pistate.SetAnalog("stick_x", ReadStick(reconstructedPacket[8]), reconstructedPacket[8]);
+                    pistate.SetAnalog("stick_y", ReadStick(reconstructedPacket[9]), reconstructedPacket[9]);
+
+
+                    return pistate.Build();
+                }
+                else if (controllerType == 0x200 && packet.Length == 48)
+                {
+                    ControllerStateBuilder pistate = new();
+
+                    for (int i = 0; i < MOUSE_BUTTONS_PI.Length; ++i)
+                    {
+                        if (!string.IsNullOrEmpty(MOUSE_BUTTONS_PI[i]))
+                        {
+                            pistate.SetButton(MOUSE_BUTTONS_PI[i], (reconstructedPacket[4] & (1 << i)) == 0x0);
+                        }
+                    }
+
+                    short axis1 = (short)(reconstructedPacket[11] << 8 | reconstructedPacket[10]);
+                    short axis2 = (short)(reconstructedPacket[9] << 8 | reconstructedPacket[8]);
+                    short axis3 = (short)(reconstructedPacket[13] << 8 | reconstructedPacket[12]);
+
+                    float x = (axis2 - 512) / 512.0f;
+                    float y = -1 * (axis1 - 512) / 512.0f;
+
+                    SignalTool.SetMouseProperties(x, y, axis2, axis1, pistate);
+
+                    pistate.SetButton("scroll_up", axis3 < 512);
+                    pistate.SetButton("scroll_down", axis3 > 512);
+
+                    return pistate.Build();
+                }   
+                else if (controllerType == 0x40 && packet.Length == 24)
+                {
+                    ControllerStateBuilder pistate = new();
+
+                    for (int i = 0; i < MODIFER_KEYS_PI.Length; ++i)
+                    {
+                        if (!string.IsNullOrEmpty(MODIFER_KEYS_PI[i]))
+                        {
+                            pistate.SetButton(MODIFER_KEYS_PI[i], (reconstructedPacket[4] & (1 << i)) != 0x0);
+                        }
+                    }
+
+                    for (int i = 0; i < KEYS.Length; ++i)
+                    {
+                        if (KEYS[i] != null)
+                        {
+                            pistate.SetButton(KEYS[i], false);
+                        }
+                    }
+
+                    for (int i = 0; i < 6; ++i)
+                    {
+                        if (KEYS[reconstructedPacket[i + 6]] != null)
+                        {
+                            pistate.SetButton(KEYS[reconstructedPacket[i + 6]], true);
+                        }
+                    }
+
+                    return pistate.Build();
+                }
             }
 
             if (packet.Length < FRAME_HEADER_SIZE)

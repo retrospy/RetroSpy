@@ -74,6 +74,17 @@
         <string>sketches\config_every.h</string>
         <string>sketches\GBA.h</string>
         <string>sketches\config_pico.h</string>
+        <string>sketches\maple_in.pio</string>
+        <string>sketches\maple_out.pio</string>
+        <string>sketches\MapleBus.hpp</string>
+        <string>sketches\MapleBusInterface.hpp</string>
+        <string>sketches\MaplePacket.hpp</string>
+        <string>sketches\PioProgram.hpp</string>
+        <string>sketches\configuration.h</string>
+        <string>sketches\dreamcast_constants.h</string>
+        <string>sketches\utils.h</string>
+        <string>sketches\maple_in.pio.h</string>
+        <string>sketches\maple_out.pio.h</string>
       </OtherFiles>
     </ProjectModeSettings>
   </Project>
@@ -817,7 +828,7 @@
       </DebugSettingsOverride>
       <BuildSettingsExtension xsi:type="com.visualgdb.build.external.arduino.extension">
         <BoardID>rp2040:rp2040:rpipico</BoardID>
-        <COMPort>COM11</COMPort>
+        <COMPort />
         <Properties>
           <Entries>
             <KeyValue>

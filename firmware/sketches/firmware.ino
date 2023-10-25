@@ -690,6 +690,9 @@ bool CreateSpy()
 	case 0x11:
 		currentSpy = new JaguarSpy();
 		break;
+	case 0x12:
+		currentSpy = new DreamcastSpy();
+		break;
 	}
 #elif defined(MODE_DETECT)
 	if (!PINC_READ(MODEPIN_SNES))
