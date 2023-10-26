@@ -1,6 +1,8 @@
 #ifndef __MAPLE_BUS_H__
 #define __MAPLE_BUS_H__
 
+#if (RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+
 //#include <memory>
 //#include <limits>
 #include "MapleBusInterface.hpp"
@@ -146,5 +148,7 @@ class MapleBus : public MapleBusInterface
 };
 
 std::shared_ptr<MapleBusInterface> create_maple_bus(uint32_t pinA, int32_t dirPin, bool dirOutHigh);
+
+#endif
 
 #endif // __MAPLE_BUS_H__

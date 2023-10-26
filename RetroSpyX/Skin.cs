@@ -154,7 +154,7 @@ namespace RetroSpy
         public uint OriginalX { get; set; }
         public uint OriginalY { get; set; }
         public FontFamily? Font { get; set; }
-        public Brush? Color { get; set; }
+        public IBrush? Color { get; set; }
         public uint Range { get; set; }
         public float Size { get; set; }
         public string? Name { get; set; }
@@ -569,7 +569,7 @@ namespace RetroSpy
                 }
 
                 var converter = new BrushConverter();
-                var brush = (Brush?)converter.ConvertFromString(colorAttrs.First().Value);
+                var brush = (IBrush?)converter.ConvertFromString(colorAttrs.First().Value);
 
                 Collection<string> targetBgs = GetArrayAttr(elem, "target", false);
                 Collection<string> ignoreBgs = GetArrayAttr(elem, "ignore", false);
