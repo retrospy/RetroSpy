@@ -14,7 +14,7 @@ namespace RetroSpy.Readers
         private static float ReadStick(byte input)
         {
             if (input >= 8)
-                return (float)((8 - input) / 7.0);
+                return (float)((8.0 - input) / 7.0);
             else
                 return (float)(input / 7.0);
         }
@@ -40,8 +40,8 @@ namespace RetroSpy.Readers
                     state.SetButton(BUTTONS[i], packet[i] != 0x00);
                 }
 
-                state.SetAnalog("lstick_x", ReadStick(packet[8]), packet[8]);
-                state.SetAnalog("lstick_y", ReadStick(packet[9]), packet[9]);
+                state.SetAnalog("lstick_x", ReadStick((byte)(packet[8] >> 4)), packet[8] >> 4);
+                state.SetAnalog("lstick_y", ReadStick((byte)(packet[9] >> 4)), packet[9] >> 4);
 
                 return state.Build();
             }

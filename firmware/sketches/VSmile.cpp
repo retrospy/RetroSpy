@@ -41,19 +41,24 @@ static byte y = 0;
 
 void VSmileSpy::setup() {
 	
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	Serial2.setRX(5);
+#endif
 	Serial1.begin(4800);
 	Serial2.begin(4800);
 	
 }
 
 void VSmileSpy::loop() {
+	noInterrupts();
 	updateState();
+	interrupts();
 #if !defined(DEBUG)
 	writeSerial();
 #else
 	debugSerial();
 #endif
-	delay(5);
+	//delay(16);
 }
 
 void VSmileSpy::writeSerial() {
@@ -65,8 +70,8 @@ void VSmileSpy::writeSerial() {
 	Serial.write(helpButton ? ONE : ZERO);
 	Serial.write(exitButton ? ONE : ZERO);
 	Serial.write(learningZoneButton ? ONE : ZERO);
-	Serial.write(x == 10 ? 11 : x);
-	Serial.write(y == 10 ? 11 : y);
+	Serial.write(x << 4);
+	Serial.write(y << 4);
 	Serial.write(SPLIT);
 }
 
