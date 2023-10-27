@@ -128,4 +128,29 @@
 #define BOOSTER_GRIP_ONGEN_INPUT_PIN_5 4;
 #define BOOSTER_GRIP_ONGEN_INPUT_PIN_6 5;
 
+#define INTPIN1            0
+#define INTPIN2            1
+#define INTPIN3            2
+#define INTPIN4            3
+#define INTPIN6            5
+#define INTPIN7            8
+#define INTPIN8            9
+#define INTPIN9            6
+
+#define PCFX_LATCH         1
+#define PCFX_CLOCK         2
+#define PCFX_DATA          3
+
+#define ThreeDO_LATCH      0
+#define ThreeDO_DATA       5
+#define ThreeDO_CLOCK      1
+
+#define VIS_ThreeDO_LATCH  4
+#define VIS_ThreeDO_DATA   5
+#define VIS_ThreeDO_CLOCK  6
+
+#define GENESIS_TH            6
+#define GENESIS_TR            5
+#define GENESIS_TL            4
+
 #define FASTRUN

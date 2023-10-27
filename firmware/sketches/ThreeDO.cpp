@@ -26,7 +26,7 @@
 
 #include "ThreeDO.h"
 
-#if !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
+#if !(defined(__arm__) && defined(CORE_TEENSY))
 
 void ThreeDOSpy::setup(uint8_t cableType) {
 	this->cableType = cableType;
@@ -35,10 +35,12 @@ void ThreeDOSpy::setup(uint8_t cableType) {
 
 void ThreeDOSpy::setup() {
 
+#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO) || defined(ARDUINO_AVR_NANO_EVERY) || defined(ARDUINO_AVR_LARDU_328E)
 	PORTD = 0x00;
 	PORTB = 0x00;
 	DDRD = 0x00;
-
+#endif
+	
 	for (int i = 2; i <= 6; ++i)
 		pinMode(i, INPUT_PULLUP);
 }

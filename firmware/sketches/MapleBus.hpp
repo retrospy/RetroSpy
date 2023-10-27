@@ -1,7 +1,7 @@
 #ifndef __MAPLE_BUS_H__
 #define __MAPLE_BUS_H__
 
-#if (RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 
 //#include <memory>
 //#include <limits>

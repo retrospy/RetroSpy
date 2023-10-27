@@ -699,6 +699,63 @@ bool CreateSpy()
 	case 0x14:
 		currentSpy = new VFlashSpy();
 		break;
+	case 0x15:
+		currentSpy = new FMTownsSpy();
+		break;
+	case 0x16:
+		currentSpy = new IntellivisionSpy();
+		break;
+	case 0x17:
+		currentSpy = new PCFXSpy();
+		break;
+	case 0x18:
+		currentSpy = new PowerGloveSpy();
+		break;
+	case 0x19:
+		currentSpy = new ThreeDOSpy();
+		break;
+	case 0x1A:
+		currentSpy = new GenesisMouseSpy();
+		break;
+	case 0x1B:
+		currentSpy = new AmigaKeyboardSpy();
+		break;
+/*	// These use AVR-only Timers or the TimerOne library
+ 	case 0x1C:
+		currentSpy = new AmigaMouseSpy();
+		((AmigaMouseSpy*)currentSpy)->setup(VIDEO_PAL, AmigaMouseSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;
+	case 0x1D:
+		currentSpy = new AmigaMouseSpy();
+		((AmigaMouseSpy*)currentSpy)->setup(VIDEO_NTSC, AmigaMouseSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;
+	case 0x1E:
+		currentSpy = new CDTVWiredSpy();
+		muteStartupMessage = true;
+		break;
+	// These use the PinChangeInterrupt library
+	case 0x1F:
+		currentSpy = new KeyboardControllerSpy();
+		((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_NORMAL, KeyboardControllerSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;
+	case 0x20:
+		currentSpy = new KeyboardControllerSpy();
+		((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_STAR_RAIDERS, KeyboardControllerSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;
+	case 0x21:
+		currentSpy = new KeyboardControllerSpy();
+		((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_BIG_BIRD, KeyboardControllerSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;
+	case 0x22:
+		currentSpy = new DrivingControllerSpy();
+		((DrivingControllerSpy*)currentSpy)->setup(DrivingControllerSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;	*/
 	}
 #elif defined(MODE_DETECT)
 	if (!PINC_READ(MODEPIN_SNES))
