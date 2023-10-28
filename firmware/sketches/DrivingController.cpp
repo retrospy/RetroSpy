@@ -26,11 +26,14 @@
 
 #include "DrivingController.h"
 
-#if defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY))
+#if (defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY))) || defined(RS_VISION_FLEX)
+
+#if !defined(RS_VISION_FLEX)
 #include <PinChangeInterrupt.h>
 #include <PinChangeInterruptBoards.h>
 #include <PinChangeInterruptPins.h>
 #include <PinChangeInterruptSettings.h>
+#endif
 
 // Turn this one for some pretty output.  Do not use with DEBUG!
 //#define PRETTY_PRINT
@@ -43,7 +46,7 @@ static byte lastRawData;
 static void bitchange_isr()
 {
 	byte encoderValue = 0;
-	encoderValue |= ((PIND & 0b00001100)) >> 2;
+	encoderValue |= (READ_PORTD(0b00001100) >> 2);
 
 	if ((currentEncoderValue == 0x3 && encoderValue == 0x2)
 		|| currentEncoderValue == 0x2 && encoderValue == 0x0
@@ -81,14 +84,19 @@ void DrivingControllerSpy::setup() {
 		pinMode(i, INPUT_PULLUP);
 
 	currentEncoderValue = 0;
-	currentEncoderValue |= ((PIND & 0b01001100)) >> 2;
+	currentEncoderValue |= READ_PORTD(0b01001100) >> 2;
 
 	currentState[0] = 0;
 	currentState[1] = 0;
 
 #ifndef DEBUG
+#if !defined(RS_VISION_FLEX)
 	attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(2), bitchange_isr, CHANGE);
 	attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(3), bitchange_isr, CHANGE);
+#else
+	attachInterrupt(digitalPinToInterrupt(0), bitchange_isr, CHANGE);
+	attachInterrupt(digitalPinToInterrupt(1), bitchange_isr, CHANGE);
+#endif
 #endif
 }
 
@@ -96,7 +104,7 @@ void DrivingControllerSpy::loop() {
 
 	noInterrupts();
 	byte rawData = 0;
-	rawData |= (PIND >> 2);
+	rawData |= (READ_PORTD(0xFF) >> 2);
 	interrupts();
 
 	byte bitmask = cableType == CABLE_SMS ?  0b00100000 : 0b00010000;

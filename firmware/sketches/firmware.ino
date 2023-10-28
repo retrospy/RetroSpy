@@ -205,7 +205,7 @@ void setup()
 	{
 		currentSpy->printFirmwareInfo();
 	}
-
+	
 	#pragma GCC diagnostic push
 	#pragma GCC diagnostic ignored "-Wunused-value"
 	T_DELAY(5000);
@@ -720,6 +720,16 @@ bool CreateSpy()
 	case 0x1B:
 		currentSpy = new AmigaKeyboardSpy();
 		break;
+	case 0x1F:
+		currentSpy = new KeyboardControllerSpy();
+		((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_NORMAL, KeyboardControllerSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;
+	case 0x22:
+		currentSpy = new DrivingControllerSpy();
+		((DrivingControllerSpy*)currentSpy)->setup(DrivingControllerSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;
 /*	// These use AVR-only Timers or the TimerOne library
  	case 0x1C:
 		currentSpy = new AmigaMouseSpy();
@@ -735,12 +745,7 @@ bool CreateSpy()
 		currentSpy = new CDTVWiredSpy();
 		muteStartupMessage = true;
 		break;
-	// These use the PinChangeInterrupt library
-	case 0x1F:
-		currentSpy = new KeyboardControllerSpy();
-		((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_NORMAL, KeyboardControllerSpy::CABLE_GENESIS);
-		customSetup = true;
-		break;
+	// These require analog pins
 	case 0x20:
 		currentSpy = new KeyboardControllerSpy();
 		((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_STAR_RAIDERS, KeyboardControllerSpy::CABLE_GENESIS);
@@ -751,11 +756,7 @@ bool CreateSpy()
 		((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_BIG_BIRD, KeyboardControllerSpy::CABLE_GENESIS);
 		customSetup = true;
 		break;
-	case 0x22:
-		currentSpy = new DrivingControllerSpy();
-		((DrivingControllerSpy*)currentSpy)->setup(DrivingControllerSpy::CABLE_GENESIS);
-		customSetup = true;
-		break;	*/
+*/
 	}
 #elif defined(MODE_DETECT)
 	if (!PINC_READ(MODEPIN_SNES))

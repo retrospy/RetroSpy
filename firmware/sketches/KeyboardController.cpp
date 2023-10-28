@@ -26,12 +26,14 @@
 
 #include "KeyboardController.h"
 
-#if defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY))
+#if (defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY))) || defined(RS_VISION_FLEX)
 
+#if !defined(RS_VISION_FLEX)
 #include <PinChangeInterrupt.h>
 #include <PinChangeInterruptBoards.h>
 #include <PinChangeInterruptPins.h>
 #include <PinChangeInterruptSettings.h>
+#endif
 
 // The below values are not scientific, but they seem to work.  These may need to be tuned for different systems.
 #define LINE_WAIT 200
@@ -45,16 +47,30 @@ static byte rawData;
 
 void row1_isr_vision()
 {
+#if !defined(RS_VISION_FLEX)
 	delayMicroseconds(LINE_WAIT);
+#else
+	for (int i = 0; i < 25*LINE_WAIT; ++i)  // This is trial and error'd.  
+		asm volatile("nop\n");    // NOP isn't consistent enough on an optimized Pi Pico
+#endif
 	byte cachedCurrentState = currentState;
 	if (currentState > 3)
 		return;
+#if !defined(RS_VISION_FLEX)
 	else if (PIN_READ(6) == 0)
 		currentState = 3;
 	else if (PIN_READ(7) == 0)
 		currentState = 2;
 	else if (PINB_READ(1) == 0)
 		currentState = 1;
+#else
+	else if (PIN_READ(4) == 0)
+		currentState = 3;
+	else if (PIN_READ(5) == 0)
+		currentState = 2;
+	else if (PINB_READ(7) == 0)
+		currentState = 1;
+#endif
 	else if (cachedCurrentState >= 1 && cachedCurrentState <= 3)
 		currentState = 0;
 }
@@ -93,16 +109,30 @@ void row2_isr_legacy()
 
 void row2_isr_vision()
 {
+#if !defined(RS_VISION_FLEX)
 	delayMicroseconds(LINE_WAIT);
+#else
+	for (int i = 0; i < 25*LINE_WAIT; ++i)  // This is trial and error'd.  
+		asm volatile("nop\n");    // NOP isn't consistent enough on an optimized Pi Pico
+#endif
 	byte cachedCurrentState = currentState;
 	if (currentState > 6)
 		return;
+#if !defined(RS_VISION_FLEX)
 	else if (PIN_READ(6) == 0)
 		currentState = 6;
 	else if (PIN_READ(7) == 0)
 		currentState = 5;
 	else if (PINB_READ(1) == 0)
 		currentState = 4;
+#else
+	else if (PIN_READ(4) == 0)
+		currentState = 6;
+	else if (PIN_READ(5) == 0)
+		currentState = 5;
+	else if (PINB_READ(7) == 0)
+		currentState = 4;
+#endif
 	else if (cachedCurrentState >= 4 && cachedCurrentState <= 6)
 		currentState = 0;
 }
@@ -125,16 +155,30 @@ void row3_isr_legacy()
 
 void row3_isr_vision()
 {
+#if !defined(RS_VISION_FLEX)
 	delayMicroseconds(LINE_WAIT);
+#else
+	for (int i = 0; i < 25*LINE_WAIT; ++i)  // This is trial and error'd.  
+		asm volatile("nop\n");    // NOP isn't consistent enough on an optimized Pi Pico
+#endif
 	byte cachedCurrentState = currentState;
 	if (currentState > 9)
 		return;
+#if !defined(RS_VISION_FLEX)
 	else if (PIN_READ(6) == 0)
 		currentState = 9;
 	else if (PIN_READ(7) == 0)
 		currentState = 8;
 	else if (PINB_READ(1) == 0)
 		currentState = 7;
+#else
+	else if (PIN_READ(4) == 0)
+		currentState = 9;
+	else if (PIN_READ(5) == 0)
+		currentState = 8;
+	else if (PINB_READ(7) == 0)
+		currentState = 7;
+#endif
 	else if (cachedCurrentState >= 7 && cachedCurrentState <= 9)
 		currentState = 0;
 }
@@ -155,14 +199,29 @@ void row4_isr_legacy()
 
 void row4_isr_vision()
 {
+#if !defined(RS_VISION_FLEX)
 	delayMicroseconds(LINE_WAIT);
+#else
+	for (int i = 0; i < 25*LINE_WAIT; ++i)  // This is trial and error'd.  
+		asm volatile("nop\n");    // NOP isn't consistent enough on an optimized Pi Pico
+#endif
+
 	byte cachedCurrentState = currentState;
+#if !defined(RS_VISION_FLEX)
 	if (PIN_READ(6) == 0)
 		currentState = 12;
 	else if (PIN_READ(7) == 0)
 		currentState = 11;
 	else if (PINB_READ(1) == 0)
 		currentState = 10;
+#else
+	if (PIN_READ(4) == 0)
+		currentState = 12;
+	else if (PIN_READ(5) == 0)
+		currentState = 11;
+	else if (PINB_READ(7) == 0)
+		currentState = 10;
+#endif
 	else if (cachedCurrentState >= 10)
 		currentState = 0;
 }
@@ -185,7 +244,12 @@ void sr_row1sr_isr_legacy()
 
 void sr_row1sr_isr_vision()
 {
+#if !defined(RS_VISION_FLEX)
 	delayMicroseconds(LINE_WAIT);
+#else
+	for (int i = 0; i < 25*LINE_WAIT; ++i)  // This is trial and error'd.  
+		asm volatile("nop\n");    // NOP isn't consistent enough on an optimized Pi Pico
+#endif
 	byte cachedCurrentState = currentState;
 	if (currentState > 3)
 		return;
@@ -217,7 +281,12 @@ void sr_row2sr_isr_legacy()
 
 void sr_row2sr_isr_vision()
 {
+#if !defined(RS_VISION_FLEX)
 	delayMicroseconds(LINE_WAIT);
+#else
+	for (int i = 0; i < 25*LINE_WAIT; ++i)  // This is trial and error'd.  
+		asm volatile("nop\n");    // NOP isn't consistent enough on an optimized Pi Pico
+#endif
 	byte cachedCurrentState = currentState;
 	if (currentState > 6)
 		return;
@@ -246,16 +315,26 @@ void KeyboardControllerSpy::setup(byte controllerMode, uint8_t cableType)
 	{
 		if (cableType == CABLE_GENESIS)
 		{
+#if defined(RS_VISION_FLEX)
+			attachInterrupt(digitalPinToInterrupt(0), row1_isr_vision, FALLING);
+			attachInterrupt(digitalPinToInterrupt(1), row2_isr_vision, FALLING);
+			attachInterrupt(digitalPinToInterrupt(2), row3_isr_vision, FALLING);
+			attachInterrupt(digitalPinToInterrupt(3), row4_isr_vision, FALLING); 
+#else
 			attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(2), row1_isr_vision, FALLING);
 			attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(3), row2_isr_vision, FALLING);
 			attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(4), row3_isr_vision, FALLING);
-			attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(5), row4_isr_vision, FALLING); }
+			attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(5), row4_isr_vision, FALLING);
+#endif
+		}
 		else
 		{
+#if !defined(RS_VISION_FLEX)
 			attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(2), row1_isr_legacy, FALLING);
 			attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(3), row2_isr_legacy, FALLING);
 			attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(4), row3_isr_legacy, FALLING);
 			attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(5), row4_isr_legacy, FALLING);
+#endif
 		}
 
 	}
@@ -265,13 +344,17 @@ void KeyboardControllerSpy::setup(byte controllerMode, uint8_t cableType)
 		pinMode(A1, INPUT);
 		if (cableType == CABLE_GENESIS)
 		{
+#if !defined(RS_VISION_FLEX)
 			attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(2), sr_row1sr_isr_vision, FALLING);
 			attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(3), sr_row2sr_isr_vision, FALLING);
+#endif
 		}
 		else
 		{
+#if !defined(RS_VISION_FLEX)
 			attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(2), sr_row1sr_isr_legacy, FALLING);
 			attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(3), sr_row2sr_isr_legacy, FALLING);
+#endif
 		}
 	}
 #endif
