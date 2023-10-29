@@ -611,6 +611,12 @@ bool CreateSpy()
 		((SMSSpy*)currentSpy)->setup(SMSSpy::CABLE_GX4000);
 		customSetup = true;
 		break;	
+	case 0x1D:
+		currentSpy = new IntellivisionSpy();
+		break;
+	case 0x1E:
+		currentSpy = new GenesisMouseSpy();
+		break;
 	}
 #elif defined(RS_VISION_ANALOG_2)
 	switch (ReadAnalog())
@@ -720,38 +726,51 @@ bool CreateSpy()
 	case 0x1B:
 		currentSpy = new AmigaKeyboardSpy();
 		break;
+	case 0x1C:
+		currentSpy = new SMSSpy();		
+		((SMSSpy*)currentSpy)->setup(SMSSpy::CABLE_GX4000);
+		customSetup = true;
+		break;
+	case 0x1D:
+		currentSpy = new SMSPaddleSpy();
+		((SMSPaddleSpy*)currentSpy)->setup(SMSPaddleSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;
+	case 0x1E:
+		currentSpy = new SMSSportsPadSpy();
+		break;
 /*	// These use AVR-only Timers or the TimerOne library
- 	case 0x1C:
+ 	case 0x1F:
 		currentSpy = new AmigaMouseSpy();
 		((AmigaMouseSpy*)currentSpy)->setup(VIDEO_PAL, AmigaMouseSpy::CABLE_GENESIS);
 		customSetup = true;
 		break;
-	case 0x1D:
+	case 0x20:
 		currentSpy = new AmigaMouseSpy();
 		((AmigaMouseSpy*)currentSpy)->setup(VIDEO_NTSC, AmigaMouseSpy::CABLE_GENESIS);
 		customSetup = true;
 		break;
-	case 0x1E:
+	case 0x21:
 		currentSpy = new CDTVWiredSpy();
 		muteStartupMessage = true;
 		break;
 	// These use the PinChangeInterrupt library
-	case 0x1F:
+	case 0x22:
 		currentSpy = new KeyboardControllerSpy();
 		((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_NORMAL, KeyboardControllerSpy::CABLE_GENESIS);
 		customSetup = true;
 		break;
-	case 0x20:
+	case 0x23:
 		currentSpy = new KeyboardControllerSpy();
 		((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_STAR_RAIDERS, KeyboardControllerSpy::CABLE_GENESIS);
 		customSetup = true;
 		break;
-	case 0x21:
+	case 0x24:
 		currentSpy = new KeyboardControllerSpy();
 		((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_BIG_BIRD, KeyboardControllerSpy::CABLE_GENESIS);
 		customSetup = true;
 		break;
-	case 0x22:
+	case 0x25:
 		currentSpy = new DrivingControllerSpy();
 		((DrivingControllerSpy*)currentSpy)->setup(DrivingControllerSpy::CABLE_GENESIS);
 		customSetup = true;
