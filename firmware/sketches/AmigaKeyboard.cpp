@@ -39,8 +39,11 @@ static volatile uint8_t head, tail;
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 static int DataPin = 2;
 const int IRQpin = 1;
-#elsestatic int DataPin = 4;
-const int IRQpin = 3;#endif
+#else
+static int DataPin = 4;
+const int IRQpin = 3;
+#endif
+
 void clockInterrupt(void)
 {
 	static uint8_t bitcount = 0;
