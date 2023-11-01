@@ -66,7 +66,7 @@ void loop()
       Serial.print("Cycle #");
       Serial.print(++count);
       Serial.println(" FAILED");
-      while(true);
+      return;
     }
 //    else
 //    {

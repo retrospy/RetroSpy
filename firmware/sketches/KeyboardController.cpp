@@ -365,7 +365,7 @@ void KeyboardControllerSpy::loop()
 #ifdef DEBUG
 	noInterrupts();
 	rawData = 0;
-	rawData |= (PIND >> 2) | (PINB << 6);
+	rawData |= (READ_PORTD(0xFF) >> 2) | (READ_PORTB(0xFF) << 6);
 	int analog0 = analogRead(6);
 	int analog1 = analogRead(7);
 	int analog2 = analogRead(2);

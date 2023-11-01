@@ -763,6 +763,9 @@ bool CreateSpy()
 		currentSpy = new CDTVWiredSpy();
 		muteStartupMessage = true;
 		break;
+	case 0x26:
+		currentSpy = new NuonSpy();
+		break;
 /*	// These require analog pins
 	case 0x20:
 		currentSpy = new KeyboardControllerSpy();
