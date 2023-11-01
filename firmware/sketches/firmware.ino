@@ -730,6 +730,9 @@ bool CreateSpy()
 		((DrivingControllerSpy*)currentSpy)->setup(DrivingControllerSpy::CABLE_GENESIS);
 		customSetup = true;
 		break;
+	case 0x23:
+		currentSpy = new NuonSpy();
+		break;
 /*	// These use AVR-only Timers or the TimerOne library
  	case 0x1C:
 		currentSpy = new AmigaMouseSpy();
