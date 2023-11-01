@@ -8,6 +8,7 @@
 #include "configuration.h"
 #include "utils.h"
 #include "MaplePacket.hpp"
+#include <limits>
 
 //! Maple Bus interface class
 class MapleBusInterface

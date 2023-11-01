@@ -14,6 +14,7 @@
 #include "maple_in.pio.h"
 #include "maple_out.pio.h"
 #include "hardware/pio.h"
+#include <limits>
 
 //! Handles communication over Maple Bus.
 //!
