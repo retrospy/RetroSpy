@@ -30,12 +30,12 @@
 
 #if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 #include <TimerOne.h>
+#define PRDT_PIN 2
 #else
 #include <elapsedMillis.h>
-#endif
+#define PRDT_PIN 0
+#endif
 #define BUFFER_SIZE 45
-
-#define PRDT_PIN 2
 
 #define WAITING_FOR_SYNC_HIGH 1
 #define WAITING_FOR_SYNC_LOW  2
