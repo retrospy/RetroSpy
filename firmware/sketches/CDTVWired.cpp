@@ -34,7 +34,8 @@
 #else
 #include <elapsedMillis.h>
 #define PRDT_PIN 0
-#endif
+#endif
+
 #define BUFFER_SIZE 45
 
 #define WAITING_FOR_SYNC_HIGH 1
@@ -65,7 +66,8 @@ void PRDTStateChanged()
 {
 #if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	diff = TCNT1 >> 1;
-#else	uint32_t diff = micros() - timestamp;
+#else
+	uint32_t diff = micros() - timestamp;
 #endif
 	if (state == WAITING_FOR_SYNC_HIGH) {
 		if (diff > 1000) {
