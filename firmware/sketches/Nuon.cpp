@@ -96,7 +96,6 @@ start:
 	}
 	else
 	{
-		//noInterrupts();
 		restPeriod = 0;
    
 		for (int i = 1; i < 64; ++i)
@@ -105,7 +104,6 @@ start:
 			while (digitalReadFast(NUON_CLOCK_PIN) == LOW) ;
 			rawData[i] = digitalReadFast(NUON_DATA_PIN);
 		}
-		//interrupts();
 	}
 
 	if ((rawData[0] == HIGH && rawData[1] == HIGH && rawData[2] == LOW && rawData[3] == LOW && rawData[4] == LOW
