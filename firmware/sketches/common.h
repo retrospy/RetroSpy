@@ -107,8 +107,8 @@ enum VideoOutputType {
 //#define ATARI5200_ADC_INT_HANDLER
 //#define ATARIPADDLES_ADC_INT_HANDLER
 //#define COLECOVISION_ROLLER_TIMER_INT_HANDLER
-
 	
+
 // Uncomment this for serial debugging output
 //#define DEBUG
 

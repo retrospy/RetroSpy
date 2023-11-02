@@ -26,11 +26,10 @@
 
 #include "VFlash.h"
 
-#if (!defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY)) || (defined(RS_VISION_DREAM))) || defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#if (!defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY)) || defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41)) || defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 
-#if !defined(RS_VISION_DREAM) && !defined(RS_VISION_FLEX)
+#if !defined(ARDUINO_TEENSY40) && !defined(ARDUINO_TEENSY41) && !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 #include <SoftwareSerial.h>
-
 static SoftwareSerial mySerial(2, 3); // RX,TX 
 #endif
 
@@ -40,7 +39,7 @@ static byte buttons[15];
 
 void VFlashSpy::setup() {
 
-#if !defined(RS_VISION_DREAM) && !defined(RS_VISION_FLEX)
+#if !defined(ARDUINO_TEENSY40) && !defined(ARDUINO_TEENSY41) && !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	mySerial.begin(9600);
 #else
 	Serial1.begin(9600);
@@ -77,7 +76,7 @@ void VFlashSpy::debugSerial() {
 	Serial.println(y);
 }
 
-#if !defined(RS_VISION_DREAM) && !defined(RS_VISION_FLEX)
+#if !defined(ARDUINO_TEENSY40) && !defined(ARDUINO_TEENSY41) && !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 int VFlashSpy::available()
 {
 	return mySerial.available();

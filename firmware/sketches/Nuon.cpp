@@ -29,7 +29,7 @@
 
 #include "Nuon.h"
  
-#if (defined(__arm__) && defined(CORE_TEENSY) && (defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41))) || defined(RS_VISION_FLEX)
+#if (defined(__arm__) && defined(CORE_TEENSY) && (defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41))) || defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 
 #include "elapsedMillis.h"
 
@@ -39,10 +39,7 @@ static unsigned long lastReadTime;
 static byte buffer[19];
 
 FASTRUN void NuonSpy::writeSerial()
-{
-	if ((signed char)buffer[16] == -1*(signed char)buffer[17])
-		return;
-	
+{	
 	buffer[18] = '\n';
 	
 	if (max(micros() - lastReadTime, 0U) < 2000)
@@ -55,10 +52,7 @@ FASTRUN void NuonSpy::writeSerial()
 }
 
 FASTRUN void NuonSpy::debugSerial()
-{
-	if ((signed char)buffer[16] == -1*(signed char)buffer[17])
-		return;
-	
+{	
 	buffer[18] = '\n';
 	
 	for (int i = 0; i < 64; ++i)
@@ -102,7 +96,7 @@ start:
 	}
 	else
 	{
-		noInterrupts();
+		//noInterrupts();
 		restPeriod = 0;
    
 		for (int i = 1; i < 64; ++i)
@@ -111,7 +105,7 @@ start:
 			while (digitalReadFast(NUON_CLOCK_PIN) == LOW) ;
 			rawData[i] = digitalReadFast(NUON_DATA_PIN);
 		}
-		interrupts();
+		//interrupts();
 	}
 
 	if ((rawData[0] == HIGH && rawData[1] == HIGH && rawData[2] == LOW && rawData[3] == LOW && rawData[4] == LOW
@@ -173,8 +167,10 @@ FASTRUN void NuonSpy::loop()
 {
 	while (true)
 	{
+		noInterrupts();
 		updateState();
-
+		interrupts();
+		
 #if !defined(DEBUG) && !defined(TRACE)
 		writeSerial();
 #endif

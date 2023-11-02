@@ -26,9 +26,8 @@
 
 #include "DrivingController.h"
 
-#if (defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY))) || defined(RS_VISION_FLEX)
-
-#if !defined(RS_VISION_FLEX)
+#if (defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY))) || defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 #include <PinChangeInterrupt.h>
 #include <PinChangeInterruptBoards.h>
 #include <PinChangeInterruptPins.h>
@@ -90,7 +89,7 @@ void DrivingControllerSpy::setup() {
 	currentState[1] = 0;
 
 #ifndef DEBUG
-#if !defined(RS_VISION_FLEX)
+#if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(2), bitchange_isr, CHANGE);
 	attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(3), bitchange_isr, CHANGE);
 #else
