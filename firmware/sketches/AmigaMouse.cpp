@@ -26,7 +26,12 @@
 
 #include "AmigaMouse.h"
 
-#if !defined(TP_IRLIB2) && !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(ARDUINO_AVR_NANO_EVERY) && !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
+#if (!defined(TP_IRLIB2) && !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(ARDUINO_AVR_NANO_EVERY)) || defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#include "RPi_Pico_TimerInterrupt.h"
+static RPI_PICO_Timer ITimer(0);
+#endif 
 
 static byte buttons[3];
 static int8_t currentX;
@@ -36,40 +41,7 @@ static int8_t lastY;
 static byte lastEncoderX;
 static byte lastEncoderY;
 
-
-void AmigaMouseSpy::setup(byte videoOutputType, uint8_t cableType)
-{
-	currentX = lastX = 0;
-	currentY = lastY = 0;
-	
-	this->cableType = cableType;
-
-	// TIMER 1 for interrupt frequency 50 or 60 Hz:
-	cli(); // stop interrupts
-	TCCR1A = 0; // set entire TCCR1A register to 0
-	TCCR1B = 0; // same for TCCR1B
-	TCNT1 = 0; // initialize counter value to 0
-	if (videoOutputType == VIDEO_NTSC)
-	{  
-		// set compare match register for 60.00060000600006 Hz increments
-		OCR1A = 33332; // = 16000000 / (8 * 60.00060000600006) - 1 (must be <65536)
-	}
-	else // PAL
-	{
-		// set compare match register for 50 Hz increments
-		OCR1A = 39999; // = 16000000 / (8 * 50) - 1 (must be <65536)
-	}
-	// turn on CTC mode
-	TCCR1B |= (1 << WGM12);
-	// Set CS12, CS11 and CS10 bits for 8 prescaler
-	TCCR1B |= (0 << CS12) | (1 << CS11) | (0 << CS10);
-	// enable timer compare interrupt
-	TIMSK1 |= (1 << OCIE1A);
-	sei(); // allow interrupts
-
-}
-
-#if !defined(COLECOVISION_ROLLER_TIMER_INT_HANDLER)
+#if !defined(COLECOVISION_ROLLER_TIMER_INT_HANDLER) && !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 ISR(TIMER1_COMPA_vect) {
 	int8_t x = lastX - currentX;
 	int8_t y = lastY - currentY;
@@ -95,12 +67,83 @@ ISR(TIMER1_COMPA_vect) {
 	Serial.write('\n');
 #endif
 }
+#elif defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+static bool TimerHandler(struct repeating_timer *t)
+{
+	int8_t x = lastX - currentX;
+	int8_t y = lastY - currentY;
+
+	lastX = currentX;
+	lastY = currentY;
+
+#ifdef DEBUG
+	for (int i = 0; i < 3; ++i)
+		Serial.print(buttons[i] == 0 ? "0" : "1");
+	Serial.print('|');
+	Serial.print(x);
+	Serial.print('|');
+	Serial.print(y);
+	Serial.print('\n');
+#else
+	for (int i = 0; i < 3; ++i)
+		Serial.write(buttons[i]);
+	for (int i = 0; i < 8; ++i)
+		Serial.write((x & (1 << i)) == 0 ? 0 : 1);
+	for (int i = 0; i < 8; ++i)
+		Serial.write((y & (1 << i)) == 0 ? 0 : 1);
+	Serial.write('\n');
 #endif
+	
+	return true;
+}
+#endif
+
+void AmigaMouseSpy::setup(byte videoOutputType, uint8_t cableType)
+{
+	currentX = lastX = 0;
+	currentY = lastY = 0;
+	
+	this->cableType = cableType;
+
+#if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
+	// TIMER 1 for interrupt frequency 50 or 60 Hz:
+	cli(); // stop interrupts
+	TCCR1A = 0; // set entire TCCR1A register to 0
+	TCCR1B = 0; // same for TCCR1B
+	TCNT1 = 0; // initialize counter value to 0
+	if (videoOutputType == VIDEO_NTSC)
+	{  
+		// set compare match register for 60.00060000600006 Hz increments
+		OCR1A = 33332; // = 16000000 / (8 * 60.00060000600006) - 1 (must be <65536)
+	}
+	else // PAL
+	{
+		// set compare match register for 50 Hz increments
+		OCR1A = 39999; // = 16000000 / (8 * 50) - 1 (must be <65536)
+	}
+	// turn on CTC mode
+	TCCR1B |= (1 << WGM12);
+	// Set CS12, CS11 and CS10 bits for 8 prescaler
+	TCCR1B |= (0 << CS12) | (1 << CS11) | (0 << CS10);
+	// enable timer compare interrupt
+	TIMSK1 |= (1 << OCIE1A);
+	sei(); // allow interrupts
+#else
+	if (videoOutputType == VIDEO_NTSC)
+	{  
+		ITimer.attachInterrupt(60, TimerHandler);
+	}
+	else
+	{
+		ITimer.attachInterrupt(50, TimerHandler);
+	}	
+#endif
+}
 
 void AmigaMouseSpy::loop()
 {
 	noInterrupts();
-	byte data = ~PIND;
+	byte data = ~READ_PORTD(0xFF);
 	interrupts();
 
 	byte xData = (data & 0b00101000);
@@ -144,12 +187,12 @@ void AmigaMouseSpy::loop()
 	{
 		buttons[0] = (data & 0b10000000) != 0 ? 1 : 0;
 		buttons[1] = (data & 0b01000000) != 0 ? 1 : 0;
-		buttons[2] = (PINB & 0b00000001) != 0 ? 0 : 1;		
+		buttons[2] = (READ_PORTB(0b00000001)) != 0 ? 0 : 1;		
 	}
 	else
 	{
 		buttons[0] = (data & 0b01000000) != 0 ? 1 : 0;
-		buttons[1] = (PINB & 0b00000010) != 0 ? 1 : 0;
+		buttons[1] = (READ_PORTB(0b00000010)) != 0 ? 1 : 0 ;
 		buttons[2] = (data & 0b10000000) != 0 ? 1 : 0;	
 	}
 

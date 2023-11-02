@@ -749,6 +749,20 @@ bool CreateSpy()
 		((DrivingControllerSpy*)currentSpy)->setup(DrivingControllerSpy::CABLE_GENESIS);
 		customSetup = true;
 		break;
+	case 0x23:
+		currentSpy = new AmigaMouseSpy();
+		((AmigaMouseSpy*)currentSpy)->setup(VIDEO_PAL, AmigaMouseSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;
+	case 0x24:
+		currentSpy = new AmigaMouseSpy();
+		((AmigaMouseSpy*)currentSpy)->setup(VIDEO_NTSC, AmigaMouseSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;
+	case 0x25:
+		currentSpy = new CDTVWiredSpy();
+		muteStartupMessage = true;
+		break;
 	case 0x26:
 		currentSpy = new NuonSpy();
 		break;
@@ -762,21 +776,6 @@ bool CreateSpy()
 		currentSpy = new KeyboardControllerSpy();
 		((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_BIG_BIRD, KeyboardControllerSpy::CABLE_GENESIS);
 		customSetup = true;
-		break;
-	// These use AVR-only Timers or the TimerOne library
- 	case 0x23:
-		currentSpy = new AmigaMouseSpy();
-		((AmigaMouseSpy*)currentSpy)->setup(VIDEO_PAL, AmigaMouseSpy::CABLE_GENESIS);
-		customSetup = true;
-		break;
-	case 0x24:
-		currentSpy = new AmigaMouseSpy();
-		((AmigaMouseSpy*)currentSpy)->setup(VIDEO_NTSC, AmigaMouseSpy::CABLE_GENESIS);
-		customSetup = true;
-		break;
-	case 0x25:
-		currentSpy = new CDTVWiredSpy();
-		muteStartupMessage = true;
 		break;
 */
 	}
