@@ -113,8 +113,40 @@ if exist "..\..\..\Firmware\CDi_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*#define.*RS_VISION_CDI/\/\/#define RS_VISION_CDI/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
-  del ..\..\..\..\CDi_Firmware\firmware.ino.elf
-  copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Raspberry_Pi_Pico\Release\firmware.ino.elf ..\..\..\..\Firmware\CDi_Firmware\firmware.ino.elf
+  del ..\..\..\..\CDi_Firmware\firmware.ino.uf2
+  copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Raspberry_Pi_Pico\Release\firmware.ino.uf2 ..\..\..\..\Firmware\CDi_Firmware\firmware.ino.uf2
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  cd ..
+  if %ERRORLEVEL% NEQ 0 goto :fail
+)
+
+if exist "..\..\..\Firmware\Flex_Firmware\" (
+  cd firmware
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  ..\sed -i "s/.*\/\/#define.*RS_VISION_FLEX/#define RS_VISION_FLEX/" sketches\common.h
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=rp2040:rp2040:rpipico:flash=2097152_0,freq=250,opt=Optimize3,rtti=Disabled,stackprotect=Disabled,exceptions=Disabled,dbgport=Disabled,dbglvl=None,usbstack=picosdk,ipbtstack=ipv4only,uploadmethod=default -build-path D:\src\Repos\retrospy\RetroSpy\firmware\Output\Raspberry_Pi_Pico\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -hardware C:\Users\Administrator\AppData\Local/Arduino15/packages -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools C:\Users\Administrator\AppData\Local/Arduino15/packages -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.pqt-gcc.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-gcc\1.5.0-b-c7bab52 -prefs=runtime.tools.pqt-python3.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-python3\1.0.1-base-3a57aed -prefs=runtime.tools.pqt-elf2uf2.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-elf2uf2\1.5.0-b-c7bab52 -prefs=runtime.tools.pqt-openocd.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-openocd\1.5.0-b-c7bab52 -prefs=runtime.tools.pqt-picotool.path=C:\Users\Administrator\AppData\Local\Arduino15\packages\rp2040\tools\pqt-picotool\1.5.0-b-03f2812 -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  ..\sed -i "s/.*#define.*RS_VISION_FLEX/\/\/#define RS_VISION_FLEX/" sketches\common.h
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  del ..\..\..\..\Flex_Firmware\firmware.ino.uf2
+  copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Raspberry_Pi_Pico\Release\firmware.ino.uf2 ..\..\..\..\Firmware\Flex_Firmware\firmware.ino.uf2
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  cd ..
+  if %ERRORLEVEL% NEQ 0 goto :fail
+)
+
+if exist "..\..\..\Firmware\Analog_Firmware\" (
+  cd firmware
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  ..\sed -i "s/.*\/\/#define.*RS_VISION_ANALOG/#define RS_VISION_ANALOG/" sketches\common.h
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=arduino:avr:nano:cpu=atmega328 -build-path D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools "C:/Program Files (x86)/Arduino/hardware/tools/avr" -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  ..\sed -i "s/.*#define.*RS_VISION_ANALOG/\/\/#define RS_VISION_ANALOG/" sketches\common.h
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  del ..\..\..\..\Analog_Firmware\firmware.ino.hex
+  copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\Analog_Firmware\firmware.ino.hex
   if %ERRORLEVEL% NEQ 0 goto :fail
   cd ..
   if %ERRORLEVEL% NEQ 0 goto :fail
@@ -329,10 +361,42 @@ if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
 if exist "..\..\..\Firmware\CDi_Firmware\" (
-del Dream_Firmware.zip
-"C:\Program Files\7-Zip\7z.exe" a CDi_Firmware.zip ..\..\..\Firmware\CDi_Firmware\firmware.ino.elf
+del CDi_Firmware.zip
+"C:\Program Files\7-Zip\7z.exe" a CDi_Firmware.zip ..\..\..\Firmware\CDi_Firmware\firmware.ino.uf2
 if %ERRORLEVEL% NEQ 0 goto :fail
 copy CDi_Firmware.zip RetroSpy-Upload
+if %ERRORLEVEL% NEQ 0 goto :fail
+)
+
+if exist "..\..\..\Firmware\Flex_Firmware\" (
+del Flex_Firmware.zip
+"C:\Program Files\7-Zip\7z.exe" a Flex_Firmware.zip ..\..\..\Firmware\Flex_Firmware\firmware.ino.uf2
+if %ERRORLEVEL% NEQ 0 goto :fail
+copy Flex_Firmware.zip RetroSpy-Upload
+if %ERRORLEVEL% NEQ 0 goto :fail
+)
+
+if exist "..\..\..\Firmware\Analog_Firmware\" (
+del Analog_Firmware.zip
+"C:\Program Files\7-Zip\7z.exe" a Analog_Firmware.zip ..\..\..\Firmware\Analog_Firmware\avrdude.exe
+if %ERRORLEVEL% NEQ 0 goto :fail
+"C:\Program Files\7-Zip\7z.exe" a Analog_Firmware.zip ..\..\..\Firmware\Analog_Firmware\avrdude.conf
+if %ERRORLEVEL% NEQ 0 goto :fail
+"C:\Program Files\7-Zip\7z.exe" a Analog_Firmware.zip ..\..\..\Firmware\Analog_Firmware\firmware.ino.hex
+if %ERRORLEVEL% NEQ 0 goto :fail
+"C:\Program Files\7-Zip\7z.exe" a Analog_Firmware.zip ..\..\..\Firmware\Analog_Firmware\libusb0.dll
+if %ERRORLEVEL% NEQ 0 goto :fail
+"C:\Program Files\7-Zip\7z.exe" a Analog_Firmware.zip ..\..\..\Firmware\Analog_Firmware\avrdude
+if %ERRORLEVEL% NEQ 0 goto :fail
+"C:\Program Files\7-Zip\7z.exe" a Analog_Firmware.zip ..\..\..\Firmware\Analog_Firmware\libusb-1.0.0.dylib
+if %ERRORLEVEL% NEQ 0 goto :fail
+"C:\Program Files\7-Zip\7z.exe" a Analog_Firmware.zip ..\..\..\Firmware\Analog_Firmware\libusb-0.1.4.dylib
+if %ERRORLEVEL% NEQ 0 goto :fail
+"C:\Program Files\7-Zip\7z.exe" a Analog_Firmware.zip ..\..\..\Firmware\Analog_Firmware\libftdi1.2.dylib
+if %ERRORLEVEL% NEQ 0 goto :fail
+"C:\Program Files\7-Zip\7z.exe" a Analog_Firmware.zip ..\..\..\Firmware\Analog_Firmware\libhidapi.0.dylib
+if %ERRORLEVEL% NEQ 0 goto :fail
+copy Analog_Firmware.zip RetroSpy-Upload
 if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
