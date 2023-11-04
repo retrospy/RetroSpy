@@ -82,6 +82,7 @@ enum VideoOutputType {
 #endif
 
 #if defined(RS_VISION_ANALOG_1) || defined(RS_VISION_ANALOG_2)
+#define TP_PINCHANGEINTERRUPT
 #define VISION_ANALOG_ADC_INT_HANDLER
 #endif
 
