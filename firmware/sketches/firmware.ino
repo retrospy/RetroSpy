@@ -595,9 +595,6 @@ bool CreateSpy()
 	case 0x16:
 		currentSpy = new JaguarSpy();
 		break;
-	case 0x17:
-		currentSpy = new FMTownsSpy();
-		break;
 	case 0x18:
 		currentSpy = new PCFXSpy();
 		break;
