@@ -741,6 +741,16 @@ bool CreateSpy()
 		((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_NORMAL, KeyboardControllerSpy::CABLE_GENESIS);
 		customSetup = true;
 		break;
+	case 0x20:
+		currentSpy = new KeyboardControllerSpy();
+		((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_STAR_RAIDERS, KeyboardControllerSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;
+	case 0x21:
+		currentSpy = new KeyboardControllerSpy();
+		((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_BIG_BIRD, KeyboardControllerSpy::CABLE_GENESIS);
+		customSetup = true;
+		break;
 	case 0x22:
 		currentSpy = new DrivingControllerSpy();
 		((DrivingControllerSpy*)currentSpy)->setup(DrivingControllerSpy::CABLE_GENESIS);
@@ -763,18 +773,6 @@ bool CreateSpy()
 	case 0x26:
 		currentSpy = new NuonSpy();
 		break;
-/*	// These require analog pins
-	case 0x20:
-		currentSpy = new KeyboardControllerSpy();
-		((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_STAR_RAIDERS, KeyboardControllerSpy::CABLE_GENESIS);
-		customSetup = true;
-		break;
-	case 0x21:
-		currentSpy = new KeyboardControllerSpy();
-		((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_BIG_BIRD, KeyboardControllerSpy::CABLE_GENESIS);
-		customSetup = true;
-		break;
-*/
 	}
 #elif defined(MODE_DETECT)
 	if (!PINC_READ(MODEPIN_SNES))
@@ -910,13 +908,13 @@ bool CreateSpy()
 	currentSpy = new KeyboardControllerSpy();
 	((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_NORMAL);
 	customSetup = true;
-#elif (MODE_KEYBOARD_CONTROLLER_STAR_RAIDERS) 
+#elif defined(MODE_KEYBOARD_CONTROLLER_STAR_RAIDERS) 
 	currentSpy = new KeyboardControllerSpy();
 	((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_STAR_RAIDERS);
 	customSetup = true;
-#elif (MODE_KEYBOARD_CONTROLLER_BIG_BIRD)
+#elif defined(MODE_KEYBOARD_CONTROLLER_BIG_BIRD)
 	currentSpy = new KeyboardControllerSpy();
-	((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_BIG_BIRD);
+	((KeyboardControllerSpy*)currentSpy)->setup(KeyboardControllerSpy::MODE_BIG_BIRD, KeyboardControllerSpy::CABLE_GENESIS);
 	customSetup = true;
 #endif
 	

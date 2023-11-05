@@ -37,6 +37,7 @@
 // The below values are not scientific, but they seem to work.  These may need to be tuned for different systems.
 #define LINE_WAIT 200
 #define DIGITAL_HIGH_THRESHOLD 150
+#define PICO_DIGITAL_HIGH_THRESHOLD 500
 
 static volatile byte currentState = 0;
 static byte lastState = 0xFF;
@@ -243,15 +244,18 @@ void sr_row1sr_isr_legacy()
 
 void sr_row1sr_isr_vision()
 {
+
 #if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	delayMicroseconds(LINE_WAIT);
 #else
 	for (int i = 0; i < 25*LINE_WAIT; ++i)  // This is trial and error'd.  
 		asm volatile("nop\n");    // NOP isn't consistent enough on an optimized Pi Pico
 #endif
+	
 	byte cachedCurrentState = currentState;
 	if (currentState > 3)
 		return;
+#if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	else if (PIN_READ(6) == 0)
 		currentState = 3;
 	else if (analogRead(7) < DIGITAL_HIGH_THRESHOLD)
@@ -260,6 +264,16 @@ void sr_row1sr_isr_vision()
 		currentState = 1;
 	else if (cachedCurrentState >= 1 && cachedCurrentState <= 3)
 		currentState = 0;
+#else
+	else if (PIN_READ(4) == 0)
+		currentState = 3;
+	else if (analogRead(26) < PICO_DIGITAL_HIGH_THRESHOLD)
+		currentState = 2;
+	else if (analogRead(27) < PICO_DIGITAL_HIGH_THRESHOLD)
+		currentState = 1;
+	else if (cachedCurrentState >= 1 && cachedCurrentState <= 3)
+		currentState = 0;
+#endif
 }
 
 void sr_row2sr_isr_legacy()
@@ -283,12 +297,14 @@ void sr_row2sr_isr_vision()
 #if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	delayMicroseconds(LINE_WAIT);
 #else
-	for (int i = 0; i < 25*LINE_WAIT; ++i)  // This is trial and error'd.  
+	for (int i = 0; i < 150*LINE_WAIT; ++i)  // This is trial and error'd.  
 		asm volatile("nop\n");    // NOP isn't consistent enough on an optimized Pi Pico
 #endif
 	byte cachedCurrentState = currentState;
+	
 	if (currentState > 6)
 		return;
+#if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	else if (PIN_READ(6) == 0)
 		currentState = 6;
 	else if (analogRead(7) < DIGITAL_HIGH_THRESHOLD)
@@ -297,21 +313,32 @@ void sr_row2sr_isr_vision()
 		currentState = 4;
 	else if (cachedCurrentState >= 4 && cachedCurrentState <= 6)
 		currentState = 0;
+#else
+	else if (PIN_READ(4) == 0)
+		currentState = 6;
+	else if (analogRead(26) < PICO_DIGITAL_HIGH_THRESHOLD)
+		currentState = 5;
+	else if (analogRead(27) < PICO_DIGITAL_HIGH_THRESHOLD)
+		currentState = 4;
+	else if (cachedCurrentState >= 4 && cachedCurrentState <= 6)
+		currentState = 0;
+#endif
 }
 
 void KeyboardControllerSpy::setup(byte controllerMode, uint8_t cableType)
-{
+{	
 	this->cableType = cableType;
 	this->currentControllerMode = controllerMode;
 
 	currentState = 0;
 	lastState = 0xFF;
-	for (int i = 2; i <= 8; ++i)
-		pinMode(i, INPUT_PULLUP);
-
+	
 #ifndef DEBUG
 	if (currentControllerMode == MODE_NORMAL)
 	{
+		for (int i = 2; i <= 8; ++i)
+			pinMode(i, INPUT_PULLUP);
+		
 		if (cableType == CABLE_GENESIS)
 		{
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
@@ -341,11 +368,22 @@ void KeyboardControllerSpy::setup(byte controllerMode, uint8_t cableType)
 	{
 		pinMode(A0, INPUT);
 		pinMode(A1, INPUT);
+		
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+		pinMode(15, OUTPUT);
+		digitalWrite(15, HIGH);
+		pinMode(14, OUTPUT);
+		digitalWrite(14, HIGH);
+#endif
+		
 		if (cableType == CABLE_GENESIS)
 		{
 #if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 			attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(2), sr_row1sr_isr_vision, FALLING);
 			attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(3), sr_row2sr_isr_vision, FALLING);
+#else
+			attachInterrupt(digitalPinToInterrupt(0), sr_row1sr_isr_vision, FALLING);
+			attachInterrupt(digitalPinToInterrupt(1), sr_row2sr_isr_vision, FALLING);
 #endif
 		}
 		else
@@ -355,6 +393,15 @@ void KeyboardControllerSpy::setup(byte controllerMode, uint8_t cableType)
 			attachPinChangeInterrupt(digitalPinToPinChangeInterrupt(3), sr_row2sr_isr_legacy, FALLING);
 #endif
 		}
+	}
+	else
+	{
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+		pinMode(15, OUTPUT);
+		digitalWrite(15, HIGH);
+		pinMode(14, OUTPUT);
+		digitalWrite(14, HIGH);
+#endif
 	}
 #endif
 }
@@ -376,12 +423,20 @@ void KeyboardControllerSpy::loop()
 		byte bytemask;
 		byte digitalPin;
 		byte analogPin;
-		
+		int digitalThreshold = DIGITAL_HIGH_THRESHOLD;
+			
 		if (cableType == CABLE_GENESIS)
 		{
+#if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 			bytemask = 0b01000000;
 			digitalPin = 6;
 			analogPin = 7;
+#else
+			bytemask = 0xFF;
+			digitalPin = 4;
+			analogPin = 26;
+			digitalThreshold = PICO_DIGITAL_HIGH_THRESHOLD;
+#endif
 		}
 		else
 		{
@@ -395,7 +450,7 @@ void KeyboardControllerSpy::loop()
 		interrupts();
 		if ((pin6 & bytemask) == 0)
 			currentState = 6;
-		else if (pin9 < DIGITAL_HIGH_THRESHOLD)
+		else if (pin9 < digitalThreshold)
 			currentState = 5;
 		else
 			currentState = 0;
