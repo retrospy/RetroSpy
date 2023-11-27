@@ -149,6 +149,9 @@ void AmigaCd32Spy::setup() {
 void AmigaCd32Spy::loop() {
 }
 
+void AmigaCd32Spy::loop1() {
+}
+
 void AmigaCd32Spy::writeSerial() {
 }
 

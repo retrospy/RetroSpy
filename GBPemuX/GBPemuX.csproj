@@ -11,9 +11,9 @@
 	  <BaseOutputPath>..\bin</BaseOutputPath>
   </PropertyGroup>
 	<PropertyGroup>
-		<AssemblyVersion>6.4</AssemblyVersion>
-		<FileVersion>6.4</FileVersion>
-		<Version>6.4</Version>
+		<AssemblyVersion>6.4.1</AssemblyVersion>
+		<FileVersion>6.4.1</FileVersion>
+		<Version>6.4.1</Version>
 		<Copyright>Copyright © 2022</Copyright>
 		<NeutralLanguage>en-US</NeutralLanguage>
 	</PropertyGroup>

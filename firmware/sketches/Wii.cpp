@@ -337,6 +337,12 @@ void WiiSpy::debugSerial() {
 void WiiSpy::updateState() {
 }
 
+void WiiSpy::setup1() {
+}
+
+void WiiSpy::loop1() {
+}
+
 #endif
 
 const char* WiiSpy::startupMsg()

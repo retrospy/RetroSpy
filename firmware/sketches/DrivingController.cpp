@@ -145,6 +145,7 @@ void DrivingControllerSpy::updateState() {}
 #else
 void DrivingControllerSpy::loop() {}
 void DrivingControllerSpy::setup() {}
+void DrivingControllerSpy::setup(uint8_t cableType) {}
 void DrivingControllerSpy::writeSerial() {}
 void DrivingControllerSpy::debugSerial() {}
 void DrivingControllerSpy::updateState() {}
