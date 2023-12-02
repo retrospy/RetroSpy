@@ -26,7 +26,12 @@
 
 #include "Wii.h"
 
-#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#if defined(RS_VISION_FLEX)
+#define PIN_SCL		1
+#define PIN_SDA		0
+#define BIT_SCL		(1UL << PIN_SCL)
+#define BIT_SDA		(1UL << PIN_SDA)
+#elif defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 #define PIN_SCL		13
 #define PIN_SDA		12
 #define BIT_SCL		(1UL << PIN_SCL)
