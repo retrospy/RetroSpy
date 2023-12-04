@@ -26,7 +26,7 @@
 
 #include "CDTVWired.h"
 
-#if (defined(TP_TIMERONE) && !(defined(__arm__) && defined(CORE_TEENSY))) || defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#if (defined(TP_TIMERONE) && !(defined(__arm__) && defined(CORE_TEENSY))) || (defined(TP_ELASPEDMILLIS) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)))
 
 #if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 #include <TimerOne.h>

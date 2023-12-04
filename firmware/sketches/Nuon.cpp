@@ -29,7 +29,7 @@
 
 #include "Nuon.h"
  
-#if (defined(__arm__) && defined(CORE_TEENSY) && (defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41))) || defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#if (defined(__arm__) && defined(CORE_TEENSY) && (defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41))) || (defined(TP_ELASPEDMILLIS) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)))
 
 #include "elapsedMillis.h"
 

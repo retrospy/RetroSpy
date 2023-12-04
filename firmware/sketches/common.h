@@ -93,6 +93,7 @@ enum VideoOutputType {
 #define SNES_LATCH         1
 #define SNES_DATA          2
 #define SNES_CLOCK         4
+#define TP_ELASPEDMILLIS
 #endif
 
 // Uncomment these to enable 3rd party libraries once installed
@@ -101,6 +102,8 @@ enum VideoOutputType {
 //#define TP_TIMERONE             
 // Used by MODE_COLECOVISION, MODE_DRIVING_CONTROLLER & MODE_KEYBOARD_CONTROLLER
 //#define TP_PINCHANGEINTERRUPT
+// Used by Pi Pico implementation of N64, Gamecube, Nuon & CDTV
+//#define TP_ELASPEDMILLIS
 
 // Uncomment these out to enable the necessary ADC interrupt handler.
 // They cannot co-exist when linked even when not active
