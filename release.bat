@@ -431,14 +431,14 @@ if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
 if exist "..\..\..\Firmware\USBLite_Firmware\" (
-del Flex_Firmware.zip
+del USBLite_Firmware.zip
 "C:\Program Files\7-Zip\7z.exe" a USBLite_Firmware.zip ..\..\..\Firmware\USBLite_Firmware\UsbSnifferLite.uf2
 if %ERRORLEVEL% NEQ 0 goto :fail
 copy USBLite_Firmware.zip RetroSpy-Upload
 if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
-if exist "..\..\..\Firmware\USBLite_Firmware\" (
+if exist "..\..\..\Firmware\Flex_Firmware\" (
 del Flex_Firmware.zip
 "C:\Program Files\7-Zip\7z.exe" a Flex_Firmware.zip ..\..\..\Firmware\Flex_Firmware\firmware.ino.uf2
 if %ERRORLEVEL% NEQ 0 goto :fail
