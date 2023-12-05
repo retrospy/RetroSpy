@@ -48,8 +48,8 @@ void TG16Spy::updateState() {
 
 	while ((READ_PORTD(0b01000000)) == 0) {}
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-	for (int i = 0; i < 50; ++i)  // This is trial and error'd.  
-	asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
+	unsigned long start = micros(); 
+	while (micros() - start < 4) ;
 #else
 	asm volatile("nop\nnop\n");
 #endif

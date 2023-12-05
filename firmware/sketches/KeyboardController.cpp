@@ -50,8 +50,8 @@ void row1_isr_vision()
 #if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	delayMicroseconds(LINE_WAIT);
 #else
-	for (int i = 0; i < 25*LINE_WAIT; ++i)  // This is trial and error'd.  
-		asm volatile("nop\n");    // NOP isn't consistent enough on an optimized Pi Pico
+	unsigned long start = micros(); 
+	while (micros() - start < 2*LINE_WAIT) ;
 #endif
 	byte cachedCurrentState = currentState;
 	if (currentState > 3)
@@ -112,8 +112,8 @@ void row2_isr_vision()
 #if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	delayMicroseconds(LINE_WAIT);
 #else
-	for (int i = 0; i < 25*LINE_WAIT; ++i)  // This is trial and error'd.  
-		asm volatile("nop\n");    // NOP isn't consistent enough on an optimized Pi Pico
+	unsigned long start = micros(); 
+	while (micros() - start < 2*LINE_WAIT) ;
 #endif
 	byte cachedCurrentState = currentState;
 	if (currentState > 6)
@@ -158,8 +158,8 @@ void row3_isr_vision()
 #if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	delayMicroseconds(LINE_WAIT);
 #else
-	for (int i = 0; i < 25*LINE_WAIT; ++i)  // This is trial and error'd.  
-		asm volatile("nop\n");    // NOP isn't consistent enough on an optimized Pi Pico
+	unsigned long start = micros(); 
+	while (micros() - start < 2*LINE_WAIT) ;
 #endif
 	byte cachedCurrentState = currentState;
 	if (currentState > 9)
@@ -202,8 +202,8 @@ void row4_isr_vision()
 #if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	delayMicroseconds(LINE_WAIT);
 #else
-	for (int i = 0; i < 25*LINE_WAIT; ++i)  // This is trial and error'd.  
-		asm volatile("nop\n");    // NOP isn't consistent enough on an optimized Pi Pico
+	unsigned long start = micros(); 
+	while (micros() - start < 2*LINE_WAIT) ;
 #endif
 
 	byte cachedCurrentState = currentState;
@@ -248,8 +248,8 @@ void sr_row1sr_isr_vision()
 #if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	delayMicroseconds(LINE_WAIT);
 #else
-	for (int i = 0; i < 25*LINE_WAIT; ++i)  // This is trial and error'd.  
-		asm volatile("nop\n");    // NOP isn't consistent enough on an optimized Pi Pico
+	unsigned long start = micros(); 
+	while (micros() - start < 2*LINE_WAIT) ;
 #endif
 	
 	byte cachedCurrentState = currentState;
@@ -297,8 +297,8 @@ void sr_row2sr_isr_vision()
 #if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	delayMicroseconds(LINE_WAIT);
 #else
-	for (int i = 0; i < 150*LINE_WAIT; ++i)  // This is trial and error'd.  
-		asm volatile("nop\n");    // NOP isn't consistent enough on an optimized Pi Pico
+	unsigned long start = micros(); 
+	while (micros() - start < 2*LINE_WAIT) ;
 #endif
 	byte cachedCurrentState = currentState;
 	

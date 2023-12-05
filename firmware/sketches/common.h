@@ -93,7 +93,7 @@ enum VideoOutputType {
 #define SNES_LATCH         1
 #define SNES_DATA          2
 #define SNES_CLOCK         4
-#define TP_ELASPEDMILLIS
+#define TP_ELAPSEDMILLIS
 #endif
 
 // Uncomment these to enable 3rd party libraries once installed

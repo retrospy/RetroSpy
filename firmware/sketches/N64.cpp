@@ -26,7 +26,7 @@
 
 #include "N64.h"
 
-#if (defined(__arm__) && defined(CORE_TEENSY) && (defined(ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41))) || (defined(TP_ELASPEDMILLIS) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)))
+#if (defined(__arm__) && defined(CORE_TEENSY) && (defined(ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41))) || (defined(TP_ELAPSEDMILLIS) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)))
 
 #include <elapsedMillis.h>
 
@@ -77,8 +77,8 @@ findcmdinit:
 		noInterrupts();
 		// Wait ~2us between line reads
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-		for (int i = 0; i < 25; ++i)  // This is trial and error'd.  
-		asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
+		unsigned long start = micros();
+		while (micros() - start < 2) ;
 #else
 		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
 #endif
@@ -100,8 +100,8 @@ readCmd:
 
 	// Wait ~2us between line reads
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-	for (int i = 0; i < 25; ++i)  // This is trial and error'd.  
-	asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
+	unsigned long start = micros();
+	while (micros() - start < 2) ;
 #else
 	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
 #endif
@@ -157,8 +157,8 @@ readData:
 	
 	// Wait ~2us between line reads
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-	for (int i = 0; i < 25; ++i)  // This is trial and error'd.  
-	asm volatile("nop\n"); // NOP isn't consistent enough on an optimized Pi Pico
+	start = micros();
+	while (micros() - start < 2) ;
 #else
 	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
 #endif
@@ -213,7 +213,7 @@ void N64Spy::debugSerial() {
 		Serial.print(sendData[i] ? "1" : "0");
 		j++;
 	}
-	Serial.print("\n");
+	Serial.println();
 }
 
 #elif defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO) || defined(ARDUINO_AVR_NANO_EVERY) || defined(ARDUINO_AVR_LARDU_328E)

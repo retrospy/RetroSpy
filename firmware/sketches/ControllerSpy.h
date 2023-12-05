@@ -40,14 +40,22 @@ public:
 	virtual void printFirmwareInfo()
 	{
 		delay(1000);
-		Serial.print("// Starting up in ");
-		Serial.print(startupMsg());
-		Serial.println(" mode");
-		Serial.print("// Version: ");
-		Serial.println("6.4.1"); /*VERSIONINFO*/
-		delay(1000);		
+		const char* console = startupMsg();
+		if (console != nullptr)
+		{
+			Serial.print("// Starting up in ");
+			Serial.print(console);
+			Serial.println(" mode");
+			Serial.print("// Version: ");
+		}
+		else
+		{
+			Serial.println("// Selected mode is unsupported on this hardware");
+		}
+		Serial.println("6.4.1"); /*VERSIONINFO*/		
+		delay(1000);
 	}
-	
+		
 	virtual void setup1() {}
 	virtual void loop() = 0;
 	virtual void loop1() {}
