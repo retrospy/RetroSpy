@@ -719,7 +719,6 @@ namespace GBPUpdaterX2
                 });
 
             }
-
         }
 
         private void UpdateVisionThread()
@@ -834,6 +833,215 @@ namespace GBPUpdaterX2
                     p.BeginErrorReadLine();
                     p.WaitForExit();
                 }
+
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += sb.ToString() + "\n";
+                    txtboxData.Text += "..." + "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+
+                    try
+                    {
+                        var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", "Update complete! Please reboot your device.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Info);
+                        await m.ShowWindowDialogAsync(this);
+                        goButton.IsEnabled = true;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                        var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                        await m.ShowWindowDialogAsync(this);
+                        goButton.IsEnabled = true;
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                    var m = MsBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                    await m.ShowWindowDialogAsync(this);
+
+                    goButton.IsEnabled = true;
+                });
+
+            }
+        }
+
+        private void UpdateFlexThread()
+        {
+            try
+            {
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    this.goButton.IsEnabled = false;
+                    txtboxData.Text = string.Empty;
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                _ = Directory.CreateDirectory(tempDirectory);
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Downloading latest firmware...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+
+                DownloadFirmware(tempDirectory, "Flex_Firmware.zip");
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.Text += "Decompressing firmware package...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "Flex_Firmware.zip"), tempDirectory);
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                string? port = (string?)COMPortComboBox.SelectedItem;
+                port ??= "No Arduino/Teensy Found";
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Updating firmware...\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ProcessStartInfo processInfo;
+     
+                StringBuilder sb = new();
+
+                DriveInfo[] drives = DriveInfo.GetDrives();
+                bool found = false;
+                foreach(var drive in drives)
+                {
+                    if (drive.IsReady && drive.VolumeLabel == "RPI-RP2")
+                    {
+                        File.Copy(Path.Combine(tempDirectory, "firmware.ino.uf2"), Path.Combine(drive.Name, "firmware.ino.uf2"), true);
+                        found = true;
+                    }
+                }
+
+                if (!found)
+                    throw new Exception("Could not find Raspberry Pi Pico device.");
+
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += sb.ToString() + "\n";
+                    txtboxData.Text += "..." + "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+
+                    try
+                    {
+                        var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", "Update complete! Please reboot your device.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Info);
+                        await m.ShowWindowDialogAsync(this);
+                        goButton.IsEnabled = true;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                        var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                        await m.ShowWindowDialogAsync(this);
+                        goButton.IsEnabled = true;
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                    var m = MsBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                    await m.ShowWindowDialogAsync(this);
+
+                    goButton.IsEnabled = true;
+                });
+
+            }
+        }
+
+        private void UpdateUSBLiteThread()
+        {
+            try
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    this.goButton.IsEnabled = false;
+                    txtboxData.Text = string.Empty;
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                _ = Directory.CreateDirectory(tempDirectory);
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Downloading latest firmware...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+
+                DownloadFirmware(tempDirectory, "USB_Firmware.zip");
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.Text += "Decompressing firmware package...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "USB_Firmware.zip"), tempDirectory);
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                string? port = (string?)COMPortComboBox.SelectedItem;
+                port ??= "No Arduino/Teensy Found";
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Updating firmware...\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ProcessStartInfo processInfo;
+
+                StringBuilder sb = new();
+
+                DriveInfo[] drives = DriveInfo.GetDrives();
+                bool found = false;
+                foreach (var drive in drives)
+                {
+                    if (drive.IsReady && drive.VolumeLabel == "RPI-RP2")
+                    {
+                        File.Copy(Path.Combine(tempDirectory, "firmware.ino.uf2"), Path.Combine(drive.Name, "firmware.ino.uf2"), true);
+                        found = true;
+                    }
+                }
+
+                if (!found)
+                    throw new Exception("Could not find Raspberry Pi Pico device.");
 
                 Dispatcher.UIThread.Post(async () =>
                 {
@@ -1030,291 +1238,724 @@ namespace GBPUpdaterX2
 
         private void UpdateCDiThread()
         {
-            Dispatcher.UIThread.Post(() =>
+            try
             {
-                this.goButton.IsEnabled = false;
-                txtboxData.Text = string.Empty;
-                txtboxData.CaretIndex = int.MaxValue;
 
-            });
+                Dispatcher.UIThread.Post(() =>
+                {
+                    this.goButton.IsEnabled = false;
+                    txtboxData.Text = string.Empty;
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
 
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            _ = Directory.CreateDirectory(tempDirectory);
+                string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                _ = Directory.CreateDirectory(tempDirectory);
 
-            Dispatcher.UIThread.Post(() =>
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Downloading latest firmware...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+
+                DownloadFirmware(tempDirectory, "CDi_Firmware.zip");
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.Text += "Decompressing firmware package...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "CDi_Firmware.zip"), tempDirectory);
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                string? port = (string?)COMPortComboBox.SelectedItem;
+                port ??= "No Arduino/Teensy Found";
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Updating firmware...\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ProcessStartInfo processInfo;
+
+                StringBuilder sb = new();
+
+                DriveInfo[] drives = DriveInfo.GetDrives();
+                bool found = false;
+                foreach (var drive in drives)
+                {
+                    if (drive.IsReady && drive.VolumeLabel == "RPI-RP2")
+                    {
+                        File.Copy(Path.Combine(tempDirectory, "firmware.ino.uf2"), Path.Combine(drive.Name, "firmware.ino.uf2"), true);
+                        found = true;
+                    }
+                }
+
+                if (!found)
+                    throw new Exception("Could not find Raspberry Pi Pico device.");
+
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += sb.ToString() + "\n";
+                    txtboxData.Text += "..." + "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+
+                    try
+                    {
+                        var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", "Update complete! Please reboot your device.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Info);
+                        await m.ShowWindowDialogAsync(this);
+                        goButton.IsEnabled = true;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                        var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                        await m.ShowWindowDialogAsync(this);
+                        goButton.IsEnabled = true;
+                    }
+                });
+            }
+            catch (Exception ex)
             {
-                txtboxData.Text += "Downloading latest firmware...";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                    var m = MsBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                    await m.ShowWindowDialogAsync(this);
 
+                    goButton.IsEnabled = true;
+                });
 
-            DownloadFirmware(tempDirectory, "CDi_Firmware.zip");
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                txtboxData.Text += "done.\n\n";
-                txtboxData.Text += "Decompressing firmware package...";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
-
-            ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "CDi_Firmware.zip"), tempDirectory);
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                txtboxData.Text += "done.\n\n";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
-
-            StringBuilder sb = new();
-
-            Dispatcher.UIThread.Post(async () =>
-            {
-                txtboxData.Text += sb.ToString() + "\n";
-                txtboxData.Text += "..." + "done.\n\n";
-                txtboxData.CaretIndex = int.MaxValue;
-                goButton.IsEnabled = true;
-            });
+            }
         }
     
 
         private void UpdateColecoVisionThread()
         {
-            Dispatcher.UIThread.Post(() =>
+            try
             {
-                this.goButton.IsEnabled = false;
-                txtboxData.Text = string.Empty;
-                txtboxData.CaretIndex = int.MaxValue;
 
-            });
+                Dispatcher.UIThread.Post(() =>
+                {
+                    this.goButton.IsEnabled = false;
+                    txtboxData.Text = string.Empty;
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
 
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            _ = Directory.CreateDirectory(tempDirectory);
+                string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                _ = Directory.CreateDirectory(tempDirectory);
 
-            Dispatcher.UIThread.Post(() =>
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Downloading latest firmware...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+
+                DownloadFirmware(tempDirectory, "CV_Firmware.zip");
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.Text += "Decompressing firmware package...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "CV_Firmware.zip"), tempDirectory);
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                string? port = (string?)COMPortComboBox.SelectedItem;
+                port ??= "No Arduino/Teensy Found";
+
+                string? port2 = (string?)COMPortComboBox2.SelectedItem;
+                port ??= "No Arduino/Teensy Found";
+
+                if (port == port2)
+                    throw new Exception("Port 1 and 2 cannot be the same port.");
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Updating firmware on port 1...\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ProcessStartInfo processInfo;
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    processInfo = new ProcessStartInfo("cmd.exe",
+                        "/c avrdude.exe -Cavrdude.conf -v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    processInfo = new ProcessStartInfo("chmod",
+                        "755 " + Path.Join(tempDirectory, "avrdude"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false
+                    };
+                    Process? p1 = Process.Start(processInfo);
+                    p1?.WaitForExit();
+
+                    processInfo = new ProcessStartInfo(Path.Join(tempDirectory, "avrdude"),
+                        "-v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    processInfo = new ProcessStartInfo("avrdude",
+                        "-v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else
+                {
+                    throw new PlatformNotSupportedException();
+                }
+
+                StringBuilder sb = new();
+                Process? p = Process.Start(processInfo);
+                if (p != null)
+                {
+                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.BeginOutputReadLine();
+                    p.BeginErrorReadLine();
+                    p.WaitForExit();
+                }
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += sb.ToString() + "\n";
+                    txtboxData.Text += "..." + "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+
+                    txtboxData.Text += "Updating firmware on port 2...\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    processInfo = new ProcessStartInfo("cmd.exe",
+                        "/c avrdude.exe -Cavrdude.conf -v -patmega328p -carduino -P" + port2 +
+                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    processInfo = new ProcessStartInfo("chmod",
+                        "755 " + Path.Join(tempDirectory, "avrdude"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false
+                    };
+                    Process? p1 = Process.Start(processInfo);
+                    p1?.WaitForExit();
+
+                    processInfo = new ProcessStartInfo(Path.Join(tempDirectory, "avrdude"),
+                        "-v -patmega328p -carduino -P" + port2 +
+                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    processInfo = new ProcessStartInfo("avrdude",
+                        "-v -patmega328p -carduino -P" + port2 +
+                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else
+                {
+                    throw new PlatformNotSupportedException();
+                }
+
+                sb = new();
+                p = Process.Start(processInfo);
+                if (p != null)
+                {
+                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.BeginOutputReadLine();
+                    p.BeginErrorReadLine();
+                    p.WaitForExit();
+                }
+
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += sb.ToString() + "\n";
+                    txtboxData.Text += "..." + "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+
+                    try
+                    {
+                        var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", "Update complete! Please reboot your device.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Info);
+                        await m.ShowWindowDialogAsync(this);
+                        goButton.IsEnabled = true;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                        var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                        await m.ShowWindowDialogAsync(this);
+                        goButton.IsEnabled = true;
+                    }
+                });
+            }
+            catch (Exception ex)
             {
-                txtboxData.Text += "Downloading latest firmware...";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                    var m = MsBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                    await m.ShowWindowDialogAsync(this);
 
+                    goButton.IsEnabled = true;
+                });
 
-            DownloadFirmware(tempDirectory, "CV_Firmware.zip");
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                txtboxData.Text += "done.\n\n";
-                txtboxData.Text += "Decompressing firmware package...";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
-
-            ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "CV_Firmware.zip"), tempDirectory);
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                txtboxData.Text += "done.\n\n";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
-
-            StringBuilder sb = new();
-
-            Dispatcher.UIThread.Post(async () =>
-            {
-                txtboxData.Text += sb.ToString() + "\n";
-                txtboxData.Text += "..." + "done.\n\n";
-                txtboxData.CaretIndex = int.MaxValue;
-                goButton.IsEnabled = true;
-            });
+            }
         }
 
         private void UpdatePippinThread()
         {
-            Dispatcher.UIThread.Post(() =>
+            try
             {
-                this.goButton.IsEnabled = false;
-                txtboxData.Text = string.Empty;
-                txtboxData.CaretIndex = int.MaxValue;
 
-            });
+                Dispatcher.UIThread.Post(() =>
+                {
+                    this.goButton.IsEnabled = false;
+                    txtboxData.Text = string.Empty;
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
 
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            _ = Directory.CreateDirectory(tempDirectory);
+                string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                _ = Directory.CreateDirectory(tempDirectory);
 
-            Dispatcher.UIThread.Post(() =>
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Downloading latest firmware...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+
+                DownloadFirmware(tempDirectory, "ADB_Firmware.zip");
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.Text += "Decompressing firmware package...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "ADB_Firmware.zip"), tempDirectory);
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                string? port = (string?)COMPortComboBox.SelectedItem;
+                port ??= "No Arduino/Teensy Found";
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Updating firmware...\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ProcessStartInfo processInfo;
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    processInfo = new ProcessStartInfo("cmd.exe",
+                        "/c avrdude.exe -Cavrdude.conf -v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    processInfo = new ProcessStartInfo("chmod",
+                        "755 " + Path.Join(tempDirectory, "avrdude"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false
+                    };
+                    Process? p1 = Process.Start(processInfo);
+                    p1?.WaitForExit();
+
+                    processInfo = new ProcessStartInfo(Path.Join(tempDirectory, "avrdude"),
+                        "-v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    processInfo = new ProcessStartInfo("avrdude",
+                        "-v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else
+                {
+                    throw new PlatformNotSupportedException();
+                }
+
+                StringBuilder sb = new();
+                Process? p = Process.Start(processInfo);
+                if (p != null)
+                {
+                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.BeginOutputReadLine();
+                    p.BeginErrorReadLine();
+                    p.WaitForExit();
+                }
+
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += sb.ToString() + "\n";
+                    txtboxData.Text += "..." + "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+
+                    try
+                    {
+                        var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", "Update complete! Please reboot your device.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Info);
+                        await m.ShowWindowDialogAsync(this);
+                        goButton.IsEnabled = true;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                        var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                        await m.ShowWindowDialogAsync(this);
+                        goButton.IsEnabled = true;
+                    }
+                });
+            }
+            catch (Exception ex)
             {
-                txtboxData.Text += "Downloading latest firmware...";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                    var m = MsBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                    await m.ShowWindowDialogAsync(this);
 
+                    goButton.IsEnabled = true;
+                });
 
-            DownloadFirmware(tempDirectory, "ADB_Firmware.zip");
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                txtboxData.Text += "done.\n\n";
-                txtboxData.Text += "Decompressing firmware package...";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
-
-            ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "ADB_Firmware.zip"), tempDirectory);
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                txtboxData.Text += "done.\n\n";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
-
-            StringBuilder sb = new();
-
-            Dispatcher.UIThread.Post(async () =>
-            {
-                txtboxData.Text += sb.ToString() + "\n";
-                txtboxData.Text += "..." + "done.\n\n";
-                txtboxData.CaretIndex = int.MaxValue;
-                goButton.IsEnabled = true;
-            });
+            }
         }
 
         private void UpdateAnalogThread()
         {
-            Dispatcher.UIThread.Post(() =>
+            try
             {
-                this.goButton.IsEnabled = false;
-                txtboxData.Text = string.Empty;
-                txtboxData.CaretIndex = int.MaxValue;
 
-            });
+                Dispatcher.UIThread.Post(() =>
+                {
+                    this.goButton.IsEnabled = false;
+                    txtboxData.Text = string.Empty;
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
 
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            _ = Directory.CreateDirectory(tempDirectory);
+                string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                _ = Directory.CreateDirectory(tempDirectory);
 
-            Dispatcher.UIThread.Post(() =>
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Downloading latest firmware...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+
+                DownloadFirmware(tempDirectory, "Analog_Firmware.zip");
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.Text += "Decompressing firmware package...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "Analog_Firmware.zip"), tempDirectory);
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                string? port = (string?)COMPortComboBox.SelectedItem;
+                port ??= "No Arduino/Teensy Found";
+
+                string? port2 = (string?)COMPortComboBox2.SelectedItem;
+                port ??= "No Arduino/Teensy Found";
+
+                if (port == port2)
+                    throw new Exception("Port 1 and 2 cannot be the same port.");
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Updating firmware on port 1...\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ProcessStartInfo processInfo;
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    processInfo = new ProcessStartInfo("cmd.exe",
+                        "/c avrdude.exe -Cavrdude.conf -v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:firmware_1.ino.hex:i", "115200"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    processInfo = new ProcessStartInfo("chmod",
+                        "755 " + Path.Join(tempDirectory, "avrdude"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false
+                    };
+                    Process? p1 = Process.Start(processInfo);
+                    p1?.WaitForExit();
+
+                    processInfo = new ProcessStartInfo(Path.Join(tempDirectory, "avrdude"),
+                        "-v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:firmware_1.ino.hex:i", "115200"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    processInfo = new ProcessStartInfo("avrdude",
+                        "-v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:firmware_1.ino.hex:i", "115200"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else
+                {
+                    throw new PlatformNotSupportedException();
+                }
+
+                StringBuilder sb = new();
+                Process? p = Process.Start(processInfo);
+                if (p != null)
+                {
+                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.BeginOutputReadLine();
+                    p.BeginErrorReadLine();
+                    p.WaitForExit();
+                }
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += sb.ToString() + "\n";
+                    txtboxData.Text += "..." + "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+
+                    txtboxData.Text += "Updating firmware on port 2...\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    processInfo = new ProcessStartInfo("cmd.exe",
+                        "/c avrdude.exe -Cavrdude.conf -v -patmega328p -carduino -P" + port2 +
+                        string.Format(" -b{0} -D -Uflash:w:firmware_2.ino.hex:i", "115200"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    processInfo = new ProcessStartInfo("chmod",
+                        "755 " + Path.Join(tempDirectory, "avrdude"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false
+                    };
+                    Process? p1 = Process.Start(processInfo);
+                    p1?.WaitForExit();
+
+                    processInfo = new ProcessStartInfo(Path.Join(tempDirectory, "avrdude"),
+                        "-v -patmega328p -carduino -P" + port2 +
+                        string.Format(" -b{0} -D -Uflash:w:firmware_2.ino.hex:i", "115200"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    processInfo = new ProcessStartInfo("avrdude",
+                        "-v -patmega328p -carduino -P" + port2 +
+                        string.Format(" -b{0} -D -Uflash:w:firmware_2.ino.hex:i", "115200"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else
+                {
+                    throw new PlatformNotSupportedException();
+                }
+
+                sb = new();
+                p = Process.Start(processInfo);
+                if (p != null)
+                {
+                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.BeginOutputReadLine();
+                    p.BeginErrorReadLine();
+                    p.WaitForExit();
+                }
+
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += sb.ToString() + "\n";
+                    txtboxData.Text += "..." + "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+
+                    try
+                    {
+                        var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", "Update complete! Please reboot your device.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Info);
+                        await m.ShowWindowDialogAsync(this);
+                        goButton.IsEnabled = true;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                        var m = MsBox.Avalonia.MessageBoxManager
+                            .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                        await m.ShowWindowDialogAsync(this);
+                        goButton.IsEnabled = true;
+                    }
+                });
+            }
+            catch (Exception ex)
             {
-                txtboxData.Text += "Downloading latest firmware...";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                    var m = MsBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                    await m.ShowWindowDialogAsync(this);
 
+                    goButton.IsEnabled = true;
+                });
 
-            DownloadFirmware(tempDirectory, "Analog_Firmware.zip");
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                txtboxData.Text += "done.\n\n";
-                txtboxData.Text += "Decompressing firmware package...";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
-
-            ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "Analog_Firmware.zip"), tempDirectory);
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                txtboxData.Text += "done.\n\n";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
-
-            StringBuilder sb = new();
-
-            Dispatcher.UIThread.Post(async () =>
-            {
-                txtboxData.Text += sb.ToString() + "\n";
-                txtboxData.Text += "..." + "done.\n\n";
-                txtboxData.CaretIndex = int.MaxValue;
-                goButton.IsEnabled = true;
-            });
-        }
-
-        private void UpdateFlexThread()
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                this.goButton.IsEnabled = false;
-                txtboxData.Text = string.Empty;
-                txtboxData.CaretIndex = int.MaxValue;
-
-            });
-
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            _ = Directory.CreateDirectory(tempDirectory);
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                txtboxData.Text += "Downloading latest firmware...";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
-
-
-            DownloadFirmware(tempDirectory, "Flex_Firmware.zip");
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                txtboxData.Text += "done.\n\n";
-                txtboxData.Text += "Decompressing firmware package...";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
-
-            ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "Flex_Firmware.zip"), tempDirectory);
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                txtboxData.Text += "done.\n\n";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
-
-            StringBuilder sb = new();
-
-            Dispatcher.UIThread.Post(async () =>
-            {
-                txtboxData.Text += sb.ToString() + "\n";
-                txtboxData.Text += "..." + "done.\n\n";
-                txtboxData.CaretIndex = int.MaxValue;
-                goButton.IsEnabled = true;
-            });
-        }
-
-        private void UpdateUSBLiteThread()
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                this.goButton.IsEnabled = false;
-                txtboxData.Text = string.Empty;
-                txtboxData.CaretIndex = int.MaxValue;
-
-            });
-
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            _ = Directory.CreateDirectory(tempDirectory);
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                txtboxData.Text += "Downloading latest firmware...";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
-
-
-            DownloadFirmware(tempDirectory, "Flex_Firmware.zip");
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                txtboxData.Text += "done.\n\n";
-                txtboxData.Text += "Decompressing firmware package...";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
-
-            ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "Flex_Firmware.zip"), tempDirectory);
-
-            Dispatcher.UIThread.Post(() =>
-            {
-                txtboxData.Text += "done.\n\n";
-                txtboxData.CaretIndex = int.MaxValue;
-            });
-
-            StringBuilder sb = new();
-
-            Dispatcher.UIThread.Post(async () =>
-            {
-                txtboxData.Text += sb.ToString() + "\n";
-                txtboxData.Text += "..." + "done.\n\n";
-                txtboxData.CaretIndex = int.MaxValue;
-                goButton.IsEnabled = true;
-            });
+            }
         }
 
         private void SerialDebuggerThread()
