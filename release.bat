@@ -178,6 +178,18 @@ if exist "..\..\..\Firmware\Analog_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
+if exist "..\..\..\Firmware\USBLite_Firmware\" (
+  cd ..\usb-sniffer-lite\firmware\make
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  make
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  del ..\..\..\..\..\USBLite_Firmware\firmware.ino.hex
+  copy D:\src\Repos\usb-sniffer-lite\firmware\make\build\UsbSnifferLite.uf2 ..\..\..\..\..\Firmware\Analog_Firmware\UsbSnifferLite.uf2
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  cd ..\..\..\RetroSpy
+  if %ERRORLEVEL% NEQ 0 goto :fail
+)
+
 del RetroSpy-Windows.zip
 del RetroSpy-Windows.zip.*
 rmdir /S /Q RetroSpy-Setup
@@ -418,13 +430,22 @@ copy CDi_Firmware.zip RetroSpy-Upload
 if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
-if exist "..\..\..\Firmware\Flex_Firmware\" (
+if exist "..\..\..\Firmware\USBLite_Firmware\" (
+del Flex_Firmware.zip
+"C:\Program Files\7-Zip\7z.exe" a USBLite_Firmware.zip ..\..\..\Firmware\USBLite_Firmware\UsbSnifferLite.uf2
+if %ERRORLEVEL% NEQ 0 goto :fail
+copy USBLite_Firmware.zip RetroSpy-Upload
+if %ERRORLEVEL% NEQ 0 goto :fail
+)
+
+if exist "..\..\..\Firmware\USBLite_Firmware\" (
 del Flex_Firmware.zip
 "C:\Program Files\7-Zip\7z.exe" a Flex_Firmware.zip ..\..\..\Firmware\Flex_Firmware\firmware.ino.uf2
 if %ERRORLEVEL% NEQ 0 goto :fail
 copy Flex_Firmware.zip RetroSpy-Upload
 if %ERRORLEVEL% NEQ 0 goto :fail
 )
+
 
 if exist "..\..\..\Firmware\Analog_Firmware\" (
 del Analog_Firmware.zip
