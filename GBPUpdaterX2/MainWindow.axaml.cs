@@ -312,7 +312,7 @@ namespace GBPUpdaterX2
                 };
 
                 HttpClient client = new();
-                
+
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("token", token);
                 client.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue("AppName", "1.0"));
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
@@ -377,18 +377,21 @@ namespace GBPUpdaterX2
         }
 
         public enum Devices
-        { 
+        {
             PIXEL = 0,
             VISION,
             VISION_DREAM,
             VISION_CDI,
             VISION_COLECO,
             VISION_PIPPIN,
+            VISION_ANALOG,
+            VISION_FLEX,
+            VISION_USBLITE,
             SERIAL_DEBUG
         }
 
 
-    public MainWindow()
+        public MainWindow()
         {
             InitializeComponent();
 
@@ -408,6 +411,9 @@ namespace GBPUpdaterX2
                 "RetroSpy Vision CDi",
                 "RetroSpy Vision ColecoVision",
                 "RetroSpy Vision Pippin",
+                "RetroSpy Vision Analog",
+                "RetroSpy Vision Flex",
+                "RetroSpy Vision USB Lite",
                 "Serial Debugger"
             };
 
@@ -445,7 +451,7 @@ namespace GBPUpdaterX2
 
             if (DeviceComboBox.SelectedIndex == ((int)Devices.VISION) || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_DREAM)
                 || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_COLECO) || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_PIPPIN)
-                || DeviceComboBox.SelectedIndex == ((int)Devices.SERIAL_DEBUG))
+                || DeviceComboBox.SelectedIndex == ((int)Devices.SERIAL_DEBUG) || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_ANALOG))
             {
                 COMPortComboBox.SelectedIndex = 0;
                 COMPortLabel.IsVisible = true;
@@ -457,7 +463,7 @@ namespace GBPUpdaterX2
                 COMPortComboBox.IsVisible = false;
             }
 
-            if (DeviceComboBox.SelectedIndex == ((int)Devices.VISION_COLECO))
+            if (DeviceComboBox.SelectedIndex == ((int)Devices.VISION_COLECO) || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_ANALOG))
             {
                 COMPortComboBox2.SelectedIndex = 0;
                 COMPortComboBox2.IsVisible = true;
@@ -707,7 +713,7 @@ namespace GBPUpdaterX2
                     txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
                     var m = MsBox.Avalonia.MessageBoxManager
                         .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
-                     await m.ShowWindowDialogAsync(this);
+                    await m.ShowWindowDialogAsync(this);
 
                     goButton.IsEnabled = true;
                 });
@@ -915,7 +921,7 @@ namespace GBPUpdaterX2
                 ProcessStartInfo processInfo;
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    processInfo = new ProcessStartInfo("cmd.exe" ,
+                    processInfo = new ProcessStartInfo("cmd.exe",
                         "/c teensy_loader_cli.exe --mcu=TEENSY40 -v -w firmware.ino.hex")
                     {
                         CreateNoWindow = true,
@@ -1022,6 +1028,295 @@ namespace GBPUpdaterX2
             }
         }
 
+        private void UpdateCDiThread()
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                this.goButton.IsEnabled = false;
+                txtboxData.Text = string.Empty;
+                txtboxData.CaretIndex = int.MaxValue;
+
+            });
+
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            _ = Directory.CreateDirectory(tempDirectory);
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "Downloading latest firmware...";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+
+            DownloadFirmware(tempDirectory, "CDi_Firmware.zip");
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "done.\n\n";
+                txtboxData.Text += "Decompressing firmware package...";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+            ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "CDi_Firmware.zip"), tempDirectory);
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "done.\n\n";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+            StringBuilder sb = new();
+
+            Dispatcher.UIThread.Post(async () =>
+            {
+                txtboxData.Text += sb.ToString() + "\n";
+                txtboxData.Text += "..." + "done.\n\n";
+                txtboxData.CaretIndex = int.MaxValue;
+                goButton.IsEnabled = true;
+            });
+        }
+    
+
+        private void UpdateColecoVisionThread()
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                this.goButton.IsEnabled = false;
+                txtboxData.Text = string.Empty;
+                txtboxData.CaretIndex = int.MaxValue;
+
+            });
+
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            _ = Directory.CreateDirectory(tempDirectory);
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "Downloading latest firmware...";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+
+            DownloadFirmware(tempDirectory, "CV_Firmware.zip");
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "done.\n\n";
+                txtboxData.Text += "Decompressing firmware package...";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+            ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "CV_Firmware.zip"), tempDirectory);
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "done.\n\n";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+            StringBuilder sb = new();
+
+            Dispatcher.UIThread.Post(async () =>
+            {
+                txtboxData.Text += sb.ToString() + "\n";
+                txtboxData.Text += "..." + "done.\n\n";
+                txtboxData.CaretIndex = int.MaxValue;
+                goButton.IsEnabled = true;
+            });
+        }
+
+        private void UpdatePippinThread()
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                this.goButton.IsEnabled = false;
+                txtboxData.Text = string.Empty;
+                txtboxData.CaretIndex = int.MaxValue;
+
+            });
+
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            _ = Directory.CreateDirectory(tempDirectory);
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "Downloading latest firmware...";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+
+            DownloadFirmware(tempDirectory, "ADB_Firmware.zip");
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "done.\n\n";
+                txtboxData.Text += "Decompressing firmware package...";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+            ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "ADB_Firmware.zip"), tempDirectory);
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "done.\n\n";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+            StringBuilder sb = new();
+
+            Dispatcher.UIThread.Post(async () =>
+            {
+                txtboxData.Text += sb.ToString() + "\n";
+                txtboxData.Text += "..." + "done.\n\n";
+                txtboxData.CaretIndex = int.MaxValue;
+                goButton.IsEnabled = true;
+            });
+        }
+
+        private void UpdateAnalogThread()
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                this.goButton.IsEnabled = false;
+                txtboxData.Text = string.Empty;
+                txtboxData.CaretIndex = int.MaxValue;
+
+            });
+
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            _ = Directory.CreateDirectory(tempDirectory);
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "Downloading latest firmware...";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+
+            DownloadFirmware(tempDirectory, "Analog_Firmware.zip");
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "done.\n\n";
+                txtboxData.Text += "Decompressing firmware package...";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+            ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "Analog_Firmware.zip"), tempDirectory);
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "done.\n\n";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+            StringBuilder sb = new();
+
+            Dispatcher.UIThread.Post(async () =>
+            {
+                txtboxData.Text += sb.ToString() + "\n";
+                txtboxData.Text += "..." + "done.\n\n";
+                txtboxData.CaretIndex = int.MaxValue;
+                goButton.IsEnabled = true;
+            });
+        }
+
+        private void UpdateFlexThread()
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                this.goButton.IsEnabled = false;
+                txtboxData.Text = string.Empty;
+                txtboxData.CaretIndex = int.MaxValue;
+
+            });
+
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            _ = Directory.CreateDirectory(tempDirectory);
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "Downloading latest firmware...";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+
+            DownloadFirmware(tempDirectory, "Flex_Firmware.zip");
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "done.\n\n";
+                txtboxData.Text += "Decompressing firmware package...";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+            ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "Flex_Firmware.zip"), tempDirectory);
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "done.\n\n";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+            StringBuilder sb = new();
+
+            Dispatcher.UIThread.Post(async () =>
+            {
+                txtboxData.Text += sb.ToString() + "\n";
+                txtboxData.Text += "..." + "done.\n\n";
+                txtboxData.CaretIndex = int.MaxValue;
+                goButton.IsEnabled = true;
+            });
+        }
+
+        private void UpdateUSBLiteThread()
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                this.goButton.IsEnabled = false;
+                txtboxData.Text = string.Empty;
+                txtboxData.CaretIndex = int.MaxValue;
+
+            });
+
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            _ = Directory.CreateDirectory(tempDirectory);
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "Downloading latest firmware...";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+
+            DownloadFirmware(tempDirectory, "Flex_Firmware.zip");
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "done.\n\n";
+                txtboxData.Text += "Decompressing firmware package...";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+            ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "Flex_Firmware.zip"), tempDirectory);
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text += "done.\n\n";
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+            StringBuilder sb = new();
+
+            Dispatcher.UIThread.Post(async () =>
+            {
+                txtboxData.Text += sb.ToString() + "\n";
+                txtboxData.Text += "..." + "done.\n\n";
+                txtboxData.CaretIndex = int.MaxValue;
+                goButton.IsEnabled = true;
+            });
+        }
+
         private void SerialDebuggerThread()
         {
             Dispatcher.UIThread.Post(() =>
@@ -1085,7 +1380,6 @@ namespace GBPUpdaterX2
                 });
 
             }
-
         }
 
 #if OS_WINDOWS
@@ -1218,6 +1512,44 @@ namespace GBPUpdaterX2
             if (DeviceComboBox.SelectedIndex == 2)
             {
                 Thread thread = new(UpdateDreamThread);
+                thread.Start();
+            }
+
+
+            if (DeviceComboBox.SelectedIndex == 3)
+            {
+                Thread thread = new(UpdateCDiThread);
+                thread.Start();
+            }
+
+            if (DeviceComboBox.SelectedIndex == 4)
+            {
+                Thread thread = new(UpdateColecoVisionThread);
+                thread.Start();
+            }
+
+            if (DeviceComboBox.SelectedIndex == 5)
+            {
+                Thread thread = new(UpdatePippinThread);
+                thread.Start();
+            }
+
+            if (DeviceComboBox.SelectedIndex == 6)
+            {
+                Thread thread = new(UpdateAnalogThread);
+                thread.Start();
+            }
+
+            if (DeviceComboBox.SelectedIndex == 7)
+            {
+                Thread thread = new(UpdateFlexThread);
+                thread.Start();
+            }
+
+
+            if (DeviceComboBox.SelectedIndex == 8)
+            {
+                Thread thread = new(UpdateUSBLiteThread);
                 thread.Start();
             }
 
