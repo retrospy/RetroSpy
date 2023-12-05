@@ -183,8 +183,8 @@ if exist "..\..\..\Firmware\USBLite_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
   make
   if %ERRORLEVEL% NEQ 0 goto :fail
-  del ..\..\..\..\..\USBLite_Firmware\UsbSnifferLite.uf2
-  copy D:\src\Repos\usb-sniffer-lite\firmware\make\build\UsbSnifferLite.uf2 ..\..\..\..\..\Firmware\Analog_Firmware\UsbSnifferLite.uf2
+  del ..\..\..\..\..\Firmware\USBLite_Firmware\UsbSnifferLite.uf2
+  copy D:\src\Repos\retrospy\usb-sniffer-lite\firmware\make\build\UsbSnifferLite.uf2 ..\..\..\..\..\Firmware\USBLite_Firmware\UsbSnifferLite.uf2
   if %ERRORLEVEL% NEQ 0 goto :fail
   cd ..\..\..\RetroSpy
   if %ERRORLEVEL% NEQ 0 goto :fail
