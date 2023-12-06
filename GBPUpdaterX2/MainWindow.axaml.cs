@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Rendering;
 using Avalonia.Threading;
 using MsBox.Avalonia.Enums;
 using Newtonsoft.Json;
@@ -453,7 +454,9 @@ namespace GBPUpdaterX2
 
             if (DeviceComboBox.SelectedIndex == ((int)Devices.VISION) || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_DREAM)
                 || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_COLECO) || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_PIPPIN)
-                || DeviceComboBox.SelectedIndex == ((int)Devices.SERIAL_DEBUG) || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_ANALOG))
+                || DeviceComboBox.SelectedIndex == ((int)Devices.SERIAL_DEBUG) || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_ANALOG)
+                 || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_FLEX) || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_CDI)
+                 || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_USBLITE))
             {
                 COMPortComboBox.SelectedIndex = 0;
                 COMPortLabel.IsVisible = true;
@@ -875,6 +878,36 @@ namespace GBPUpdaterX2
             }
         }
 
+
+        private void ForcePiPicoIntoBootSel()
+        {
+            string? port = (string?)COMPortComboBox.SelectedItem;
+            port ??= "No Arduino/Teensy Found";
+
+            SerialPort? _serialPort = null;
+            using (_serialPort = new SerialPort(port != null ? port.Split(' ')[0] : "", 1200, Parity.None, 8, StopBits.One)
+            {
+                Handshake = Handshake.None,
+
+                DtrEnable = true,
+                ReadTimeout = 500,
+                WriteTimeout = 500
+            })
+            {
+                try
+                {
+                    _serialPort.Open();
+                    _serialPort.Close();
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+
+            Thread.Sleep(1000);
+        }
+
         private void UpdateFlexThread()
         {
             try
@@ -914,18 +947,7 @@ namespace GBPUpdaterX2
                     txtboxData.CaretIndex = int.MaxValue;
                 });
 
-                string? port = (string?)COMPortComboBox.SelectedItem;
-                port ??= "No Arduino/Teensy Found";
-
-                Dispatcher.UIThread.Post(() =>
-                {
-                    txtboxData.Text += "Updating firmware...\n";
-                    txtboxData.CaretIndex = int.MaxValue;
-                });
-
-                ProcessStartInfo processInfo;
-     
-                StringBuilder sb = new();
+                ForcePiPicoIntoBootSel();
 
                 DriveInfo[] drives = DriveInfo.GetDrives();
                 bool found = false;
@@ -943,7 +965,6 @@ namespace GBPUpdaterX2
 
                 Dispatcher.UIThread.Post(async () =>
                 {
-                    txtboxData.Text += sb.ToString() + "\n";
                     txtboxData.Text += "..." + "done.\n\n";
                     txtboxData.CaretIndex = int.MaxValue;
 
@@ -1018,18 +1039,13 @@ namespace GBPUpdaterX2
                     txtboxData.CaretIndex = int.MaxValue;
                 });
 
-                string? port = (string?)COMPortComboBox.SelectedItem;
-                port ??= "No Arduino/Teensy Found";
-
                 Dispatcher.UIThread.Post(() =>
                 {
                     txtboxData.Text += "Updating firmware...\n";
                     txtboxData.CaretIndex = int.MaxValue;
                 });
 
-                ProcessStartInfo processInfo;
-
-                StringBuilder sb = new();
+                ForcePiPicoIntoBootSel();
 
                 DriveInfo[] drives = DriveInfo.GetDrives();
                 bool found = false;
@@ -1047,7 +1063,6 @@ namespace GBPUpdaterX2
 
                 Dispatcher.UIThread.Post(async () =>
                 {
-                    txtboxData.Text += sb.ToString() + "\n";
                     txtboxData.Text += "..." + "done.\n\n";
                     txtboxData.CaretIndex = int.MaxValue;
 
@@ -1277,18 +1292,13 @@ namespace GBPUpdaterX2
                     txtboxData.CaretIndex = int.MaxValue;
                 });
 
-                string? port = (string?)COMPortComboBox.SelectedItem;
-                port ??= "No Arduino/Teensy Found";
-
                 Dispatcher.UIThread.Post(() =>
                 {
                     txtboxData.Text += "Updating firmware...\n";
                     txtboxData.CaretIndex = int.MaxValue;
                 });
 
-                ProcessStartInfo processInfo;
-
-                StringBuilder sb = new();
+                ForcePiPicoIntoBootSel();
 
                 DriveInfo[] drives = DriveInfo.GetDrives();
                 bool found = false;
@@ -1306,7 +1316,6 @@ namespace GBPUpdaterX2
 
                 Dispatcher.UIThread.Post(async () =>
                 {
-                    txtboxData.Text += sb.ToString() + "\n";
                     txtboxData.Text += "..." + "done.\n\n";
                     txtboxData.CaretIndex = int.MaxValue;
 
