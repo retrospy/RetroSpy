@@ -419,6 +419,8 @@ namespace GBPUpdaterX2
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
+                devices.Add("Install Pi Pico Driver");
+                devices.Add("List Drives");
                 devices.Add("Bad CH340 Driver Fix");
             }
 
@@ -2023,7 +2025,126 @@ namespace GBPUpdaterX2
             }
         }
 
+
 #if OS_WINDOWS
+
+
+        private void InstallRpiDriverThread()
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                this.goButton.IsEnabled = false;
+                txtboxData.Text = string.Empty;
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+            try
+            {
+                ProcessStartInfo processInfo;
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Starting installation.  This can take a few minutes...\n";
+                });
+
+                processInfo = new ProcessStartInfo("cmd.exe",
+                    "/c wdi-simple.exe")
+                {
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true,
+                    WorkingDirectory = "."
+                };
+
+                StringBuilder sb = new();
+                Process? p = Process.Start(processInfo);
+                if (p != null)
+                {
+                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.BeginOutputReadLine();
+                    p.BeginErrorReadLine();
+                    p.WaitForExit();
+                }
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += sb.ToString() + "\n";
+                    txtboxData.Text += "..." + "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                    var m = MsBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                    await m.ShowWindowDialogAsync(this);
+
+                    goButton.IsEnabled = true;
+                });
+
+            }
+        }
+
+        private void ListDeviceThread()
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                txtboxData.Text = string.Empty;
+                txtboxData.CaretIndex = int.MaxValue;
+            });
+
+            try
+            {
+                ProcessStartInfo processInfo;
+                
+                processInfo = new ProcessStartInfo("cmd.exe",
+                    "/c echo list volume | diskpart")
+                {
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true,
+                    WorkingDirectory = "."
+                };
+
+                StringBuilder sb = new();
+                Process? p = Process.Start(processInfo);
+                if (p != null)
+                {
+                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.BeginOutputReadLine();
+                    p.BeginErrorReadLine();
+                    p.WaitForExit();
+                }
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += sb.ToString() + "\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    txtboxData.Text += "\nUpdater encountered an error.  Message: " + ex.Message + "\n";
+                    var m = MsBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandard("RetroSpy", ex.Message ?? String.Empty, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                    await m.ShowWindowDialogAsync(this);
+
+                    goButton.IsEnabled = true;
+                });
+
+            }
+        }
+
+
         private void DriverFixThread()
         {
             try
@@ -2193,13 +2314,30 @@ namespace GBPUpdaterX2
                 Thread thread = new(UpdateUSBLiteThread);
                 thread.Start();
             }
+            int serialDebuggerOffset = 1;
+#if OS_WINDOWS
+            serialDebuggerOffset = 4;
+#endif
 
-            if (DeviceComboBox.SelectedIndex == DeviceComboBox.ItemCount - 2)
+            if (DeviceComboBox.SelectedIndex == DeviceComboBox.ItemCount - serialDebuggerOffset)
             {
                 Thread thread = new(SerialDebuggerThread);
                 thread.Start();
             }
 #if OS_WINDOWS
+
+            if (DeviceComboBox.SelectedIndex == DeviceComboBox.ItemCount - 3)
+            {
+                Thread thread = new(InstallRpiDriverThread);
+                thread.Start();
+            }
+
+            if (DeviceComboBox.SelectedIndex == DeviceComboBox.ItemCount - 2)
+            {
+                Thread thread = new(ListDeviceThread);
+                thread.Start();
+            }
+
             if (DeviceComboBox.SelectedIndex == DeviceComboBox.ItemCount - 1 && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 Thread thread = new(DriverFixThread);

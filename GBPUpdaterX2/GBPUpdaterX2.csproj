@@ -38,6 +38,13 @@
   <ItemGroup>
     <None Remove=".gitignore" />
     <None Remove="CH340G_2019.zip" />
+    <None Remove="usb_driver\amd64\WdfCoInstaller01011.dll" />
+    <None Remove="usb_driver\amd64\winusbcoinstaller2.dll" />
+    <None Remove="usb_driver\installer_arm64.exe" />
+    <None Remove="usb_driver\installer_x64.exe" />
+    <None Remove="usb_driver\usb_device.cat" />
+    <None Remove="usb_driver\usb_device.inf" />
+    <None Remove="wdi-simple.exe" />
   </ItemGroup>
 
   <ItemGroup>
@@ -80,6 +87,27 @@
 		    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		  </Content>
 		  <Content Include="GBPUpdater.ico" />
+		  <Content Include="usb_driver\amd64\WdfCoInstaller01011.dll">
+		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
+		  <Content Include="usb_driver\amd64\winusbcoinstaller2.dll">
+		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
+		  <Content Include="usb_driver\installer_arm64.exe">
+		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
+		  <Content Include="usb_driver\installer_x64.exe">
+		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
+		  <Content Include="usb_driver\usb_device.cat">
+		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
+		  <Content Include="usb_driver\usb_device.inf">
+		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
+		  <Content Include="wdi-simple.exe">
+		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
 		</ItemGroup>
 
 </Project>
