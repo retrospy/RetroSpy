@@ -1147,7 +1147,7 @@ namespace GBPUpdaterX2
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     processInfo = new ProcessStartInfo("cmd.exe",
-                        "/c teensy_loader_cli.exe --mcu=TEENSY40 -v -w firmware.ino.hex")
+                        "/c teensy_loader_cli.exe -s --mcu=TEENSY40 -v -w firmware.ino.hex")
                     {
                         CreateNoWindow = true,
                         UseShellExecute = false,
@@ -1168,7 +1168,7 @@ namespace GBPUpdaterX2
                     p1?.WaitForExit();
 
                     processInfo = new ProcessStartInfo("cmd.exe",
-                        "/c teensy_loader_cli.mac --mcu=TEENSY40 -v -w firmware.ino.hex")
+                        "/c teensy_loader_cli.mac -s --mcu=TEENSY40 -v -w firmware.ino.hex")
                     {
                         CreateNoWindow = true,
                         UseShellExecute = false,
@@ -1189,7 +1189,7 @@ namespace GBPUpdaterX2
                     p1?.WaitForExit();
 
                     processInfo = new ProcessStartInfo("cmd.exe",
-                        "/c teensy_loader_cli.linux --mcu=TEENSY40 -v -w firmware.ino.hex")
+                        "/c teensy_loader_cli.linux -s --mcu=TEENSY40 -v -w firmware.ino.hex")
                     {
                         CreateNoWindow = true,
                         UseShellExecute = false,
