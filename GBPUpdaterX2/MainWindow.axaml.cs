@@ -123,37 +123,45 @@ namespace GBPUpdaterX2
 
         private static void GetRaspberryPiPorts(List<string> arduinoPorts)
         {
-            const uint vid = 0x2E8A;
-            string vidStr = "'%USB_VID[_]" + vid.ToString("X", CultureInfo.CurrentCulture) + "%'";
+            uint[] vid = new uint[]{ 0x2E8A, 0x6666 };
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            for (int i = 0; i < vid.Length; ++i)
             {
-                using ManagementObjectSearcher searcher = new("root\\CIMV2", "SELECT * FROM Win32_PnPEntity WHERE DeviceID LIKE " + vidStr);
-                foreach (ManagementBaseObject mgmtObject in searcher.Get())
+                string vidStr = "'%USB_VID[_]" + vid[i].ToString("X", CultureInfo.CurrentCulture) + "%'";
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    string[] DeviceIdParts = ((string)mgmtObject["PNPDeviceID"]).Split("\\".ToArray());
-                    if (DeviceIdParts[0] != "USB")
+                    using ManagementObjectSearcher searcher = new("root\\CIMV2", "SELECT * FROM Win32_PnPEntity WHERE DeviceID LIKE " + vidStr);
+                    foreach (ManagementBaseObject mgmtObject in searcher.Get())
                     {
-                        break;
-                    }
-
-                    int start = DeviceIdParts[1].IndexOf("PID_", StringComparison.Ordinal) + 4;
-                    uint pid = Convert.ToUInt32(DeviceIdParts[1].Substring(start, 4), 16);
-
-                    string port;
-                    if (((string)mgmtObject["Caption"]).Split("()".ToArray()).Length > 2)
-                        port = ((string)mgmtObject["Caption"]).Split("()".ToArray())[1];
-                    else
-                        continue;
-
-                    switch (pid)
-                    {
-                        case 0x000A:
-                            arduinoPorts.Add(port + " (Raspberry Pi Pico)");
+                        string[] DeviceIdParts = ((string)mgmtObject["PNPDeviceID"]).Split("\\".ToArray());
+                        if (DeviceIdParts[0] != "USB")
+                        {
                             break;
+                        }
 
-                        default:
-                            break;
+                        int start = DeviceIdParts[1].IndexOf("PID_", StringComparison.Ordinal) + 4;
+                        uint pid = Convert.ToUInt32(DeviceIdParts[1].Substring(start, 4), 16);
+
+                        string port;
+                        if (((string)mgmtObject["Caption"]).Split("()".ToArray()).Length > 2)
+                            port = ((string)mgmtObject["Caption"]).Split("()".ToArray())[1];
+                        else
+                            continue;
+
+                        switch (pid)
+                        {
+                            case 0x000A:
+                                arduinoPorts.Add(port + " (Raspberry Pi Pico)");
+                                break;
+
+                            case 0x6610:
+                                arduinoPorts.Add(port + " (RetroSpy USB Lite)");
+                                break;
+
+                            default:
+                                break;
+                        }
                     }
                 }
             }
@@ -455,8 +463,7 @@ namespace GBPUpdaterX2
             if (DeviceComboBox.SelectedIndex == ((int)Devices.VISION) || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_DREAM)
                 || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_COLECO) || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_PIPPIN)
                 || DeviceComboBox.SelectedIndex == ((int)Devices.SERIAL_DEBUG) || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_ANALOG)
-                 || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_FLEX) || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_CDI)
-                 || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_USBLITE))
+                 || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_FLEX) || DeviceComboBox.SelectedIndex == ((int)Devices.VISION_CDI))
             {
                 COMPortComboBox.SelectedIndex = 0;
                 COMPortLabel.IsVisible = true;
@@ -1022,7 +1029,7 @@ namespace GBPUpdaterX2
                 });
 
 
-                DownloadFirmware(tempDirectory, "USB_Firmware.zip");
+                DownloadFirmware(tempDirectory, "USBLite_Firmware.zip");
 
                 Dispatcher.UIThread.Post(() =>
                 {
@@ -1031,7 +1038,7 @@ namespace GBPUpdaterX2
                     txtboxData.CaretIndex = int.MaxValue;
                 });
 
-                ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "USB_Firmware.zip"), tempDirectory);
+                ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "USBLite_Firmware.zip"), tempDirectory);
 
                 Dispatcher.UIThread.Post(() =>
                 {
@@ -1053,7 +1060,7 @@ namespace GBPUpdaterX2
                 {
                     if (drive.IsReady && drive.VolumeLabel == "RPI-RP2")
                     {
-                        File.Copy(Path.Combine(tempDirectory, "firmware.ino.uf2"), Path.Combine(drive.Name, "firmware.ino.uf2"), true);
+                        File.Copy(Path.Combine(tempDirectory, "UsbSnifferLite.uf2"), Path.Combine(drive.Name, "UsbSnifferLite.uf2"), true);
                         found = true;
                     }
                 }

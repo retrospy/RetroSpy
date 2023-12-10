@@ -823,37 +823,45 @@ namespace RetroSpy
 
         private static void GetRaspberryPiPorts(List<string> arduinoPorts)
         {
-            const uint vid = 0x2E8A;
-            string vidStr = "'%USB_VID[_]" + vid.ToString("X", CultureInfo.CurrentCulture) + "%'";
+            uint[] vid = new uint[] { 0x2E8A, 0x6666 };
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            for (int i = 0; i < vid.Length; ++i)
             {
-                using ManagementObjectSearcher searcher = new("root\\CIMV2", "SELECT * FROM Win32_PnPEntity WHERE DeviceID LIKE " + vidStr);
-                foreach (ManagementBaseObject mgmtObject in searcher.Get())
+                string vidStr = "'%USB_VID[_]" + vid[i].ToString("X", CultureInfo.CurrentCulture) + "%'";
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    string[] DeviceIdParts = ((string)mgmtObject["PNPDeviceID"]).Split("\\".ToArray());
-                    if (DeviceIdParts[0] != "USB")
+                    using ManagementObjectSearcher searcher = new("root\\CIMV2", "SELECT * FROM Win32_PnPEntity WHERE DeviceID LIKE " + vidStr);
+                    foreach (ManagementBaseObject mgmtObject in searcher.Get())
                     {
-                        break;
-                    }
-
-                    int start = DeviceIdParts[1].IndexOf("PID_", StringComparison.Ordinal) + 4;
-                    uint pid = Convert.ToUInt32(DeviceIdParts[1].Substring(start, 4), 16);
-
-                    string port;
-                    if (((string)mgmtObject["Caption"]).Split("()".ToArray()).Length > 2)
-                        port = ((string)mgmtObject["Caption"]).Split("()".ToArray())[1];
-                    else
-                        continue;
-
-                    switch (pid)
-                    {
-                        case 0x000A:
-                            arduinoPorts.Add(port + " (Raspberry Pi Pico)");
+                        string[] DeviceIdParts = ((string)mgmtObject["PNPDeviceID"]).Split("\\".ToArray());
+                        if (DeviceIdParts[0] != "USB")
+                        {
                             break;
+                        }
 
-                        default:
-                            break;
+                        int start = DeviceIdParts[1].IndexOf("PID_", StringComparison.Ordinal) + 4;
+                        uint pid = Convert.ToUInt32(DeviceIdParts[1].Substring(start, 4), 16);
+
+                        string port;
+                        if (((string)mgmtObject["Caption"]).Split("()".ToArray()).Length > 2)
+                            port = ((string)mgmtObject["Caption"]).Split("()".ToArray())[1];
+                        else
+                            continue;
+
+                        switch (pid)
+                        {
+                            case 0x000A:
+                                arduinoPorts.Add(port + " (Raspberry Pi Pico)");
+                                break;
+
+                            case 0x6610:
+                                arduinoPorts.Add(port + " (RetroSpy USB Lite)");
+                                break;
+
+                            default:
+                                break;
+                        }
                     }
                 }
             }
