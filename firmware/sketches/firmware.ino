@@ -14,7 +14,7 @@
 //#define MODE_NES
 //#define MODE_POWERGLOVE
 //#define MODE_SNES
-//#define MODE_N64
+#define MODE_N64
 //#define MODE_GC
 //#define MODE_SMS
 //#define MODE_SMS_PADDLE
