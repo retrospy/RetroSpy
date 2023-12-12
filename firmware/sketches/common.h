@@ -103,7 +103,7 @@ enum VideoOutputType {
 // Used by MODE_COLECOVISION, MODE_DRIVING_CONTROLLER & MODE_KEYBOARD_CONTROLLER
 //#define TP_PINCHANGEINTERRUPT
 // Used by Pi Pico implementation of N64, Gamecube, Nuon & CDTV
-#define TP_ELAPSEDMILLIS
+//#define TP_ELAPSEDMILLIS
 
 // Uncomment these out to enable the necessary ADC interrupt handler.
 // They cannot co-exist when linked even when not active
