@@ -26,7 +26,7 @@
 
 #include "AmigaMouse.h"
 
-#if (!defined(TP_IRLIB2) && !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(ARDUINO_AVR_NANO_EVERY)) || defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#if (!defined(TP_IRLIB2) && !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(ARDUINO_AVR_NANO_EVERY) && !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)) || (defined(TP_TIMERINTERRUPTS) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))) 
 
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 #include "RPi_Pico_TimerInterrupt.h"

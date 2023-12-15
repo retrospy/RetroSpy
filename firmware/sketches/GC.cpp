@@ -751,6 +751,7 @@ void GCSpy::loop1()
 #else
 
 void GCSpy::loop() {}
+void GCSpy::loop1() {}
 void GCSpy::writeSerial() {}
 void GCSpy::debugSerial() {}
 void GCSpy::updateState() {}

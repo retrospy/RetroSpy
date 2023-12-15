@@ -31,19 +31,26 @@
 
 #if !defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY))
 
+#if !defined(RASPBERRYPI_PICO) &&  !defined(ARDUINO_RASPBERRY_PI_PICO)
 #include <SoftwareSerial.h>
-
+#endif
 class CDiKeyboardSpy : public ControllerSpy {
 public:
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	CDiKeyboardSpy(int recvpin)
+		: T_mode_caps_on(false)
+		, serial2RX(recvpin)
+	{
+		Serial2.setRX(recvpin);
+	}
+#else	
 	CDiKeyboardSpy(int recvpin)
 		: vSerial(CDI_RECVSER, CDI_SENDSER, true)
 		, T_mode_caps_on(false)
 		, serial2RX(recvpin)
 	{
-#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-		Serial2.setRX(recvpin);
-#endif
 	}
+#endif 
 	
 	void setup();
 	void loop();
@@ -76,7 +83,9 @@ public:
 	virtual const char* startupMsg();
 	
 private:
+#if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	SoftwareSerial vSerial;
+#endif
 	byte rawData[10];
 	byte incomingBytes[4];
 	bool T_mode_caps_on;

@@ -55,7 +55,7 @@ static byte lookup[128] = {
 
 void CDiKeyboardSpy::setup() {
 
-#if defined(RS_VISION_CDI) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 	Serial2.begin(1200);
 #else
 	vSerial.begin(1200); 	

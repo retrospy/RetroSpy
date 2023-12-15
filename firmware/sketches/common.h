@@ -104,6 +104,8 @@ enum VideoOutputType {
 //#define TP_PINCHANGEINTERRUPT
 // Used by Pi Pico implementation of N64, Gamecube, Nuon & CDTV
 //#define TP_ELAPSEDMILLIS
+// Used by Amiga Mouse
+//#define TP_TIMERINTERRUPTS
 
 // Uncomment these out to enable the necessary ADC interrupt handler.
 // They cannot co-exist when linked even when not active
