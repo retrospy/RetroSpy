@@ -26,7 +26,7 @@
 
 #include "BoosterGrip.h"
 
-#if !(defined(__arm__) && defined(CORE_TEENSY))
+#if !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(ARDUINO_AVR_NANO_EVERY)
 
 void BoosterGripSpy::setup(uint8_t cableType) {
 	this->cableType = cableType;

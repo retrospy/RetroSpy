@@ -29,7 +29,7 @@
 
 #include "ControllerSpy.h"
 
-#if !defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY))
+#if !defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(ARDUINO_AVR_NANO_EVERY)
 
 #if !defined(RASPBERRYPI_PICO) &&  !defined(ARDUINO_RASPBERRY_PI_PICO)
 #include <SoftwareSerial.h>

@@ -26,7 +26,7 @@
 
 #include "ThreeDO.h"
 
-#if !(defined(__arm__) && defined(CORE_TEENSY))
+#if !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(ARDUINO_AVR_NANO_EVERY)
 
 void ThreeDOSpy::setup(uint8_t cableType) {
 	this->cableType = cableType;
@@ -35,7 +35,7 @@ void ThreeDOSpy::setup(uint8_t cableType) {
 
 void ThreeDOSpy::setup() {
 
-#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO) || defined(ARDUINO_AVR_NANO_EVERY) || defined(ARDUINO_AVR_LARDU_328E)
+#if defined(ARDUINO_AVR_UNO) || defined(ARDUINO_AVR_NANO)  || defined(ARDUINO_AVR_LARDU_328E)
 	PORTD = 0x00;
 	PORTB = 0x00;
 	DDRD = 0x00;
@@ -65,6 +65,7 @@ void ThreeDOSpy::updateState()
 }
 
 void ThreeDOSpy::updateStateLegacy() {
+	
 	unsigned char *rawDataPtr = rawData;
 
 	unsigned char bits = 0;
