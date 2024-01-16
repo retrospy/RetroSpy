@@ -4,9 +4,9 @@
     <Dependency>
       <Type>Platform</Type>
       <Key>
-        <Packager>rp2040</Packager>
-        <Name>rp2040</Name>
-        <Version>3.6.0</Version>
+        <Packager>arduino</Packager>
+        <Name>avr</Name>
+        <Version>1.8.6</Version>
       </Key>
     </Dependency>
   </Dependencies>
