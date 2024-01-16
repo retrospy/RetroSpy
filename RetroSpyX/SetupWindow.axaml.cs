@@ -595,8 +595,8 @@ namespace RetroSpy
 
         private void About_Click(object sender, RoutedEventArgs e)
         {
-            string url = String.Format("https://retro-spy.com/about-retrospy/?version={0}&buildtime={1}",
-                System.Web.HttpUtility.UrlEncode(Assembly.GetEntryAssembly()?.GetName()?.Version?.ToString()), System.Web.HttpUtility.UrlEncode(Properties.Resources.BuildDate));
+            string url = String.Format("https://retro-spy.com/about-retrospy/?version={0}&buildtime={1}&cache_buster={2}",
+                System.Web.HttpUtility.UrlEncode(Assembly.GetEntryAssembly()?.GetName()?.Version?.ToString()), System.Web.HttpUtility.UrlEncode(Properties.Resources.BuildDate), Guid.NewGuid());
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
