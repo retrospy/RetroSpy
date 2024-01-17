@@ -72,7 +72,7 @@ namespace GBPemu
         private BitmapPixelMaker _imageBuffer;
         private List<byte[]> decompressedTiles;
         private readonly IControllerReader _reader;
-
+        int tile_height_count;
         private int PrintSize;
 
         private class GamePalette
@@ -460,21 +460,35 @@ namespace GBPemu
             }
         }
 
+        bool rawPacketParse = false;
+
         private void Reader_ControllerStateChanged(object reader, ControllerStateEventArgs e)
         {
+
+            if (e?.RawPrinterData?.StartsWith("// GAMEBOY PRINTER Packet Capture V3.2.1 (Copyright (C) 2022 Brian Khuu)") == true
+                || e?.RawPrinterData?.StartsWith("88 33 ") == true)
+            {
+                rawPacketParse = true;
+            }
+
+            string processedString;
+            if (rawPacketParse)
+                processedString = ProcessRawBuffer(e?.RawPrinterData);
+            else
+                processedString = e?.RawPrinterData ?? string.Empty;
 
             _imageBuffer.SetColor(0, 0, 0, 255);
 
             int square_width = PrintSize;// 480 / (TILE_PIXEL_WIDTH * TILES_PER_LINE);
             int square_height = square_width;
 
-            string[] tiles_rawBytes_array = e.RawPrinterData.Split('\n');
+            string[] tiles_rawBytes_array = processedString.Split('\n');
 
             decompressedTiles = new List<byte[]>();
 
             int total_tile_count = Decompress(tiles_rawBytes_array, decompressedTiles);
 
-            int tile_height_count = total_tile_count / TILES_PER_LINE;
+            tile_height_count = total_tile_count / TILES_PER_LINE;
 
             if (tile_height_count == 0)
             {
@@ -492,7 +506,74 @@ namespace GBPemu
             Width = square_width * TILE_PIXEL_WIDTH * TILES_PER_LINE;
 
             DisplayImage(square_width, square_height);
+        }
 
+        private static string ProcessRawBuffer(string rawPrinterData)
+        {
+            if (rawPrinterData == null)
+                return string.Empty;
+
+            string retVal = string.Empty;
+
+            string[] lines = rawPrinterData.Split('\n');
+            foreach (var line in lines)
+            {
+                if (line.Length < 5 || !(line[0] == '8' && line[1] == '8' && line[2] == ' ' && line[3] == '3' && line[4] == '3'))
+                    continue;
+
+                if (line[6] == '0' && line[7] == '4')  // We have a data line
+                {
+                    if (line[10] == '1') // We have compression
+                    {
+                        retVal += "{ \"command\":\"DATA\", \"compressed\":1, \"more\":1}\n";
+                    }
+
+                    char[] packet_length = new char[5];
+                    packet_length[2] = line[12];
+                    packet_length[3] = line[13];
+                    packet_length[0] = line[15];
+                    packet_length[1] = line[16];
+                    packet_length[4] = (char)0;
+                    string packet_length_str = string.Join("", packet_length);
+                    int length = Int32.Parse(packet_length_str, System.Globalization.NumberStyles.HexNumber);
+                    if (length == 0)
+                        continue;
+                    string packet = line.Substring(18, length * 3 - 1);
+                    string[] bytes = packet.Split(' ');
+
+                    int current_position = 0;
+                    string newline = string.Empty;
+                    while (current_position != bytes.Length)
+                    {
+                        if (current_position + 16 < bytes.Length)
+                        {
+                            newline = string.Empty;
+                            for (int i = 0; i < 16; ++i)
+                            {
+                                newline += bytes[current_position++];
+                                if (i != 16)
+                                    newline += " ";
+                            }
+
+                        }
+                        else
+                        {
+                            newline = string.Empty;
+                            int bytesLeft = length - current_position;
+
+                            for (int i = 0; i < bytesLeft; ++i)
+                            {
+                                newline += bytes[current_position++];
+                                if (i != length - current_position)
+                                    newline += " ";
+                            }
+                        }
+                        newline += "\n";
+                        retVal += newline;
+                    }
+                }
+            }
+            return retVal;
         }
 
         private void DisplayImage(int square_width, int square_height)

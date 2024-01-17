@@ -25,6 +25,7 @@
       </FileMasks>
       <TransferNewFilesOnly>true</TransferNewFilesOnly>
       <IncludeSubdirectories>true</IncludeSubdirectories>
+      <SelectedDirectories />
       <DeleteDisappearedFiles>false</DeleteDisappearedFiles>
       <ApplyGlobalExclusionList>true</ApplyGlobalExclusionList>
     </MainSourceTransferCommand>
@@ -40,7 +41,8 @@
     <ToolchainID>
       <ID>com.sysprogs.imported.arm-linux-gnueabihf</ID>
       <Version>
-        <GCC>7.5.0</GCC>
+        <GCC>6.5.0</GCC>
+        <GDB>(Linaro_GDB-2018.12)</GDB>
         <Revision>0</Revision>
       </Version>
     </ToolchainID>
