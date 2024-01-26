@@ -30,7 +30,7 @@ void loop()
   digitalWrite(10, HIGH);
   delay(1);
   
-  for(int i = 0; i < 256; ++i)
+  for(int i = 0; i < 512; ++i)
   {
     //digitalWrite(10, (i & 0b100000000) != 0 ? HIGH : LOW);
     digitalWrite(9,  (i & 0b010000000) != 0 ? HIGH : LOW);

@@ -27,29 +27,35 @@ void setup()
      pinMode(i, INPUT_PULLUP);
   }
     Serial.begin(115200);
+
+    delay(5000);
 }
 
 void loop()
 {
   while(true)
   {
-  if (gpio_get(21) == LOW)
-  {
-    Serial.print("Switch=");
-    byte switches = (~gpio_get_all() & 0x3f0000) >> 16;
-    Serial.println(switches);
-  }
-  else
+    byte switches = 0;
+  //if (gpio_get(21) == LOW)
+  //{
+  //  Serial.print("Switch=");
+  //  byte switches = (~gpio_get_all() & 0x3f0000) >> 16;
+  //  Serial.println(switches);
+  //}
+  //else
   {
   WAIT_LEADING_EDGEB(2);
 
   //Serial.print("Starting Cycle #");
   //Serial.println(count);
 
-  //noInterrupts();
+  noInterrupts();
   for(int i = 0; i < 256; ++i)
   { 
     WAIT_LEADING_EDGEB(3);
+
+    switches = (~gpio_get_all() & 0x3f0000) >> 16;
+    //Serial.println(switches);
 
     //Serial.println(PIND & 0b11111100);
     //Serial.println(PINB & 0b00000111);
@@ -59,14 +65,17 @@ void loop()
     if (val != i)
     {
       interrupts();
-      Serial.print("Expected: ");
-      Serial.print(i);
-      Serial.print("  Got: ");
-      Serial.println(val);
-      Serial.print("Cycle #");
-      Serial.print(++count);
-      Serial.println(" FAILED");
-      return;
+      //Serial.print("Expected: ");
+      //Serial.print(i);
+      //Serial.print("  Got: ");
+      //Serial.println(val);
+      //Serial.print("Cycle #");
+      //Serial.print(++count);
+      //Serial.println(" FAILED");
+      Serial.print(0);
+      Serial.print(",");
+      Serial.println(switches);
+      //return;
     }
 //    else
 //    {
@@ -79,12 +88,14 @@ void loop()
   }
   interrupts();
   
-  Serial.print("Cycle #");
-  Serial.print(++count);
-  Serial.print(" PASSED, Switch=");
+  //Serial.print("Cycle #");
+  //Serial.print(++count);
+  //Serial.print(" PASSED, Switch=");
 
-    byte switches = (~gpio_get_all() & 0x3f0000) >> 16;
-    Serial.println(switches);
+      Serial.print(1);
+      Serial.print(",");
+      Serial.println(switches);
+
   }
   }
 }

@@ -1,0 +1,80 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+	  <RootNamespace>VisionTester</RootNamespace>
+	  <AssemblyName>VisionTester</AssemblyName>
+	  <BaseOutputPath>..\bin</BaseOutputPath>
+	  <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+	  <IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
+	  <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
+  </PropertyGroup>
+
+	<PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+		<DefineConstants>OS_WINDOWS</DefineConstants>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<AssemblyVersion>6.4.7</AssemblyVersion>
+		<FileVersion>6.4.7</FileVersion>
+		<Version>6.4.7</Version>
+		<Copyright>Copyright © 2022</Copyright>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<ApplicationIcon>Mattahan-Buuf-Magnifying-Glass.ico</ApplicationIcon>
+		<ResolveComReferenceSilent>true</ResolveComReferenceSilent>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+	</PropertyGroup>
+  <ItemGroup>
+    <None Remove=".gitignore" />
+    <None Remove="green.png" />
+    <None Remove="red.png" />
+    <None Remove="vision_flex_test_client.ino.uf2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TrimmerRootDescriptor Include="Roots.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.0.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.0" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.0" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0" />
+    <PackageReference Include="MessageBox.Avalonia" Version="3.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.IO.Ports" Version="8.0.0-preview.6.23329.7" />
+    <PackageReference Include="System.Management" Version="8.0.0-preview.6.23329.7" />
+  </ItemGroup>
+
+	
+		<ItemGroup>
+		<AvaloniaResource Include="Assets\**" />
+	</ItemGroup>
+
+	
+		<ItemGroup>
+		  <Content Include="Assets\green.png">
+		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
+		  <Content Include="Assets\red.png">
+		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
+		  <Content Include="Mattahan-Buuf-Magnifying-Glass.ico" />
+		  <Content Include="vision_flex_test_client.ino.uf2">
+		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
+		</ItemGroup>
+
+</Project>

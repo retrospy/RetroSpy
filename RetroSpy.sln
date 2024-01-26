@@ -26,6 +26,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UsbUpdaterX2", "UsbUpdaterX
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GBPUpdaterX2", "GBPUpdaterX2\GBPUpdaterX2.csproj", "{3D0560EC-2726-456B-B229-A16342255DB4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisionTesterX", "VisionTesterX\VisionTesterX.csproj", "{3B19A25F-107D-40DC-AA27-9A367CB61BD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -338,6 +340,54 @@ Global
 		{3D0560EC-2726-456B-B229-A16342255DB4}.Release|x64.Build.0 = Release|Any CPU
 		{3D0560EC-2726-456B-B229-A16342255DB4}.Release|x86.ActiveCfg = Release|Any CPU
 		{3D0560EC-2726-456B-B229-A16342255DB4}.Release|x86.Build.0 = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|Arduino_Nano.ActiveCfg = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|Arduino_Nano.Build.0 = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|Arduino_Nano_Every.ActiveCfg = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|Arduino_Nano_Every.Build.0 = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|Arduino_Uno.ActiveCfg = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|Arduino_Uno.Build.0 = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|LGT8F328.ActiveCfg = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|LGT8F328.Build.0 = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|LGT8F328P-LQFP32_MiniEVB.ActiveCfg = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|LGT8F328P-LQFP32_MiniEVB.Build.0 = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|Raspberry_Pi_Pico.ActiveCfg = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|Raspberry_Pi_Pico.Build.0 = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|Teensy_3 5.ActiveCfg = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|Teensy_3 5.Build.0 = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|Teensy_4 0.ActiveCfg = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|Teensy_4 0.Build.0 = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|Teensy_4 1.ActiveCfg = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|Teensy_4 1.Build.0 = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|x64.Build.0 = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Debug|x86.Build.0 = Debug|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|Arduino_Nano.ActiveCfg = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|Arduino_Nano.Build.0 = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|Arduino_Nano_Every.ActiveCfg = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|Arduino_Nano_Every.Build.0 = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|Arduino_Uno.ActiveCfg = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|Arduino_Uno.Build.0 = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|LGT8F328.ActiveCfg = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|LGT8F328.Build.0 = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|LGT8F328P-LQFP32_MiniEVB.ActiveCfg = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|LGT8F328P-LQFP32_MiniEVB.Build.0 = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|Raspberry_Pi_Pico.ActiveCfg = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|Raspberry_Pi_Pico.Build.0 = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|Teensy_3 5.ActiveCfg = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|Teensy_3 5.Build.0 = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|Teensy_4 0.ActiveCfg = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|Teensy_4 0.Build.0 = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|Teensy_4 1.ActiveCfg = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|Teensy_4 1.Build.0 = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|x64.ActiveCfg = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|x64.Build.0 = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|x86.ActiveCfg = Release|Any CPU
+		{3B19A25F-107D-40DC-AA27-9A367CB61BD5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

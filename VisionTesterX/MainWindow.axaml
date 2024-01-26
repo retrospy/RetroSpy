@@ -1,0 +1,117 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" 
+        x:Class="VisionTester.MainWindow"
+        Title="RetroSpy Vision Tester" Width="650" Height="250" MinWidth="650" MinHeight="250" MaxWidth="650" MaxHeight="250" Foreground="#FFFFFF" Background="#FF252526" CanResize="false">
+	<Grid>
+		<StackPanel VerticalAlignment="Top">
+			<Label x:Name="DeviceLabel" Content="Device" HorizontalAlignment="Left" Margin="10,5,5,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16"/>
+			<ComboBox Name="DeviceComboBox" Margin="10,5,5,0" SelectedIndex="0" VerticalAlignment="Top" BorderBrush="#FF252525" Width="250" Height="29.9" FontFamily="Segoe UI" FontSize="12" Background="#efefef" SelectionChanged="DeviceSelectComboBox_SelectionChanged">
+			</ComboBox>
+			<Label x:Name="COMPortLabel" Content="Serial Port" HorizontalAlignment="Left" Margin="275,-61,5,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="false"/>
+			<Label x:Name="COMPortLabel2" Content="Serial Ports" HorizontalAlignment="Left" Margin="275,-61,5,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="false"/>
+			<ComboBox Name="COMPortComboBox" Margin="275,-32,5,0" SelectedIndex="0" VerticalAlignment="Top" BorderBrush="#FF252525" Width="250" Height="29.9" FontFamily="Segoe UI" FontSize="12" Background="#efefef"  IsVisible="false">
+			</ComboBox>
+			<ComboBox Name="COMPortComboBox2" Margin="275,0,5,0" SelectedIndex="0" VerticalAlignment="Top" BorderBrush="#FF252525" Width="250" Height="29.9" FontFamily="Segoe UI" FontSize="12" Background="#efefef" IsVisible="false">
+			</ComboBox>
+			<Button Name="loadTestProgramButton" Width="250" Height="30" Content="Load Test Program" HorizontalContentAlignment="Center" Margin="10,15,15,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" Background="#FF3E3E42" Foreground="#FFCBCBCB" BorderBrush="#FF252526" Click="LoadTestProgramButtonButton_Click">
+				<Button.Styles>
+					<Style Selector="Button:pointerover /template/ ContentPresenter">
+						<Setter Property="Background" Value="#4a657b"/>
+						<Setter Property="TextBlock.Foreground" Value="#efefef"/>
+						<Setter Property="ContentTemplate"></Setter>
+					</Style>
+				</Button.Styles>
+			</Button>
+			<Image Name="L1Red" Margin="275,-31,0,0" Height="32" Width="32"
+					 Source="/Assets/red.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image Name="L1Green" Margin="275,-31,0,0" Height="32" Width="32"
+					 Source="/Assets/green.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Button Name="testButton" Width="250" Height="30" Content="Start Test" HorizontalContentAlignment="Center" Margin="10,15,15,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" Background="#FF3E3E42" Foreground="#FFCBCBCB" BorderBrush="#FF252526" Click="TestButtonButton_Click">
+				<Button.Styles>
+					<Style Selector="Button:pointerover /template/ ContentPresenter">
+						<Setter Property="Background" Value="#4a657b"/>
+						<Setter Property="TextBlock.Foreground" Value="#efefef"/>
+						<Setter Property="ContentTemplate"></Setter>
+					</Style>
+				</Button.Styles>
+			</Button>
+			<Image Name="T1Red" Margin="275,-31,0,0" Height="32" Width="32"
+					 Source="/Assets/red.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image Name="T1Green" Margin="275,-31,0,0" Height="32" Width="32"
+					 Source="/Assets/green.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+
+			<Image  Name="S1Red" Margin="325,-31,0,0" Height="32" Width="32"
+		 Source="/Assets/red.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image  Name="S1Green" Margin="325,-31,0,0" Height="32" Width="32"
+					 Source="/Assets/green.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image  Name="S2Red" Margin="365,-32,0,0" Height="32" Width="32"
+		 Source="/Assets/red.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image  Name="S2Green" Margin="365,-32,0,0" Height="32" Width="32"
+					 Source="/Assets/green.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image  Name="S3Red" Margin="405,-32,0,0" Height="32" Width="32"
+		 Source="/Assets/red.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image  Name="S3Green" Margin="405,-32,0,0" Height="32" Width="32"
+					 Source="/Assets/green.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image  Name="S4Red" Margin="445,-32,0,0" Height="32" Width="32"
+		 Source="/Assets/red.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image  Name="S4Green" Margin="445,-32,0,0" Height="32" Width="32"
+					 Source="/Assets/green.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image  Name="S5Red" Margin="485,-32,0,0" Height="32" Width="32"
+		 Source="/Assets/red.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image  Name="S5Green" Margin="485,-32,0,0" Height="32" Width="32"
+					 Source="/Assets/green.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image   Name="S6Red" Margin="525,-32,0,0" Height="32" Width="32"
+		 Source="/Assets/red.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image  Name="S6Green" Margin="525,-32,0,0" Height="32" Width="32"
+					 Source="/Assets/green.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image  Name="S7Red" Margin="565,-32,0,0" Height="32" Width="32"
+		 Source="/Assets/red.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image  Name="S7Green" Margin="565,-32,0,0" Height="32" Width="32"
+					 Source="/Assets/green.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image  Name="S8Red" Margin="605,-32,0,0" Height="32" Width="32"
+		 Source="/Assets/red.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image  Name="S8Green" Margin="605,-32,0,0" Height="32" Width="32"
+					 Source="/Assets/green.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+
+			<Label x:Name="SerialNumberLabel" Content="Serial Number" HorizontalAlignment="Left" Margin="275,-61,5,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="false"/>
+			<TextBox Name="txtboxSerialNumber" Margin="275,-32,5,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="24" Width="191.8" FontSize="16" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" Background="#FF3E3E42" Foreground="#FFCBCBCB" BorderBrush="#FF656565" Text="None" ScrollViewer.VerticalScrollBarVisibility="Hidden" IsVisible="false">
+				<TextBox.Styles>
+					<Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+						<Setter Property="Background" Value="#FF3E3E42"/>
+					</Style>
+					<Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+						<Setter Property="BorderBrush" Value="#0078d7"/>
+						<Setter Property="Background" Value="#FF3E3E42"/>
+					</Style>
+				</TextBox.Styles>
+			</TextBox>
+			<TextBox Name="txtboxData" Margin="10,50,5,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="375" Width="582" FontFamily="Segoe UI" FontSize="12" Background="#FF3E3E42" Foreground="#FFCBCBCB" BorderBrush="#FF656565" ScrollViewer.VerticalScrollBarVisibility="Auto" IsVisible="false">
+				<TextBox.Styles>
+					<Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+						<Setter Property="Background" Value="#FF3E3E42"/>
+					</Style>
+					<Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+						<Setter Property="BorderBrush" Value="#0078d7"/>
+						<Setter Property="Background" Value="#FF3E3E42"/>
+					</Style>
+				</TextBox.Styles>
+			</TextBox>
+			<Button Name="goButton" Width="250" Height="30" Content="Load Vision Firmware" HorizontalContentAlignment="Center" Margin="10,15,10,10" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="16" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" Background="#FF3E3E42" Foreground="#FFCBCBCB" BorderBrush="#FF252526" Click="GoButton_Click">
+				<Button.Styles>
+					<Style Selector="Button:pointerover /template/ ContentPresenter">
+						<Setter Property="Background" Value="#4a657b"/>
+						<Setter Property="TextBlock.Foreground" Value="#efefef"/>
+						<Setter Property="ContentTemplate"></Setter>
+					</Style>
+				</Button.Styles>
+			</Button>
+			<Image  Name="P1Red" Margin="275,-40,0,0" Height="32" Width="32"
+		 Source="/Assets/red.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+			<Image  Name="P1Green"  Margin="275,-40,0,0" Height="32" Width="32"
+					 Source="/Assets/green.png"  HorizontalAlignment="Left" VerticalAlignment="Top" IsVisible="false"/>
+		</StackPanel>
+	</Grid>
+</Window>
