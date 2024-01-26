@@ -110,6 +110,7 @@ namespace RetroSpy
         public static readonly InputSource EVERCADE_II = new("evercade", "Blaze Evercade Vs", true, false, false, false, false, 1, (port, useLagFix) => new SuperSerialControllerReader(port, useLagFix, true, EVS.ReadFromPacket));
         public static readonly InputSource NEOGEOMINI_II = new("neogeomini", "SNK NeoGeo Mini", true, false, false, false, false, 1, (port, useLagFix) => new SuperSerialControllerReader(port, useLagFix, true, NeoGeoMini_II.ReadFromPacket));
         public static readonly InputSource ATARIVCS_II = new("vcs", "Atari VCS", true, false, false, false, false, 1, (port, useLagFix) => new SuperSerialControllerReader(port, useLagFix, true, VCS.ReadFromPacket));
+        public static readonly InputSource USBMOUSE = new("usbmouse", "Windows USB Mouse", true, false, false, false, false, 4, (port, useLagFix) => new SuperSerialControllerReader(port, useLagFix, false, USBMouse.ReadFromPacket));
 
         // Retired/Non-Functional
         //static public readonly InputSource MOUSETESTER = new InputSource("mousetester", "Mouse Tester", true, false, false, false, false, 3, (port, useLagFix) => new MouseTester3, (port));
@@ -120,7 +121,7 @@ namespace RetroSpy
 
         public static readonly IReadOnlyList<InputSource> ALL = new List<InputSource> {
 #pragma warning disable CS8604 // Possible null reference argument.
-            MISTER, POCKET, POCKET_II, CLASSIC, DRIVINGCONTROLLER, ATARIKEYBOARD, PADDLES, ATARI5200, JAGUAR, ATARIVCS_II, ATARIVCS, PIPPIN, EVERCADE, EVERCADE_II, COLECOVISION, CDTV, CD32, C64MINI, C64MINI_II, A500MINI, A500MINI_II, FMTOWNS, INTELLIVISION, DOLPHIN, XBOX, XBOX_II, XBOX360, XBOX360_II, TG16, PCFX, TG16MINI, TG16_II, NES, SNES, VIRTUALBOY, N64, GAMECUBE, WII, SWITCH, SWITCH_II, THREEDO, PC360, PAD, PCKEYBOARD, CDI, SEGA, SATURN3D, DREAMCAST, GENMINI, GENMINI1_II, GENMINI2, GENMINI2_II, NEOGEO, NEOGEOMINI_II, NEOGEOMINI, PLAYSTATION2, PS3_II, PS3, PS4_II, PS4, PS4CRONUS, PS4USB, PSCLASSIC, PSCLASSIC_II, NUON, VSMILE, VFLASH
+            MISTER, POCKET, POCKET_II, CLASSIC, DRIVINGCONTROLLER, ATARIKEYBOARD, PADDLES, ATARI5200, JAGUAR, ATARIVCS_II, ATARIVCS, PIPPIN, EVERCADE, EVERCADE_II, COLECOVISION, CDTV, CD32, C64MINI, C64MINI_II, A500MINI, A500MINI_II, FMTOWNS, INTELLIVISION, DOLPHIN, XBOX, XBOX_II, XBOX360, XBOX360_II, TG16, PCFX, TG16MINI, TG16_II, NES, SNES, VIRTUALBOY, N64, GAMECUBE, WII, SWITCH, SWITCH_II, THREEDO, PC360, PAD, PCKEYBOARD, CDI, SEGA, SATURN3D, DREAMCAST, GENMINI, GENMINI1_II, GENMINI2, GENMINI2_II, NEOGEO, NEOGEOMINI_II, NEOGEOMINI, PLAYSTATION2, PS3_II, PS3, PS4_II, PS4, PS4CRONUS, PS4USB, PSCLASSIC, PSCLASSIC_II, NUON, VSMILE, VFLASH, USBMOUSE
 #pragma warning restore CS8604 // Possible null reference argument.
         };
 

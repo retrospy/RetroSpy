@@ -536,7 +536,8 @@ namespace RetroSpy
             {
                 if (!_excludedSources.Contains(source.Name) 
                     && !(source.UseUSB2 == 0 && _vm.UseUSB2 == true) 
-                    && !(source.UseUSB2 == 1 && _vm.UseUSB2 == false))
+                    && !(source.UseUSB2 == 1 && _vm.UseUSB2 == false)
+                    && !(source.UseUSB2 == 4 && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VisionTester"))))
                 {
                     prunedSources.Add(source);
                 }
