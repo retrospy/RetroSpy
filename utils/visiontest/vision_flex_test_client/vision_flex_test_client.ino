@@ -17,7 +17,7 @@ static int count = 0;
 void setup()
 {
     count = 0;
-    for(int i = 0; i < 12; ++i)
+    for(int i = 0; i < 14; ++i)
     {
       pinMode(i, INPUT_PULLUP);
     }
@@ -36,66 +36,31 @@ void loop()
   while(true)
   {
     byte switches = 0;
-  //if (gpio_get(21) == LOW)
-  //{
-  //  Serial.print("Switch=");
-  //  byte switches = (~gpio_get_all() & 0x3f0000) >> 16;
-  //  Serial.println(switches);
-  //}
-  //else
-  {
-  WAIT_LEADING_EDGEB(2);
-
-  //Serial.print("Starting Cycle #");
-  //Serial.println(count);
-
-  noInterrupts();
-  for(int i = 0; i < 256; ++i)
-  { 
-    WAIT_LEADING_EDGEB(3);
-
-    switches = (~gpio_get_all() & 0x3f0000) >> 16;
-    //Serial.println(switches);
-
-    //Serial.println(PIND & 0b11111100);
-    //Serial.println(PINB & 0b00000111);
-    //int val = (((PINB & 0b00000111) << 6) | ((PIND & 0b11111100) >> 2));
-    int val = gpio_get_all() & 0xFF;
+   
+    WAIT_LEADING_EDGEB(2);
   
-    if (val != i)
-    {
-      interrupts();
-      //Serial.print("Expected: ");
-      //Serial.print(i);
-      //Serial.print("  Got: ");
-      //Serial.println(val);
-      //Serial.print("Cycle #");
-      //Serial.print(++count);
-      //Serial.println(" FAILED");
-      Serial.print(0);
-      Serial.print(",");
-      Serial.println(switches);
-      //return;
+    noInterrupts();
+    for(int i = 0; i < 2048; ++i)
+    { 
+      WAIT_LEADING_EDGEB(3);
+  
+      switches = (~gpio_get_all() & 0x3f0000) >> 16;
+    
+      //Maybe???  12 and 13 might need analog read and some translation logic
+      int val = (gpio_get_all() & 0x0001FF) | ((gpio_get_all() & 0x003000) >> 3);
+    
+      if (val != i)
+      {
+        interrupts();
+        Serial.print(0);
+        Serial.print(",");
+        Serial.println(switches);
+      }
     }
-//    else
-//    {
-//      interrupts();
-//      Serial.print(i);
-//      Serial.print(" equal to ");
-//      Serial.println(val);
-//      noInterrupts();
-//    }
-  }
-  interrupts();
+    interrupts();
   
-  //Serial.print("Cycle #");
-  //Serial.print(++count);
-  //Serial.print(" PASSED, Switch=");
-
-      Serial.print(1);
-      Serial.print(",");
-      Serial.println(switches);
-
-  }
+    Serial.print(1);
+    Serial.print(",");
+    Serial.println(switches);
   }
 }

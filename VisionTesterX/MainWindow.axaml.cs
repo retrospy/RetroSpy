@@ -530,6 +530,15 @@ namespace VisionTester
 
         private static bool testRunning = false;
 
+        private static bool LED1Master = true;
+        private static bool LED2Master = true;
+        private static bool LED3Master = true;
+        private static bool LED4Master = true;
+        private static bool LED5Master = true;
+        private static bool LED6Master = true;
+        private static bool LED7Master = true;
+        private static bool LED8Master = true;
+
         private void TestProgramThread()
         {
             try
@@ -539,23 +548,25 @@ namespace VisionTester
                     T1Red.IsVisible = true;
                     T1Green.IsVisible = false;
                     testButton.Content = "Stop Test";
+                    loadTestProgramButton.IsEnabled = false;
+                    goButton.IsEnabled = false;
 
-                    S1Red.IsVisible = true;
-                    S1Green.IsVisible = false;
-                    S2Red.IsVisible = true;
-                    S2Green.IsVisible = false;
-                    S3Red.IsVisible = true;
-                    S3Green.IsVisible = false;
-                    S4Red.IsVisible = true;
-                    S4Green.IsVisible = false;
-                    S5Red.IsVisible = true;
-                    S5Green.IsVisible = false;
-                    S6Red.IsVisible = true;
-                    S6Green.IsVisible = false;
-                    S7Red.IsVisible = true;
-                    S7Green.IsVisible = false;
-                    S8Red.IsVisible = true;
-                    S8Green.IsVisible = false;
+                    S1Red.IsVisible = true && LED1Master;
+                    S1Green.IsVisible = false && LED1Master;
+                    S2Red.IsVisible = true && LED2Master;
+                    S2Green.IsVisible = false && LED2Master;
+                    S3Red.IsVisible = true && LED3Master;
+                    S3Green.IsVisible = false && LED3Master;
+                    S4Red.IsVisible = true && LED4Master;
+                    S4Green.IsVisible = false && LED4Master;
+                    S5Red.IsVisible = true && LED5Master;
+                    S5Green.IsVisible = false && LED5Master;
+                    S6Red.IsVisible = true && LED6Master;
+                    S6Green.IsVisible = false && LED6Master;
+                    S7Red.IsVisible = true && LED7Master;
+                    S7Green.IsVisible = false && LED7Master;
+                    S8Red.IsVisible = true && LED8Master;
+                    S8Green.IsVisible = false && LED8Master;
                 });
 
                 SerialPort? _serialPort = null;
@@ -586,22 +597,22 @@ namespace VisionTester
                                 T1Red.IsVisible = true;
                                 T1Green.IsVisible = false;
 
-                                S1Red.IsVisible = true;
-                                S1Green.IsVisible = false;
-                                S2Red.IsVisible = true;
-                                S2Green.IsVisible = false;
-                                S3Red.IsVisible = true;
-                                S3Green.IsVisible = false;
-                                S4Red.IsVisible = true;
-                                S4Green.IsVisible = false;
-                                S5Red.IsVisible = true;
-                                S5Green.IsVisible = false;
-                                S6Red.IsVisible = true;
-                                S6Green.IsVisible = false;
-                                S7Red.IsVisible = true;
-                                S7Green.IsVisible = false;
-                                S8Red.IsVisible = true;
-                                S8Green.IsVisible = false;
+                                S1Red.IsVisible = true && LED1Master;
+                                S1Green.IsVisible = false && LED1Master;
+                                S2Red.IsVisible = true && LED2Master;
+                                S2Green.IsVisible = false && LED2Master;
+                                S3Red.IsVisible = true && LED3Master;
+                                S3Green.IsVisible = false && LED3Master;
+                                S4Red.IsVisible = true && LED4Master;
+                                S4Green.IsVisible = false && LED4Master;
+                                S5Red.IsVisible = true && LED5Master;
+                                S5Green.IsVisible = false && LED5Master;
+                                S6Red.IsVisible = true && LED6Master;
+                                S6Green.IsVisible = false && LED6Master;
+                                S7Red.IsVisible = true && LED7Master;
+                                S7Green.IsVisible = false && LED7Master;
+                                S8Red.IsVisible = true && LED8Master;
+                                S8Green.IsVisible = false && LED8Master;
                             });
                             continue;
                         }
@@ -629,110 +640,121 @@ namespace VisionTester
                             {
                                 if ((switches & 0x01) == 0)
                                 {
-                                    S1Red.IsVisible = true;
-                                    S1Green.IsVisible = false;
+                                    S1Red.IsVisible = true && LED1Master;
+                                    S1Green.IsVisible = false && LED1Master;
                                 }
                                 else
                                 {
-                                    S1Red.IsVisible = false;
-                                    S1Green.IsVisible = true;
+                                    S1Red.IsVisible = false && LED1Master;
+                                    S1Green.IsVisible = true && LED1Master;
                                 }
 
                                 if ((switches & 0x02) == 0)
                                 {
-                                    S2Red.IsVisible = true;
-                                    S2Green.IsVisible = false;
+                                    S2Red.IsVisible = true && LED2Master;
+                                    S2Green.IsVisible = false && LED2Master;
                                 }
                                 else
                                 {
-                                    S2Red.IsVisible = false;
-                                    S2Green.IsVisible = true;
+                                    S2Red.IsVisible = false && LED2Master;
+                                    S2Green.IsVisible = true && LED2Master;
                                 }
 
                                 if ((switches & 0x04) == 0)
                                 {
-                                    S3Red.IsVisible = true;
-                                    S3Green.IsVisible = false;
+                                    S3Red.IsVisible = true && LED3Master;
+                                    S3Green.IsVisible = false && LED3Master;
                                 }
                                 else
                                 {
-                                    S3Red.IsVisible = false;
-                                    S3Green.IsVisible = true;
+                                    S3Red.IsVisible = false && LED3Master;
+                                    S3Green.IsVisible = true && LED3Master;
                                 }
 
                                 if ((switches & 0x08) == 0)
                                 {
-                                    S4Red.IsVisible = true;
-                                    S4Green.IsVisible = false;
+                                    S4Red.IsVisible = true && LED4Master;
+                                    S4Green.IsVisible = false && LED4Master;
                                 }
                                 else
                                 {
-                                    S4Red.IsVisible = false;
-                                    S4Green.IsVisible = true;
+                                    S4Red.IsVisible = false && LED4Master;
+                                    S4Green.IsVisible = true && LED4Master;
                                 }
 
                                 if ((switches & 0x10) == 0)
                                 {
-                                    S5Red.IsVisible = true;
-                                    S5Green.IsVisible = false;
+                                    S5Red.IsVisible = true && LED5Master;
+                                    S5Green.IsVisible = false && LED5Master;
                                 }
                                 else
                                 {
-                                    S5Red.IsVisible = false;
-                                    S5Green.IsVisible = true;
+                                    S5Red.IsVisible = false && LED5Master;
+                                    S5Green.IsVisible = true && LED5Master;
                                 }
 
                                 if ((switches & 0x20) == 0)
                                 {
-                                    S6Red.IsVisible = true;
-                                    S6Green.IsVisible = false;
+                                    S6Red.IsVisible = true && LED6Master;
+                                    S6Green.IsVisible = false && LED6Master;
                                 }
                                 else
                                 {
-                                    S6Red.IsVisible = false;
-                                    S6Green.IsVisible = true;
+                                    S6Red.IsVisible = false && LED6Master;
+                                    S6Green.IsVisible = true && LED6Master;
                                 }
 
                                 if ((switches & 0x40) == 0)
                                 {
-                                    S7Red.IsVisible = true;
-                                    S7Green.IsVisible = false;
+                                    S7Red.IsVisible = true && LED7Master;
+                                    S7Green.IsVisible = false && LED7Master;
                                 }
                                 else
                                 {
-                                    S7Red.IsVisible = false;
-                                    S7Green.IsVisible = true;
+                                    S7Red.IsVisible = false && LED7Master;
+                                    S7Green.IsVisible = true && LED7Master;
                                 }
 
                                 if ((switches & 0x80) == 0)
                                 {
-                                    S8Red.IsVisible = true;
-                                    S8Green.IsVisible = false;
+                                    S8Red.IsVisible = true && LED8Master;
+                                    S8Green.IsVisible = false && LED8Master;
                                 }
                                 else
                                 {
-                                    S8Red.IsVisible = false;
-                                    S8Green.IsVisible = true;
+                                    S8Red.IsVisible = false && LED8Master;
+                                    S8Green.IsVisible = true && LED8Master;
                                 }
                             }
                             else
                             {
-                                S1Red.IsVisible = true;
+                                S1Red.IsVisible = false;
                                 S1Green.IsVisible = false;
-                                S2Red.IsVisible = true;
+                                S2Red.IsVisible = false;
                                 S2Green.IsVisible = false;
-                                S3Red.IsVisible = true;
+                                S3Red.IsVisible = false;
                                 S3Green.IsVisible = false;
-                                S4Red.IsVisible = true;
+                                S4Red.IsVisible = false;
                                 S4Green.IsVisible = false;
-                                S5Red.IsVisible = true;
+                                S5Red.IsVisible = false;
                                 S5Green.IsVisible = false;
-                                S6Red.IsVisible = true;
+                                S6Red.IsVisible = false;
                                 S6Green.IsVisible = false;
-                                S7Red.IsVisible = true;
+                                S7Red.IsVisible = false;
                                 S7Green.IsVisible = false;
-                                S8Red.IsVisible = true;
+                                S8Red.IsVisible = false;
                                 S8Green.IsVisible = false;
+
+                                LED1Master = true;
+                                LED2Master = true;
+                                LED3Master = true;
+                                LED4Master = true;
+                                LED5Master = true;
+                                LED6Master = true;
+                                LED7Master = true;
+                                LED8Master = true;
+
+                                return;
                             }
 
 
@@ -740,6 +762,8 @@ namespace VisionTester
                     }
                     Dispatcher.UIThread.Post(() =>
                     {
+                        loadTestProgramButton.IsEnabled = true;
+                        goButton.IsEnabled = true;
                         testButton.Content = "Start Test";
                         S1Red.IsVisible = false;
                         S1Green.IsVisible = false;
@@ -757,6 +781,15 @@ namespace VisionTester
                         S7Green.IsVisible = false;
                         S8Red.IsVisible = false;
                         S8Green.IsVisible = false;
+
+                        LED1Master = true;
+                        LED2Master = true;
+                        LED3Master = true;
+                        LED4Master = true;
+                        LED5Master = true;
+                        LED6Master = true;
+                        LED7Master = true;
+                        LED8Master = true;
                     });
                 }
             }
@@ -764,6 +797,8 @@ namespace VisionTester
             {
                 Dispatcher.UIThread.Post(() =>
                 {
+                    loadTestProgramButton.IsEnabled = true;
+                    goButton.IsEnabled = true;
                     testButton.Content = "Start Test";
                     S1Red.IsVisible = false;
                     S1Green.IsVisible = false;
@@ -781,6 +816,15 @@ namespace VisionTester
                     S7Green.IsVisible = false;
                     S8Red.IsVisible = false;
                     S8Green.IsVisible = false;
+
+                    LED1Master = true;
+                    LED2Master = true;
+                    LED3Master = true;
+                    LED4Master = true;
+                    LED5Master = true;
+                    LED6Master = true;
+                    LED7Master = true;
+                    LED8Master = true;
                 });
             }
         }
@@ -790,7 +834,16 @@ namespace VisionTester
             testRunning = !testRunning;
             if (testRunning && DeviceComboBox.SelectedIndex == 0)
             {
-                Thread thread = new(TestProgramThread);
+                        LED1Master = true;
+                        LED2Master = true;
+                        LED3Master = true;
+                        LED4Master = true;
+                        LED5Master = true;
+                        LED6Master = true;
+                        LED7Master = false;
+                        LED8Master = false;
+
+        Thread thread = new(TestProgramThread);
                 thread.Start();
             }
         }
