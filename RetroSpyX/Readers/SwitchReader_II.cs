@@ -54,12 +54,22 @@ namespace RetroSpy.Readers
                 if (binaryPacket[0] != 0x30)
                     return null;
 
-                for (int i = 0; i < 15; ++i)
+                if (binaryPacket[55] == 1)
                 {
-                    if (binaryPacket[binaryPacket.Length - i - 1] != 0x00)
-                        return null;
+                    for (int i = 0; i < 8; ++i)
+                    {
+                        if (i != 0 && i != 4 && binaryPacket[binaryPacket.Length - i - 1] != 0x00)
+                            return null;
+                    }
                 }
-
+                else
+                {
+                    for (int i = 0; i < 15; ++i)
+                    {
+                        if (binaryPacket[binaryPacket.Length - i - 1] != 0x00)
+                            return null;
+                    }
+                }
                 ControllerStateBuilder outState = new();
 
                 for (int i = 0; i < 3; ++i)
@@ -79,7 +89,9 @@ namespace RetroSpy.Readers
                 outState.SetAnalog("lstick_y", ReadStick((byte)(binaryPacket[8] + 127)), binaryPacket[8] + 127);
                 outState.SetAnalog("rstick_x", ReadStick((byte)((((binaryPacket[10] & 0x0F) << 4) | ((binaryPacket[9] & 0xF0) >> 4)) + 127)), (((binaryPacket[10] & 0x0F) << 4) | ((binaryPacket[9] & 0xF0) >> 4)) + 127);
                 outState.SetAnalog("rstick_y", ReadStick((byte)(binaryPacket[11] + 127)), binaryPacket[11] + 127);
-
+                outState.SetAnalog("r1", binaryPacket[63] / 255.0f, binaryPacket[63]);
+                outState.SetAnalog("l1", binaryPacket[63] / 255.0f, binaryPacket[59]);
+                
                 return outState.Build();
 
             }
