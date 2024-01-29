@@ -51,6 +51,10 @@ namespace RetroSpy.Readers
             {
                 byte[] binaryPacket = StringToByteArray(Encoding.UTF8.GetString(packet, 0, packet.Length).Trim());
 
+                // PS1 Games have a weird packet that I need to filter out
+                if (binaryPacket[10] != 0)
+                    return null;
+
                 ControllerStateBuilder outState = new();
 
                 for (int i = 2; i < 4; ++i)
