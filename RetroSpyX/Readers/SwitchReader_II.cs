@@ -89,9 +89,16 @@ namespace RetroSpy.Readers
                 outState.SetAnalog("lstick_y", ReadStick((byte)(binaryPacket[8] + 127)), binaryPacket[8] + 127);
                 outState.SetAnalog("rstick_x", ReadStick((byte)((((binaryPacket[10] & 0x0F) << 4) | ((binaryPacket[9] & 0xF0) >> 4)) + 127)), (((binaryPacket[10] & 0x0F) << 4) | ((binaryPacket[9] & 0xF0) >> 4)) + 127);
                 outState.SetAnalog("rstick_y", ReadStick((byte)(binaryPacket[11] + 127)), binaryPacket[11] + 127);
-                outState.SetAnalog("r1", binaryPacket[63] / 255.0f, binaryPacket[63]);
-                outState.SetAnalog("l1", binaryPacket[63] / 255.0f, binaryPacket[59]);
-                
+                if (binaryPacket[55] == 1)
+                {
+                    outState.SetAnalog("r2", binaryPacket[63] / 255.0f, binaryPacket[63]);
+                    outState.SetAnalog("l2", binaryPacket[63] / 255.0f, binaryPacket[59]);
+                }
+                else
+                {
+                    outState.SetAnalog("r2", binaryPacket[7] != 0 ? 1.0f : 0.0f, binaryPacket[7] != 0 ? 255 : 0);
+                    outState.SetAnalog("l2", binaryPacket[23] != 0 ? 1.0f : 0.0f, binaryPacket[23] != 0 ? 255 : 0);
+                }
                 return outState.Build();
 
             }
