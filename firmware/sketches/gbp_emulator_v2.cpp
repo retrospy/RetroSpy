@@ -42,8 +42,11 @@ WebUSB WebUSBSerial(1, "herrzatacke.github.io/gb-printer-web/#/webusb");
 #include <stdint.h> // uint8_t
 #include <stddef.h> // size_t
 
+#include "common.h"
+
 #include "gameboy_printer_protocol.h"
 #include "gbp_serial_io.h"
+
 
 #if GBP_OUTPUT_RAW_PACKETS
 #define GBP_FEATURE_PACKET_CAPTURE_MODE
@@ -78,6 +81,14 @@ WebUSB WebUSBSerial(1, "herrzatacke.github.io/gb-printer-web/#/webusb");
 #define GBP_SC_PIN       14       // Pin 5            : ESP-pin 5 CLK  (Serial Clock)  -> Arduino 14
 #define GBP_GND_PIN               // Pin 6            : GND (Attach to GND Pin)
 #define LED_STATUS_PIN    2       // Internal LED blink on packet reception
+#elif defined(RS_PIXEL_2)
+#define GBP_VCC_PIN               // Pin 1            : 5.0V (Unused)
+#define GBP_SO_PIN        3       // Pin 2            : Serial OUTPUT
+#define GBP_SI_PIN        4       // Pin 3            : Serial INPUT
+#define GBP_SD_PIN                // Pin 4            : Serial Data  (Unused)
+#define GBP_SC_PIN        2       // Pin 5            : Serial Clock (Interrupt)
+#define GBP_GND_PIN               // Pin 6            : GND (Attach to GND Pin)
+#define LED_STATUS_PIN   13       // Internal LED blink on packet reception
 #else
 // Pin Setup for Arduinos
 //                  | Arduino Pin | Gameboy Link Pin  |

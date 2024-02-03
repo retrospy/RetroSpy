@@ -874,7 +874,7 @@ bool CreateSpy()
 	currentSpy = new CDiSpy(CDI_WIRED_TIMEOUT, CDI_WIRELESS_TIMEOUT, CDI_WIRELESS_REMOTE_TIMEOUT, 0xFF);
 #elif defined(MODE_CDI_KEYBOARD)
 	currentSpy = new CDiKeyboardSpy();
-#elif defined(MODE_GAMEBOY_PRINTER)
+#elif defined(MODE_GAMEBOY_PRINTER) || defined(RS_PIXEL_2)
 	currentSpy = new GameBoyPrinterEmulator();
 #elif defined(MODE_AMIGA_ANALOG_1)
 	currentSpy = new AmigaAnalogSpy();

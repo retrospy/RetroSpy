@@ -55,6 +55,7 @@ enum VideoOutputType {
 //#define RS_VISION_ANALOG_1
 //#define RS_VISION_ANALOG_2
 //#define RS_VISION_FLEX
+//#define RS_PIXEL_2
 
 #ifdef RS_VISION
 #define TP_TIMERONE
