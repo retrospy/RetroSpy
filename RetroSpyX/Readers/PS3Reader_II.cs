@@ -78,6 +78,8 @@ namespace RetroSpy.Readers
                 outState.SetAnalog("analog_left", ReadAnalogButton(binaryPacket[17]), binaryPacket[17]);
                 outState.SetAnalog("l_trig", ReadAnalogButton(binaryPacket[18]), binaryPacket[18]);
                 outState.SetAnalog("r_trig", ReadAnalogButton(binaryPacket[19]), binaryPacket[19]);
+                outState.SetAnalog("analog_l2", ReadAnalogButton(binaryPacket[18]), binaryPacket[18]);
+                outState.SetAnalog("analog_r2", ReadAnalogButton(binaryPacket[19]), binaryPacket[19]);
                 outState.SetAnalog("analog_l1", ReadAnalogButton(binaryPacket[20]), binaryPacket[20]);
                 outState.SetAnalog("analog_r1", ReadAnalogButton(binaryPacket[21]), binaryPacket[21]);
                 outState.SetAnalog("analog_triangle", ReadAnalogButton(binaryPacket[22]), binaryPacket[22]);
