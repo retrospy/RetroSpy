@@ -58,9 +58,9 @@ void loop()
     digitalWrite(0,  (i & 0b0000000000000001) != 0 ? HIGH : LOW);
 
     digitalWrite(10, HIGH);
-    delayMicroseconds(100);
+    delayMicroseconds(25);
     digitalWrite(10, LOW);
-    delayMicroseconds(100);
+    delayMicroseconds(25);
   }
   digitalWrite(9, LOW);
   delay(1);
