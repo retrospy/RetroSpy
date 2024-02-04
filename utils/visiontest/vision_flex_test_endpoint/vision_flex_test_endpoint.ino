@@ -33,19 +33,23 @@ void loop()
   while(true)
   {
   
-  WAIT_LEADING_EDGEB(2);
+  WAIT_LEADING_EDGEB(3);
 
   noInterrupts();
   for(int i = 0; i < 65536; ++i)
   { 
-    WAIT_LEADING_EDGEB(3);
+    WAIT_LEADING_EDGEB(4);
 
-    int val = (gpio_get_all() & 0x0001FF) & ((gpio_get_all() & 0x07F000) >> 3);
+    int val = (gpio_get_all() & 0x0001FF) | ((gpio_get_all() & 0x07F000) >> 3);
     
     if (val != i)
     {
       interrupts();
-      Serial.print(0);
+      Serial.print("FAILED ");
+      Serial.print(i);
+      Serial.print("!=");
+      Serial.print(val);
+      Serial.println(".");
       digitalWrite(21, HIGH);
       digitalWrite(22, LOW);
     }

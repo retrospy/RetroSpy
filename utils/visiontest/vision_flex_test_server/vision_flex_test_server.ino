@@ -16,6 +16,11 @@ void setup()
       pinMode(i, OUTPUT);
       digitalWrite(i, LOW);
     }
+  
+       pinMode(21, OUTPUT);
+       pinMode(22, OUTPUT);
+       digitalWrite(21, HIGH);
+       digitalWrite(22, LOW);
     Serial.begin(115200);
 }
 
@@ -32,6 +37,9 @@ void loop()
   
   for(int i = 0; i < 65536; ++i)
   {
+    Serial.print("Sending ");
+    Serial.print(i);
+    Serial.println(".");
     digitalWrite(18, (i & 0b1000000000000000) != 0 ? HIGH : LOW);
     digitalWrite(17, (i & 0b0100000000000000) != 0 ? HIGH : LOW);
     digitalWrite(16, (i & 0b0010000000000000) != 0 ? HIGH : LOW);
@@ -50,11 +58,14 @@ void loop()
     digitalWrite(0,  (i & 0b0000000000000001) != 0 ? HIGH : LOW);
 
     digitalWrite(10, HIGH);
-    delay(1);
+    delayMicroseconds(100);
     digitalWrite(10, LOW);
-    delay(1);
+    delayMicroseconds(100);
   }
   digitalWrite(9, LOW);
   delay(1);
+
+  digitalWrite(22, HIGH);
+  digitalWrite(21, LOW);
   }
 }
