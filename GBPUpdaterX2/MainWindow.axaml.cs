@@ -651,7 +651,8 @@ namespace GBPUpdaterX2
                         processInfo = new ProcessStartInfo(Path.Join(tempDirectory, "avrdude"),
                             "-v -patmega328p -carduino -P" + gbpemuPort +
                             string.Format(" -b{0} -D -Uflash:w:firmware{1}.ino.hex:i",
-                                serialNumber < 100007 ? "115200" : "57600", serialNumber < 100007 ? "" : "-old"))
+                                serialNumber < 100007 || serialNumber >= 100247 ? "115200" : "57600",
+                                serialNumber < 100007 || serialNumber >= 100247 ? "" : "-old"))
                         {
                             CreateNoWindow = true,
                             UseShellExecute = false,
@@ -665,7 +666,8 @@ namespace GBPUpdaterX2
                         processInfo = new ProcessStartInfo("avrdude",
                             "-v -patmega328p -carduino -P" + gbpemuPort +
                             string.Format(" -b{0} -D -Uflash:w:firmware{1}.ino.hex:i",
-                                serialNumber < 100007 ? "115200" : "57600", serialNumber < 100007 ? "" : "-old"))
+                                serialNumber < 100007 || serialNumber >= 100247 ? "115200" : "57600",
+                                serialNumber < 100007 || serialNumber >= 100247 ? "" : "-old"))
                         {
                             CreateNoWindow = true,
                             UseShellExecute = false,
