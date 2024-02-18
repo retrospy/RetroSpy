@@ -183,6 +183,9 @@ void setup()
 #elif defined(RS_VISION)
 	for (int i = A0; i <= A7; ++i)
 		pinMode(i, INPUT_PULLUP);
+#elif defined(RS_VISION_ANALOG_1) || defined(RS_VISION_ANALOG_1)
+	for (int i = A1; i <= A7; ++i)
+		pinMode(i, INPUT_PULLUP);
 #elif !defined(VISION_ANALOG_ADC_INT_HANDLER) && !defined(MODE_ATARI_PADDLES) && !defined(MODE_ATARI5200_1) && !defined(MODE_ATARI5200_2) && !defined(MODE_AMIGA_ANALOG_1) && !defined(MODE_AMIGA_ANALOG_2)
 	PORTC = 0xFF; // Set the pull-ups on the port we use to check operation mode.
 	DDRC  = 0x00;
