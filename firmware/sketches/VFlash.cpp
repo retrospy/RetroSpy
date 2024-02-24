@@ -26,9 +26,9 @@
 
 #include "VFlash.h"
 
-#if (!defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY)) || defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41)) || defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+#if (!defined(TP_PINCHANGEINTERRUPT) && !(defined(__arm__) && defined(CORE_TEENSY))  && !defined(ESP_PLATFORM))
 
-#if !defined(ARDUINO_TEENSY40) && !defined(ARDUINO_TEENSY41) && !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
+#if !defined(ARDUINO_TEENSY40) && !defined(ARDUINO_TEENSY41) && !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO) 
 #include <SoftwareSerial.h>
 static SoftwareSerial mySerial(2, 3); // RX,TX 
 #endif

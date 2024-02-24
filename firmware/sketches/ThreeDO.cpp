@@ -26,7 +26,7 @@
 
 #include "ThreeDO.h"
 
-#if !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(ARDUINO_AVR_NANO_EVERY)
+#if !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(ARDUINO_AVR_NANO_EVERY) && !defined(ESP_PLATFORM)
 
 void ThreeDOSpy::setup(uint8_t cableType) {
 	this->cableType = cableType;

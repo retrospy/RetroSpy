@@ -186,7 +186,7 @@ void setup()
 #elif defined(RS_VISION_ANALOG_1) || defined(RS_VISION_ANALOG_1)
 	for (int i = A1; i <= A7; ++i)
 		pinMode(i, INPUT_PULLUP);
-#elif !defined(VISION_ANALOG_ADC_INT_HANDLER) && !defined(MODE_ATARI_PADDLES) && !defined(MODE_ATARI5200_1) && !defined(MODE_ATARI5200_2) && !defined(MODE_AMIGA_ANALOG_1) && !defined(MODE_AMIGA_ANALOG_2)
+#elif !defined(VISION_ANALOG_ADC_INT_HANDLER) && !defined(MODE_ATARI_PADDLES) && !defined(MODE_ATARI5200_1) && !defined(MODE_ATARI5200_2) && !defined(MODE_AMIGA_ANALOG_1) && !defined(MODE_AMIGA_ANALOG_2) && !defined(ESP_PLATFORM)
 	PORTC = 0xFF; // Set the pull-ups on the port we use to check operation mode.
 	DDRC  = 0x00;
 #endif
@@ -214,7 +214,7 @@ void setup()
 	T_DELAY(5000);
 	A_DELAY(200);
 	#pragma GCC diagnostic pop
- 
+	
 }
 
 #if defined(RASPBERRYPI_PICO)  || defined(ARDUINO_RASPBERRY_PI_PICO)
