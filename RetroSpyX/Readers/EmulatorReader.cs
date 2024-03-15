@@ -18,7 +18,7 @@ namespace RetroSpy.Readers
         public event EventHandler<ControllerStateEventArgs>? ControllerStateChanged;
         public event EventHandler? ControllerDisconnected;
 
-        const double TIMER_MS = 13;
+        const double TIMER_MS = 1;
         State state;
 #pragma warning disable IDE1006 // Naming Styles
         State _state
