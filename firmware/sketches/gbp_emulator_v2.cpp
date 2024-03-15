@@ -39,9 +39,6 @@ WebUSB WebUSBSerial(1, "herrzatacke.github.io/gb-printer-web/#/webusb");
 #define GBP_OUTPUT_RAW_PACKETS true // by default, packets are parsed. if enabled, output will change to raw data packets for parsing and decompressing later
 #define GBP_USE_PARSE_DECOMPRESSOR false // embedded decompressor can be enabled for use with parse mode but it requires fast hardware (SAMD21, SAMD51, ESP8266, ESP32)
 
-#include <stdint.h> // uint8_t
-#include <stddef.h> // size_t
-
 #include "common.h"
 
 #include "gameboy_printer_protocol.h"
@@ -50,15 +47,14 @@ WebUSB WebUSBSerial(1, "herrzatacke.github.io/gb-printer-web/#/webusb");
 #if defined(ESP_PLATFORM)
 #include "WiFi.h"
 #include "ESPAsyncWebServer.h"
-#include "SPIFFS.h"
-
-//const char* ssid     = "RetroSpy Pixel 2.0";
-//const char* password = "123456789";
+#include "FS.h"
+#include "FFat.h"
+#include "PSString.h"
 
 // Set web server port number to 80
 AsyncWebServer server(80);
 
-String output = "";
+PSString output;
 #endif
 
 #if GBP_OUTPUT_RAW_PACKETS
@@ -185,12 +181,13 @@ void serialClock_ISR(void)
 /*******************************************************************************
   Main Setup and Loop
 *******************************************************************************/
-#if defined(ESP_PLATFORM)
+
+#if defined(ESP_PLATFORM)
 
 String GetStringFromFile(String defaultValue, String filename)
 {
 	String value = defaultValue;
-	File file = SPIFFS.open(filename, "r");
+	File file = FFat.open(filename, "r");
 	if (!file)
 	{
 		Serial.printf("// There was an error opening %s for reading\r\n", filename.c_str());
@@ -211,7 +208,7 @@ String GetStringFromFile(String defaultValue, String filename)
 
 String SaveStringToFile(String value, String filename)
 {
-	File file = SPIFFS.open(filename, "w");
+	File file = FFat.open(filename, "w");
 	if (!file)
 	{
 		Serial.printf("// There was an error opening %s for writing\r\n", filename.c_str());
@@ -228,8 +225,8 @@ String SaveStringToFile(String value, String filename)
 String processor(const String& var) {
 	Serial.println(var);
 	if (var == "PERCENTUSED")
-	{
-		return String((float)SPIFFS.usedBytes() / (float)SPIFFS.totalBytes() * 100.0);			
+	{		
+		return String((float)FFat.usedBytes() / (float)FFat.totalBytes() * 100.0);			
 	}
 	else if (var == "SSID")
 	{
@@ -302,9 +299,10 @@ void GameBoyPrinterEmulator::setup(void)
 	Serial.flush();
 	
 #if defined(ESP_PLATFORM)	
-	// Initialize SPIFFS
-	if (!SPIFFS.begin(true)) {
-		Serial.println("An Error has occurred while mounting SPIFFS");
+	
+	if (!FFat.begin(0, "", 10)) 
+	{
+		Serial.println("Fat FS mount failed. Not enough RAM?");
 		return;
 	}
 	
@@ -328,13 +326,13 @@ void GameBoyPrinterEmulator::setup(void)
 	server.on("/",
 		HTTP_GET,
 		[](AsyncWebServerRequest *request) {
-			request->send(SPIFFS, "/gbp_js_raw_decoder.html", String(), false, processor);
+			request->send(FFat, "/gbp_js_raw_decoder.html", "text/html", false, processor);
 		});
  
 	server.on("/gbp_gbp2bpp_raw.js",
 		HTTP_GET,
 		[](AsyncWebServerRequest *request) {
-			request->send(SPIFFS,
+			request->send(FFat,
 				"/gbp_gbp2bpp_raw.js",
 				"text/javascript");
 		});
@@ -342,26 +340,26 @@ void GameBoyPrinterEmulator::setup(void)
 	server.on("/rawFunctions.js",
 		HTTP_GET,
 		[](AsyncWebServerRequest *request) {
-			request->send(SPIFFS, "/rawFunctions.js", "text/javascript");
+			request->send(FFat, "/rawFunctions.js", "text/javascript");
 		});
 	
 	server.on("/images.dat",
 		HTTP_GET,
 		[](AsyncWebServerRequest *request) {
-			request->send(SPIFFS, "/images.dat", String(), false, NULL);
+			request->send(FFat, "/images.dat", "text/plain", false, NULL);
 		});
 	
 	server.on("/clear",
 		HTTP_GET,
 		[](AsyncWebServerRequest *request) {
-			SPIFFS.remove("/images.dat");
+			FFat.remove("/images.dat");
 			request->redirect("/");
 		});
 	
 	server.on("/wifi_setup.html",
 		HTTP_GET,
 		[](AsyncWebServerRequest *request) {
-			request->send(SPIFFS, "/wifi_setup.html", String(), false, processor);
+			request->send(FFat, "/wifi_setup.html", "text/html", false, processor);
 		});
 	
 	server.on("/save",
@@ -385,13 +383,14 @@ void GameBoyPrinterEmulator::setup(void)
 	server.begin();
  
 	Serial.print("File system size: ");
-	Serial.print(SPIFFS.totalBytes());
+	Serial.print(FFat.totalBytes());
 	Serial.println(" bytes");
   
 	Serial.print("File system used: ");
-	Serial.print(SPIFFS.usedBytes());
+	Serial.print(FFat.usedBytes());
 	Serial.println(" bytes");
-#endif
+#endif
+
 } // setup()
 
 void GameBoyPrinterEmulator::loop()
@@ -414,15 +413,15 @@ void GameBoyPrinterEmulator::loop()
 		if (gbp_serial_io_timeout_handler(elapsed_ms))
 		{	
 #if defined(ESP_PLATFORM)
-			File file = SPIFFS.open("/images.dat", "a", true);
+			File file = FFat.open("/images.dat", "a", true);
 			if (!file) {
 				Serial.println("// There was an error opening images.dat for appending");
-				output = "";
+				output.clear();
 				return;
 			}			
-			file.print(output);
+			file.print(output.c_str());
 			file.close();
-			output = "";
+			output.clear();
 			Serial.println("// Successfully appended print to images.dat");
 #endif
 			Serial.println("");
@@ -627,7 +626,8 @@ inline void gbp_packet_capture_loop()
 			Serial.print((char)nibbleToCharLUT[(data_8bit >> 0) & 0xF]);
 #if defined(ESP_PLATFORM)
 			output.concat((char)nibbleToCharLUT[(data_8bit >> 0) & 0xF]);
-#endif
+#endif
+
 			// Splitting packets for convenience
 			if ((pktByteIndex > 5)&&(pktByteIndex >= (9 + pktDataLength)))
 			{

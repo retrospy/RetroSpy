@@ -86,6 +86,7 @@
         <string>sketches\maple_in.pio.h</string>
         <string>sketches\maple_out.pio.h</string>
         <string>sketches\config_esp32.h</string>
+        <string>sketches\PSString.h</string>
       </OtherFiles>
     </ProjectModeSettings>
   </Project>
@@ -965,7 +966,7 @@
       </BuildSettingsExtension>
     </VisualGDBConfiguration>
     <VisualGDBConfiguration>
-      <PlatformName>ESP32-WROOM-DA_Module</PlatformName>
+      <PlatformName>ESP32S3_Dev_Module</PlatformName>
       <DebugSettingsOverride xsi:type="com.visualgdb.debug.embedded">
         <AdditionalStartupCommands />
         <AdditionalGDBSettings>
@@ -1002,7 +1003,12 @@
           <EnableVerboseMode>true</EnableVerboseMode>
           <EnablePrettyPrinters>false</EnablePrettyPrinters>
         </AdditionalGDBSettings>
-        <DebugMethod />
+        <DebugMethod>
+          <ID>gdbsim</ID>
+          <Configuration>
+            <Entries />
+          </Configuration>
+        </DebugMethod>
         <AutoDetectRTOS>true</AutoDetectRTOS>
         <SemihostingSupport>Auto</SemihostingSupport>
         <SemihostingPollingDelay>0</SemihostingPollingDelay>
@@ -1019,32 +1025,25 @@
         <CheckInterfaceDrivers>true</CheckInterfaceDrivers>
       </DebugSettingsOverride>
       <BuildSettingsExtension xsi:type="com.visualgdb.build.external.arduino.extension">
-        <BoardID>esp32:esp32:esp32da</BoardID>
+        <BoardID>esp32:esp32:esp32s3</BoardID>
+        <COMPort />
         <Properties>
           <Entries>
             <KeyValue>
-              <Key>PartitionScheme</Key>
+              <Key>JTAGAdapter</Key>
               <Value>default</Value>
             </KeyValue>
             <KeyValue>
-              <Key>CPUFreq</Key>
-              <Value>240</Value>
+              <Key>PSRAM</Key>
+              <Value>opi</Value>
             </KeyValue>
             <KeyValue>
               <Key>FlashMode</Key>
               <Value>qio</Value>
             </KeyValue>
             <KeyValue>
-              <Key>FlashFreq</Key>
-              <Value>80</Value>
-            </KeyValue>
-            <KeyValue>
               <Key>FlashSize</Key>
-              <Value>4M</Value>
-            </KeyValue>
-            <KeyValue>
-              <Key>UploadSpeed</Key>
-              <Value>921600</Value>
+              <Value>16M</Value>
             </KeyValue>
             <KeyValue>
               <Key>LoopCore</Key>
@@ -1053,6 +1052,38 @@
             <KeyValue>
               <Key>EventsCore</Key>
               <Value>1</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>USBMode</Key>
+              <Value>hwcdc</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>CDCOnBoot</Key>
+              <Value>default</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>MSCOnBoot</Key>
+              <Value>default</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>DFUOnBoot</Key>
+              <Value>default</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>UploadMode</Key>
+              <Value>default</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>PartitionScheme</Key>
+              <Value>fatflash</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>CPUFreq</Key>
+              <Value>240</Value>
+            </KeyValue>
+            <KeyValue>
+              <Key>UploadSpeed</Key>
+              <Value>921600</Value>
             </KeyValue>
             <KeyValue>
               <Key>DebugLevel</Key>
