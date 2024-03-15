@@ -331,6 +331,11 @@ namespace RetroSpy
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                             UpdateXIList();
                     }
+                    else if (_vm.Sources.SelectedItem == InputSource.N64EMU)
+                    {
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            UpdateEmulatorList();
+                    }
                     else if (_vm.Sources.SelectedItem == InputSource.LINUX)
                     {
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
@@ -473,7 +478,11 @@ namespace RetroSpy
 
                     reader = _vm.Sources.SelectedItem.BuildReader2(_vm.Ports.SelectedItem, _vm.Ports2.SelectedItem, _vm.UseLagFix);
                 }
-
+                else if (_vm.Sources.SelectedItem == InputSource.N64EMU)
+                {
+                    reader = _vm.Sources.SelectedItem == null || _vm.Sources.SelectedItem.BuildReader == null
+                        ? null : _vm.Sources.SelectedItem.BuildReader(_vm.EmulatorPIDs.SelectedItem, false);
+                }
                 //else if (_vm.Sources.SelectedItem == InputSource.XBOX)
                 //{
                 //    reader = _vm.Sources.SelectedItem.BuildReader(_vm.XIAndGamepad.SelectedItem.ToString());
@@ -663,11 +672,13 @@ namespace RetroSpy
             _vm.XIAndGamepadOptionVisibility = _vm.Sources.SelectedItem.RequiresId;
             _vm.MiSTerGamepadOptionVisibility = _vm.Sources.SelectedItem.RequiresMisterId;
             _vm.SSHOptionVisibility = _vm.Sources.SelectedItem.RequiresHostname;
+            _vm.EmulatorPIDsOptionVisibility = _vm.Sources.SelectedItem.RequiresEmulator;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 UpdateMayflashList();
                 UpdateGamepadList();
                 UpdateXIList();
+                UpdateEmulatorList();
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
@@ -706,7 +717,6 @@ namespace RetroSpy
         }
 
         private readonly object updatePortLock = new();
-
         private void UpdatePortList()
         {
 
@@ -978,6 +988,35 @@ namespace RetroSpy
             _vm.XIAndGamepad.UpdateContents(LinuxJoystickReader.GetDevices());
         }
 
+        private static readonly string[] processNames = {
+            "project64", "project64d",
+            "mupen64-rerecording",
+            "mupen64-pucrash",
+            "mupen64_lua",
+            "mupen64-wiivc",
+            "mupen64-RTZ",
+            "mupen64-rerecording-v2-reset",
+            "mupen64-rrv8-avisplit",
+            "mupen64-rerecording-v2-reset",
+            "mupen64",
+            "retroarch",
+            "wine-preloader"
+        };
+
+        private void UpdateEmulatorList()
+        {
+            List<Process> foundProcesses = new();
+            foreach (string name in processNames)
+            {
+                foreach (Process p in Process.GetProcessesByName(name).Where(p => !p.HasExited))
+                {
+                    foundProcesses.Add(p);
+                }
+            }
+
+            _vm.EmulatorPIDs.UpdateContents(foundProcesses.Select(p => p.Id.ToString()));
+        }
+
         private void UpdateXIList()
         {
             _vm.XIAndGamepad.UpdateContents(XInputReader.GetDevices());
@@ -1050,6 +1089,7 @@ namespace RetroSpy
         public ListView<string> Ports2 { get; set; }
         public ListView<int> XIAndGamepad { get; set; }
         public ListView<uint> MisterGamepad { get; set; }
+        public ListView<string> EmulatorPIDs { get; set; }
         public ListView<Skin> Skins { get; set; }
         public ListView<Background> Backgrounds { get; set; }
         public ListView<InputSource> Sources { get; set; }
@@ -1088,6 +1128,18 @@ namespace RetroSpy
         }
 
         private bool _XIAndGamepadOptionVisibility;
+
+        public bool EmulatorPIDsOptionVisibility
+        {
+            get => _emulatorPIDsOptionVisibility;
+            set
+            {
+                _emulatorPIDsOptionVisibility = value;
+                NotifyPropertyChanged("EmulatorPIDsOptionVisibility");
+            }
+        }
+
+        private bool _emulatorPIDsOptionVisibility;
 
         public bool XIAndGamepadOptionVisibility
         {
@@ -1151,7 +1203,8 @@ namespace RetroSpy
             Sources.StoreControl(setupWindow, "SourcesComboBox");
             Backgrounds = new ListView<Background>();
             Backgrounds.StoreControl(setupWindow, "BackgroundListBox");
-
+            EmulatorPIDs = new ListView<string>();
+            EmulatorPIDs.StoreControl(setupWindow, "EmulatorPIDsCombo");
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

@@ -12,8 +12,6 @@ namespace RetroSpy.Readers
             "left", "right", "middle", null, null, null, null, null
         };
 
-        private static DispatcherTimer? _timer;
-
         public static ControllerStateEventArgs? ReadFromPacket(byte[]? packet)
         {
             if (packet == null)

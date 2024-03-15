@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin name="N64 Controller" author="Forstride" type="n64emu">
+
+    <background name="Grey" image="..\img_N64\pad-grey.png" />
+	<background name="Black" image="..\img_N64\pad-black.png" />
+	<background name="Red" image="..\img_N64\pad-red.png" />
+	<background name="Orange" image="..\img_N64\pad-orange.png" />
+	<background name="Yellow" image="..\img_N64\pad-yellow.png" />
+	<background name="Lime Green" image="..\img_N64\pad-lime.png" />
+	<background name="Green" image="..\img_N64\pad-green.png" />
+	<background name="Aqua" image="..\img_N64\pad-aqua.png" />
+	<background name="Light Blue" image="..\img_N64\pad-lightblue.png" />
+	<background name="Blue" image="..\img_N64\pad-blue.png" />
+	<background name="Purple" image="..\img_N64\pad-purple.png" />
+	<background name="Pink" image="..\img_N64\pad-pink.png" />
+	<background name="Gold" image="..\img_N64\pad-gold.png" />
+	<background name="Millennium 2000" image="..\img_N64\pad-2000.png" />
+	<background name="Donkey Kong 64" image="..\img_N64\pad-dk.png" />
+	<background name="Pokemon" image="..\img_N64\pad-pokemon.png" />
+	<background name="Banjo-Kazooie (Custom)" image="..\img_N64\pad-banjo.png" />
+	<background name="Chameleon Twist (Custom)" image="..\img_N64\pad-twist.png" />
+	<background name="The Legend of Zelda (Custom)" image="..\img_N64\pad-zelda.png" />
+
+    <button name="a" image="button-face.png" x="312" y="159" width="40" height="40" />
+    <button name="b" image="button-face.png" x="282" y="130" width="40" height="40" />
+    <button name="z" image="button-z.png" x="139" y="230" width="34" height="70" />
+    <button name="start" image="button-face.png" x="200" y="130" width="47" height="47" />
+
+    <button name="cup" image="button-face.png" x="345" y="86" width="33" height="33" />
+    <button name="cdown" image="button-face.png" x="345" y="132" width="33" height="33" />
+    <button name="cleft" image="button-face.png" x="321" y="109" width="33" height="33" />
+    <button name="cright" image="button-face.png" x="370" y="109" width="33" height="33" />
+
+    <button name="r" image="button-r.png" x="301" y="40" width="101" height="43" />
+    <button name="l" image="button-l.png" x="46" y="42" width="99" height="44" />
+
+    <button name="up" image="button-dpad.png" x="79" y="110" width="28" height="28" />
+    <button name="down" image="button-dpad.png" x="79" y="153" width="28" height="28" />
+    <button name="left" image="button-dpad.png" x="59" y="132" width="28" height="28" />
+    <button name="right" image="button-dpad.png" x="100" y="132" width="28" height="28" />
+
+    <stick xname="stick_x" yname="stick_y" image="stick.png"
+           x="203" y="215" width="40" height="40" xrange="30" yrange="30" />
+
+</skin>

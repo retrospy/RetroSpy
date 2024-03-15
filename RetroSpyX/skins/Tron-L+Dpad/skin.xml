@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin name="Tron-L+Dpad" author="Quills" type="n64emu">
+
+	<background name="Tron-L+Dpad" image="Input-display-2.png" />
+
+    <button name="l" image="L highlight.png" x="13" y="7" width="48" height="16" />
+    <button name="a" image="RealAbutton.png" x="268" y="70" width="30" height="30" />
+    <button name="b" image="Abutton.png" x="245" y="34" width="30" height="30" />
+    <button name="z" image="Z highlight.png" x="184" y="88" width="48" height="16" />
+    <button name="start" image="StartButton.png" x="192" y="24" width="30" height="30" />
+
+    <button name="cup" image="Cbutton.png" x="336" y="30" width="26" height="26" />
+    <button name="cdown" image="Cbutton.png" x="336" y="79" width="26" height="26" />
+    <button name="cleft" image="Cbutton.png" x="310" y="55" width="28" height="26" />
+    <button name="cright" image="Cbutton.png" x="362" y="55" width="26" height="26" />m
+
+    <button name="up" image="D-down-up.png" height="17" width="14" y="60" x="30"/>
+    <button name="down" image="D-down-up.png" height="17" width="14" y="90" x="30"/>
+    <button name="left" image="D-left-right.png" height="14" width="17" y="76" x="14"/>
+    <button name="right" image="D-left-right.png" height="14" width="17" y="76" x="43"/>
+
+    <button name="r" image="R button-01.png" x="256" y="8" width="86" height="13" />
+
+    <stick xname="stick_x" yname="stick_y" image="joystick2.png"
+           x="94" y="31" width="50" height="50" xrange="30" yrange="30" />
+</skin>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin name="Neon N64" author="aglab2" type="n64emu">
+
+    <background name="Default" image="pad.png" />
+
+    <button name="a" image="a.png" x="0" y="0" width="250" height="250" />
+    <button name="b" image="b.png" x="0" y="0" width="250" height="250" />
+    <button name="z" image="z.png" x="0" y="0" width="250" height="250" />
+    <button name="start" image="start.png" x="0" y="0" width="250" height="250" />
+
+    <button name="cup" image="c-up.png" x="0" y="0" width="250" height="250" />
+    <button name="cdown" image="c-down.png" x="0" y="0" width="250" height="250" />
+    <button name="cleft" image="c-left.png" x="0" y="0" width="250" height="250" />
+    <button name="cright" image="c-right.png" x="0" y="0" width="250" height="250" />
+
+    <button name="r" image="r.png" x="0" y="0" width="250" height="250" />
+    <button name="l" image="l.png" x="0" y="0" width="250" height="250" />
+
+    <button name="up" image="d-up.png" x="0" y="0" width="250" height="250" />
+    <button name="down" image="d-down.png" x="0" y="0" width="250" height="250" />
+    <button name="left" image="d-left.png" x="0" y="0" width="250" height="250" />
+    <button name="right" image="d-right.png" x="0" y="0" width="250" height="250" />
+
+    <stick xname="stick_x" yname="stick_y" image="stick.png"
+           x="0" y="0" width="250" height="250" xrange="15" yrange="15" />
+
+</skin>
