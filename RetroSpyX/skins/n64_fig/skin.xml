@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin name="Fig N64" author="aglab2, fig02" type="n64emu">
+
+    <background name="Magenta" image="pad-magenta.png" />
+    <background name="Black" image="pad-black.png" />
+
+    <button name="a" image="a.png" x="0" y="0" width="775" height="540" />
+    <button name="b" image="b.png" x="0" y="0" width="775" height="540" />
+    <button name="z" image="z.png" x="0" y="0" width="775" height="540" />
+    <button name="start" image="start.png" x="0" y="0" width="775" height="540" />
+
+    <button name="cup" image="c-up.png" x="0" y="0" width="775" height="540" />
+    <button name="cdown" image="c-down.png" x="0" y="0" width="775" height="540" />
+    <button name="cleft" image="c-left.png" x="0" y="0" width="775" height="540" />
+    <button name="cright" image="c-right.png" x="0" y="0" width="775" height="540" />
+
+    <button name="r" image="r.png" x="0" y="0" width="775" height="540" />
+    <button name="l" image="l.png" x="0" y="0" width="775" height="540" />
+
+	<button name="up" image="d-up.png" x="0" y="0" width="775" height="540" />
+    <button name="down" image="d-down.png" x="0" y="0" width="775" height="540" />
+    <button name="left" image="d-left.png" x="0" y="0" width="775" height="540" />
+    <button name="right" image="d-right.png" x="0" y="0" width="775" height="540" />
+	
+    <stick xname="stick_x" yname="stick_y" image="stick.png"
+           x="0" y="0" width="775" height="540" xrange="100" yrange="100" />
+
+</skin>
