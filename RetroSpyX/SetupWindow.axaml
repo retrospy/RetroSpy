@@ -73,8 +73,9 @@
         </ComboBox>
         <Label Content="Controller Source:" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16"/>
         <Label Name="ComPortLabel" Content="COM Port:" HorizontalAlignment="Left" Margin="59,70,0,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="{Binding ComPortOptionVisibility}"/>
-        <Label Name="ControllerIdLabel" Content="Controller:" HorizontalAlignment="Left" Margin="59,70,0,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="{Binding XIAndGamepadOptionVisibility}"/>
-        <Label Name="HostnameLabel" Content="Hostname:" HorizontalAlignment="Left" Margin="59,70,0,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="{Binding SSHOptionVisibility}"/>
+		<Label Name="EmulatorPIDLabel" Content="PID:" HorizontalAlignment="Left" Margin="59,70,0,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="{Binding EmulatorPIDsOptionVisibility}"/>
+		<Label Name="ControllerIdLabel" Content="Controller:" HorizontalAlignment="Left" Margin="59,70,0,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="{Binding XIAndGamepadOptionVisibility}"/>
+		<Label Name="HostnameLabel" Content="Hostname:" HorizontalAlignment="Left" Margin="59,70,0,0" VerticalAlignment="Top" Foreground="#FFCBCBCB" FontFamily="/Assets/Carlito-Regular.ttf#Carlito" FontSize="16" IsVisible="{Binding SSHOptionVisibility}"/>
         <ComboBox Name="ComPortCombo" Margin="145,70,10,0" Width="447" Height="29.9" VerticalAlignment="Top" BorderBrush="#FF252525" FontFamily="Segoe UI" FontSize="12" Background="#efefef" IsVisible="{Binding ComPortOptionVisibility}" ItemsSource="{Binding Ports}" SelectedItem="{Binding Ports.SelectedItem}" SelectionChanged="ComPortCombo_SelectionChanged">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
@@ -82,6 +83,13 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
+		<ComboBox Name="EmulatorPIDsCombo" Margin="145,70,10,0" Width="447" Height="29.9" VerticalAlignment="Top" BorderBrush="#FF252525" FontFamily="Segoe UI" FontSize="12" Background="#efefef" IsVisible="{Binding EmulatorPIDsOptionVisibility}" ItemsSource="{Binding EmulatorPIDs}" SelectedItem="{Binding EmulatorPIDs.SelectedItem}">
+			<ComboBox.ItemTemplate>
+				<DataTemplate>
+					<TextBlock Text="{Binding}"/>
+				</DataTemplate>
+			</ComboBox.ItemTemplate>
+		</ComboBox>
         <ComboBox Name="ControllerIdCombo" Margin="145,70,10,0" VerticalAlignment="Top" BorderBrush="#FF252525" FontFamily="Segoe UI" FontSize="12" Background="#efefef" Width="447" Height="29.96" IsVisible="{Binding XIAndGamepadOptionVisibility}" ItemsSource="{Binding XIAndGamepad}" SelectedItem="{Binding XIAndGamepad.SelectedItem}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>

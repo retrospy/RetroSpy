@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin name="Keyboard buttons" author="eN-t" type="n64emu">
+
+    <background name="GC Buttons" image="GCN_Buttons.png" />
+	
+	<rangebutton name="stick_y" image="Control-Up.png" x="43" y="13" width="32" height="32" from="0.4" to="1" />
+	<rangebutton name="stick_y" image="Control-Down.png" x="42" y="101" width="32" height="32" from="-1" to="-0.4" />
+	<rangebutton name="stick_x" image="Control-Left.png" x="0" y="57" width="32" height="32" from="-1" to="-0.4" />
+	<rangebutton name="stick_x" image="Control-Right.png" x="87" y="57" width="32" height="32" from="0.4" to="1" />
+    
+    <button name="cup" image="C-Up.png" x="316" y="12" />
+	<button name="cdown" image="C-Down.png" x="315" y="101" />
+	<button name="cleft" image="C-Left.png" x="271" y="57" />
+	<button name="cright" image="C-Right.png" x="358" y="57" />
+		   
+    <button name="l" image="L-all.png" x="126" y="13" width="35" height="35" />
+    <button name="z" image="Z.png" x="178" y="13" width="35" height="35" />
+    <button name="r" image="R-all.png" x="231" y="13" width="35" height="35" />
+	
+    <button name="start" image="Start.png" x="126" y="53" width="35" height="35" />
+    <button name="b" image="B.png" x="161" y="53" width="35" height="35" />
+    <button name="a" image="A.png" x="196" y="53" width="35" height="35" />
+
+    <button name="left" image="Dpad-Left.png" x="126" y="93" width="35" height="35" />
+    <button name="up" image="Dpad-Up.png" x="161" y="93" width="35" height="35" />
+    <button name="down" image="Dpad-Down.png" x="196" y="93" width="35" height="35" />
+    <button name="right" image="Dpad-Right.png" x="231" y="93" width="35" height="35" />
+
+</skin>

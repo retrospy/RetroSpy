@@ -91,10 +91,10 @@ namespace RetroSpy
                 _datPort?.Write("z");
                 try
                 { // If the device has been unplugged, Close will throw an IOException.  This is fine, we'll just keep cleaning up.
-                    _datPort.Close();
+                    _datPort?.Close();
                 }
                 catch (IOException) { }
-                _datPort.Dispose();
+                _datPort?.Dispose();
                 _datPort = null;
             }
             if (_timer != null)

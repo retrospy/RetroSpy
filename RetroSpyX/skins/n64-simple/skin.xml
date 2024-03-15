@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin name="N64 Simple" author="eN-t, Jimmie1717, deceax" type="n64emu">
+
+	<!-- Resolution: 360x100 -->
+
+	<background name="Black" image="background/black.png" />
+	
+	<stick xname="stick_x" yname="stick_y" image="stick/joystick.png" x="25" y="25" xrange="25" yrange="25" />
+
+	<button name="b" image="button/b.png" x="96" y="25" />
+	<button name="a" image="button/a.png" x="128" y="25" />
+	<button name="l" image="button/l.png" x="168" y="25" />
+	<button name="r" image="button/r.png" x="196" y="25" />
+	<button name="z" image="button/z.png" x="228" y="25" />
+
+	<button name="start" image="button/start.png" x="299" y="38" />
+
+    	<button name="cup" image="button/c.png" x="293" y="1" />
+    	<button name="cdown" image="button/c.png" x="293" y="65" />
+    	<button name="cleft" image="button/c.png" x="262" y="33" />
+    	<button name="cright" image="button/c.png" x="325" y="33" />
+
+	<button name="up" image="dpad/up.png" x="110" y="68" />
+	<button name="right" image="dpad/right.png" x="145" y="68" />
+	<button name="down" image="dpad/down.png" x="180" y="68" />
+	<button name="left" image="dpad/left.png" x="215" y="68" />
+
+</skin>
