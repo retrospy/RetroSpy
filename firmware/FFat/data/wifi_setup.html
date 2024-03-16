@@ -1,0 +1,47 @@
+<html lang="en">
+<head>
+    <title>RetroSpy Pixel 2.0 Gameboy Printer Emulator</title>
+    <script type="text/javascript" src="./rawFunctions.js"></script>
+    <script type="text/javascript" src="./gbp_gbp2bpp_raw.js"></script>
+    <style>
+        body {
+            background-color: white;
+        }
+
+        .image-container {
+            padding: 16px 0;
+        }
+
+        button {
+            display: block;
+        }
+
+        .error {
+            border: 2px solid red;
+        }
+
+        #errormessage {
+            display: none;
+            background: #ffdddd;
+        }
+
+        .error ~ #errormessage {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <h1>RetroSpy Pixel 2.0 Gameboy Printer Emulator WiFi Setup</h1>
+
+        <form action="/save">
+            <label for="fname">SSID:</label><br>
+            <input type="text" id="ssid" name="ssid" value="%SSID%"><br>
+            <label for="lname">Last name:</label><br>
+            <input type="number" id="password" name="password" value="%PASSWORD%"><br><br>
+            <input type="submit" value="Save">
+        </form>
+
+    </div>
+</body>
+</html>
