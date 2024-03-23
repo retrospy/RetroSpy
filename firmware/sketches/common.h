@@ -34,6 +34,8 @@
 #include "config_every.h"
 #elif defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 #include "config_pico.h"
+#elif defined(ESP_PLATFORM)
+#include "config_esp32.h"
 #else
 #include "config_arduino.h"
 #endif

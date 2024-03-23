@@ -26,7 +26,7 @@
 
 #include "AmigaMouse.h"
 
-#if (!defined(TP_IRLIB2) && !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(ARDUINO_AVR_NANO_EVERY) && !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)) || (defined(TP_TIMERINTERRUPTS) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))) 
+#if (!defined(TP_IRLIB2) && !(defined(__arm__) && defined(CORE_TEENSY)) && !defined(ARDUINO_AVR_NANO_EVERY)  && !defined(ESP_PLATFORM) && !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)) || (defined(TP_TIMERINTERRUPTS) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO))) 
 
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 #include "RPi_Pico_TimerInterrupt.h"
@@ -41,7 +41,7 @@ static int8_t lastY;
 static byte lastEncoderX;
 static byte lastEncoderY;
 
-#if !defined(COLECOVISION_ROLLER_TIMER_INT_HANDLER) && !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
+#if !defined(COLECOVISION_ROLLER_TIMER_INT_HANDLER) && !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)  && !defined(ESP_PLATFORM)
 ISR(TIMER1_COMPA_vect) {
 	int8_t x = lastX - currentX;
 	int8_t y = lastY - currentY;

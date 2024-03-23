@@ -39,14 +39,23 @@ WebUSB WebUSBSerial(1, "herrzatacke.github.io/gb-printer-web/#/webusb");
 #define GBP_OUTPUT_RAW_PACKETS true // by default, packets are parsed. if enabled, output will change to raw data packets for parsing and decompressing later
 #define GBP_USE_PARSE_DECOMPRESSOR false // embedded decompressor can be enabled for use with parse mode but it requires fast hardware (SAMD21, SAMD51, ESP8266, ESP32)
 
-#include <stdint.h> // uint8_t
-#include <stddef.h> // size_t
-
 #include "common.h"
 
 #include "gameboy_printer_protocol.h"
 #include "gbp_serial_io.h"
 
+#if defined(ESP_PLATFORM)
+#include "WiFi.h"
+#include "ESPAsyncWebServer.h"
+#include "FS.h"
+#include "FFat.h"
+#include "PSString.h"
+
+// Set web server port number to 80
+AsyncWebServer server(80);
+
+PSString output;
+#endif
 
 #if GBP_OUTPUT_RAW_PACKETS
 #define GBP_FEATURE_PACKET_CAPTURE_MODE
@@ -71,7 +80,7 @@ WebUSB WebUSBSerial(1, "herrzatacke.github.io/gb-printer-web/#/webusb");
 //  \_5__3__1_/   (at cable)
 //
 
-#ifdef ESP8266
+#ifdef ESP_PLATFORM
 // Pin Setup for ESP8266 Devices
 //                  | Arduino Pin | Gameboy Link Pin  |
 #define GBP_VCC_PIN               // Pin 1            : 5.0V (Unused)
@@ -169,10 +178,66 @@ void serialClock_ISR(void)
 	digitalWrite(GBP_SI_PIN, txBit ? HIGH : LOW);
 }
 
-
 /*******************************************************************************
   Main Setup and Loop
 *******************************************************************************/
+
+#if defined(ESP_PLATFORM)
+
+String GetStringFromFile(String defaultValue, String filename)
+{
+	String value = defaultValue;
+	File file = FFat.open(filename, "r");
+	if (!file)
+	{
+		Serial.printf("// There was an error opening %s for reading\r\n", filename.c_str());
+	}
+	else
+	{
+		value = "";
+		uint8_t byte[1];
+		while (file.read(byte, 1) != 0 && byte[0] != '\r')
+		{
+			value += (char)byte[0];	
+		}
+		file.close();
+	}
+	
+	return value;
+}
+
+String SaveStringToFile(String value, String filename)
+{
+	File file = FFat.open(filename, "w");
+	if (!file)
+	{
+		Serial.printf("// There was an error opening %s for writing\r\n", filename.c_str());
+	}
+	else
+	{
+		file.println(value);
+		file.close();
+	}
+	
+	return value;
+}
+
+String processor(const String& var) {
+	Serial.println(var);
+	if (var == "PERCENTUSED")
+	{		
+		return String((float)FFat.usedBytes() / (float)FFat.totalBytes() * 100.0);			
+	}
+	else if (var == "SSID")
+	{
+		return GetStringFromFile("Default", "/SSID.txt");
+	}
+	else if (var == "PASSWORD")
+	{
+		return GetStringFromFile("", "/Password.txt");
+	}
+}
+#endif
 
 void GameBoyPrinterEmulator::setup(void)
 {
@@ -232,10 +297,104 @@ void GameBoyPrinterEmulator::setup(void)
 	Serial.println(F("// ---"));
 
 	Serial.flush();
+	
+#if defined(ESP_PLATFORM)	
+	
+	if (!FFat.begin(0, "", 10)) 
+	{
+		Serial.println("Fat FS mount failed. Not enough RAM?");
+		return;
+	}
+	
+	String ssid = GetStringFromFile("Default", "/SSID.txt");
+	String password = GetStringFromFile("", "/Password.txt");
+	
+	Serial.print("SSID: ");
+	Serial.println(ssid);
+	Serial.print("Password: ");
+	Serial.println(password);
+	
+	// Connect to Wi-Fi network with SSID and password
+	Serial.print("Setting AP (Access Point)...");
+	// Remove the password parameter, if you want the AP (Access Point) to be open
+	WiFi.softAP(ssid, password);
+	IPAddress IP = WiFi.softAPIP();
+	Serial.print("AP IP address: ");
+	Serial.println(IP);
+  
+	// Route for root / web page
+	server.on("/",
+		HTTP_GET,
+		[](AsyncWebServerRequest *request) {
+			request->send(FFat, "/gbp_js_raw_decoder.html", "text/html", false, processor);
+		});
+ 
+	server.on("/gbp_gbp2bpp_raw.js",
+		HTTP_GET,
+		[](AsyncWebServerRequest *request) {
+			request->send(FFat,
+				"/gbp_gbp2bpp_raw.js",
+				"text/javascript");
+		});
+	
+	server.on("/rawFunctions.js",
+		HTTP_GET,
+		[](AsyncWebServerRequest *request) {
+			request->send(FFat, "/rawFunctions.js", "text/javascript");
+		});
+	
+	server.on("/images.dat",
+		HTTP_GET,
+		[](AsyncWebServerRequest *request) {
+			request->send(FFat, "/images.dat", "text/plain", false, NULL);
+		});
+	
+	server.on("/clear",
+		HTTP_GET,
+		[](AsyncWebServerRequest *request) {
+			FFat.remove("/images.dat");
+			request->redirect("/");
+		});
+	
+	server.on("/wifi_setup.html",
+		HTTP_GET,
+		[](AsyncWebServerRequest *request) {
+			request->send(FFat, "/wifi_setup.html", "text/html", false, processor);
+		});
+	
+	server.on("/save",
+		HTTP_GET,
+		[](AsyncWebServerRequest *request) {
+			if (request->hasParam("ssid"))
+			{
+				AsyncWebParameter* p = request->getParam("ssid");
+				Serial.println(p->value());
+				SaveStringToFile(p->value(), "/SSID.txt");
+			}
+			if (request->hasParam("password"))
+			{
+				AsyncWebParameter* p = request->getParam("password");
+				Serial.println(p->value());
+				SaveStringToFile(p->value(), "/Password.txt");
+			}
+			request->redirect("/wifi_setup.html");
+		});
+	
+	server.begin();
+ 
+	Serial.print("File system size: ");
+	Serial.print(FFat.totalBytes());
+	Serial.println(" bytes");
+  
+	Serial.print("File system used: ");
+	Serial.print(FFat.usedBytes());
+	Serial.println(" bytes");
+#endif
+
 } // setup()
 
 void GameBoyPrinterEmulator::loop()
-{
+{	
 	static uint16_t sioWaterline = 0;
 
 #ifdef GBP_FEATURE_PACKET_CAPTURE_MODE
@@ -252,7 +411,19 @@ void GameBoyPrinterEmulator::loop()
 	{
 		uint32_t elapsed_ms = curr_millis - last_millis;
 		if (gbp_serial_io_timeout_handler(elapsed_ms))
-		{
+		{	
+#if defined(ESP_PLATFORM)
+			File file = FFat.open("/images.dat", "a", true);
+			if (!file) {
+				Serial.println("// There was an error opening images.dat for appending");
+				output.clear();
+				return;
+			}			
+			file.print(output.c_str());
+			file.close();
+			output.clear();
+			Serial.println("// Successfully appended print to images.dat");
+#endif
 			Serial.println("");
 			Serial.print("// Completed ");
 			Serial.print("(Memory Waterline: ");
@@ -262,7 +433,7 @@ void GameBoyPrinterEmulator::loop()
 			Serial.println("B)");
 			Serial.flush();
 			digitalWrite(LED_STATUS_PIN, LOW);
-
+			
 #ifdef GBP_FEATURE_PARSE_PACKET_MODE
 			gbp_pkt_reset(&gbp_pktState);
 #ifdef GBP_FEATURE_PARSE_PACKET_USE_DECOMPRESSOR
@@ -449,18 +620,31 @@ inline void gbp_packet_capture_loop()
 			// Print Hex Byte
 			data_8bit = gbp_serial_io_dataBuff_getByte();
 			Serial.print((char)nibbleToCharLUT[(data_8bit >> 4) & 0xF]);
+#if defined(ESP_PLATFORM)
+			output.concat((char)nibbleToCharLUT[(data_8bit >> 4) & 0xF]);
+#endif
 			Serial.print((char)nibbleToCharLUT[(data_8bit >> 0) & 0xF]);
+#if defined(ESP_PLATFORM)
+			output.concat((char)nibbleToCharLUT[(data_8bit >> 0) & 0xF]);
+#endif
+
 			// Splitting packets for convenience
 			if ((pktByteIndex > 5)&&(pktByteIndex >= (9 + pktDataLength)))
 			{
 				digitalWrite(LED_STATUS_PIN, LOW);
 				Serial.println("");
+#if defined(ESP_PLATFORM)
+				output.concat("\r\n");
+#endif
 				pktByteIndex = 0;
 				pktTotalCount++;
 			}
 			else
 			{
 				Serial.print((char)' ');
+#if defined(ESP_PLATFORM)
+				output.concat((char)' ') ;
+#endif
 				pktByteIndex++; // Byte hex split counter
 				byteTotal++; // Byte total counter
 			}

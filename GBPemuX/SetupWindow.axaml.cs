@@ -235,8 +235,8 @@ namespace GBPemu
                                 string? result = null;
                                 do
                                 {
-                                    result = _serialPort.ReadLine();
-                                } while (result != null && (result.StartsWith("!", StringComparison.Ordinal) || result.StartsWith("#", StringComparison.Ordinal)));
+                                    result += _serialPort.ReadLine();
+                                } while (_serialPort.BytesToRead > 0 /*result != null && (result.StartsWith("!", StringComparison.Ordinal) || result.StartsWith("#", StringComparison.Ordinal))*/);
 
                                 if (result == "parse_state:0\r" || result?.Contains("d=debug") == true)
                                 {
@@ -399,7 +399,7 @@ namespace GBPemu
             List<string> ports = new();
             foreach (COMPortInfo port in comPortInformation)
             {
-                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || (_vm.FilterCOMPorts == true || port.FriendlyName?.Contains("Arduino") == true))
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || (_vm.FilterCOMPorts == true || port.FriendlyName?.Contains("Arduino") == true) || port.FriendlyName?.Contains("Silicon Labs CP210x USB to UART Bridge") == true)
                 {
                     ports.Add(port.PortName ?? "COMX");
                 }

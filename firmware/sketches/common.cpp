@@ -58,7 +58,7 @@ void common_pin_setup()
 	pinMode(17, INPUT_PULLUP);
 	pinMode(19, INPUT_PULLUP);
 	pinMode(18, INPUT_PULLUP);
-#elif !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
+#elif !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO) && !defined(ESP_PLATFORM)
 	PORTD = 0x00;
 	PORTB = 0x00;
 	DDRD = 0x00;
