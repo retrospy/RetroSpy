@@ -217,6 +217,7 @@
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
           <EnablePrettyPrinters>false</EnablePrettyPrinters>
+          <EnableAbsolutePathReporting>true</EnableAbsolutePathReporting>
         </AdditionalGDBSettings>
         <DebugMethod>
           <ID>gdbsim</ID>
@@ -289,6 +290,7 @@
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
           <EnablePrettyPrinters>false</EnablePrettyPrinters>
+          <EnableAbsolutePathReporting>true</EnableAbsolutePathReporting>
         </AdditionalGDBSettings>
         <DebugMethod>
           <ID>gdbsim</ID>
@@ -373,6 +375,7 @@
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
           <EnablePrettyPrinters>false</EnablePrettyPrinters>
+          <EnableAbsolutePathReporting>true</EnableAbsolutePathReporting>
         </AdditionalGDBSettings>
         <DebugMethod />
         <AutoDetectRTOS>true</AutoDetectRTOS>
@@ -441,6 +444,7 @@
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
           <EnablePrettyPrinters>false</EnablePrettyPrinters>
+          <EnableAbsolutePathReporting>true</EnableAbsolutePathReporting>
         </AdditionalGDBSettings>
         <DebugMethod />
         <AutoDetectRTOS>true</AutoDetectRTOS>
@@ -524,6 +528,7 @@
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
           <EnablePrettyPrinters>false</EnablePrettyPrinters>
+          <EnableAbsolutePathReporting>true</EnableAbsolutePathReporting>
         </AdditionalGDBSettings>
         <DebugMethod />
         <AutoDetectRTOS>true</AutoDetectRTOS>
@@ -591,6 +596,7 @@
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
           <EnablePrettyPrinters>false</EnablePrettyPrinters>
+          <EnableAbsolutePathReporting>true</EnableAbsolutePathReporting>
         </AdditionalGDBSettings>
         <DebugMethod />
         <AutoDetectRTOS>true</AutoDetectRTOS>
@@ -653,6 +659,7 @@
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
           <EnablePrettyPrinters>false</EnablePrettyPrinters>
+          <EnableAbsolutePathReporting>true</EnableAbsolutePathReporting>
         </AdditionalGDBSettings>
         <DebugMethod />
         <AutoDetectRTOS>true</AutoDetectRTOS>
@@ -732,6 +739,7 @@
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
           <EnablePrettyPrinters>false</EnablePrettyPrinters>
+          <EnableAbsolutePathReporting>true</EnableAbsolutePathReporting>
         </AdditionalGDBSettings>
         <DebugMethod />
         <AutoDetectRTOS>true</AutoDetectRTOS>
@@ -811,6 +819,7 @@
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
           <EnablePrettyPrinters>false</EnablePrettyPrinters>
+          <EnableAbsolutePathReporting>true</EnableAbsolutePathReporting>
         </AdditionalGDBSettings>
         <DebugMethod />
         <AutoDetectRTOS>true</AutoDetectRTOS>
@@ -919,6 +928,7 @@
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
           <EnablePrettyPrinters>false</EnablePrettyPrinters>
+          <EnableAbsolutePathReporting>true</EnableAbsolutePathReporting>
         </AdditionalGDBSettings>
         <DebugMethod />
         <AutoDetectRTOS>true</AutoDetectRTOS>
@@ -1002,6 +1012,7 @@
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
           <EnablePrettyPrinters>false</EnablePrettyPrinters>
+          <EnableAbsolutePathReporting>true</EnableAbsolutePathReporting>
         </AdditionalGDBSettings>
         <DebugMethod>
           <ID>gdbsim</ID>
@@ -1035,7 +1046,7 @@
             </KeyValue>
             <KeyValue>
               <Key>PSRAM</Key>
-              <Value>opi</Value>
+              <Value>enabled</Value>
             </KeyValue>
             <KeyValue>
               <Key>FlashMode</Key>
