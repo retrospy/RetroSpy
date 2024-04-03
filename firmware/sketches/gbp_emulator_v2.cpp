@@ -89,7 +89,7 @@ PSString output;
 #define GBP_SD_PIN                // Pin 4            : Serial Data  (Unused)
 #define GBP_SC_PIN       14       // Pin 5            : ESP-pin 5 CLK  (Serial Clock)  -> Arduino 14
 #define GBP_GND_PIN               // Pin 6            : GND (Attach to GND Pin)
-#define LED_STATUS_PIN    2       // Internal LED blink on packet reception
+#define LED_STATUS_PIN    15       // Internal LED blink on packet reception
 #elif defined(RS_PIXEL_2)
 #define GBP_VCC_PIN               // Pin 1            : 5.0V (Unused)
 #define GBP_SO_PIN        3       // Pin 2            : Serial OUTPUT
@@ -208,7 +208,7 @@ String GetStringFromFile(String defaultValue, String filename)
 
 String SaveStringToFile(String value, String filename)
 {
-	File file = FFat.open(filename, "w");
+	File file = FFat.open(filename, "w");	
 	if (!file)
 	{
 		Serial.printf("// There was an error opening %s for writing\r\n", filename.c_str());
@@ -241,6 +241,10 @@ String processor(const String& var) {
 
 void GameBoyPrinterEmulator::setup(void)
 {
+#if defined(ESP_PLATFORM)	
+	pinMode(2, OUTPUT);
+	digitalWrite(2, LOW);
+#endif
 	// Config Serial
 	// Has to be fast or it will not transfer the image fast enough to the computer
 	Serial.begin(115200);
@@ -389,6 +393,8 @@ void GameBoyPrinterEmulator::setup(void)
 	Serial.print("File system used: ");
 	Serial.print(FFat.usedBytes());
 	Serial.println(" bytes");
+	
+	digitalWrite(2, HIGH);
 #endif
 
 } // setup()
