@@ -14,7 +14,7 @@
 static int count = 0;
 
 #define PIND_READ( pin ) (PIND&(1<<(pin)))
-#define PINB_READ( pin ) (PINB&(1<<(pin-8)))
+#define PINB_READ( pin ) (PINB&(1<<(pin)))
 #define WAIT_LEADING_EDGEB( pin ) while( PINB_READ(pin) ){} while( !PINB_READ(pin) ){}
 
 void setup()
@@ -32,7 +32,7 @@ void setup()
     pinMode(A0, INPUT);
 
     Serial.begin(115200);
-Serial.println("here2");
+Serial.println("here1");
     while(!Serial);
 }
 
@@ -46,60 +46,61 @@ void loop()
   {
     Serial.println("waiting for latch");
     pinMode(12, OUTPUT);
-    digitalWriteFast(12, HIGH);
-    WAIT_LEADING_EDGEB(11);
     digitalWriteFast(12, LOW);
+    WAIT_LEADING_EDGEB(3);
+    Serial.println("latch triggered");
     digitalWriteFast(12, HIGH);
-    pinMode(12, INPUT_PULLUP);
+    pinMode(12, INPUT);
     
     bool didFail = false;
     //noInterrupts();
     for(int i = 0; i < 2048; ++i)
     { 
       Serial.println("waiting on clock");
-      WAIT_LEADING_EDGEB(12);
-
-      switches = 0;
-      switches = (~PINC >> 1) & 0x1F;
-   int val = 0;
-         if (i >= 512)
-        val = i - 512;
-      else
-        val = i;
-
-      //int val = (PIND >> 2) | ((PINB & 0x07) << 6);
-      
-      int analogval = analogRead(A0);
-      if (analogval > 500)
-      {
-        val |= 512;
-      }
-
-       Serial.print(i);
-       Serial.print(",");
-       Serial.print(val);
-       Serial.print(",");
-       Serial.println(switches);
-    
-      if (val != i)
-      {
-        interrupts();
-        
-        Serial.print(0);
-        Serial.print(",");
-        Serial.println(switches);
-        failure = true;
-        didFail = true;
-      }
+      WAIT_LEADING_EDGEB(4);
+      Serial.println("clock triggered");
     }
-    interrupts();
-
-    if (!didFail)
-    {
-      failure = false;
-      Serial.print(1);
-      Serial.print(",");
-      Serial.println(switches);
+//      switches = 0;
+//      switches = (~PINC >> 1) & 0x1F;
+//   int val = 0;
+//         if (i >= 512)
+//        val = i - 512;
+//      else
+//        val = i;
+//
+//      //int val = (PIND >> 2) | ((PINB & 0x07) << 6);
+//      
+//      int analogval = analogRead(A0);
+//      if (analogval > 500)
+//      {
+//        val |= 512;
+//      }
+//
+//       Serial.print(i);
+//       Serial.print(",");
+//       Serial.print(val);
+//       Serial.print(",");
+//       Serial.println(switches);
+//    
+//      if (val != i)
+//      {
+//        interrupts();
+//        
+//        Serial.print(0);
+//        Serial.print(",");
+//        Serial.println(switches);
+//        failure = true;
+//        didFail = true;
+//      }
     }
-  }
+//    interrupts();
+//
+//    if (!didFail)
+//    {
+//      failure = false;
+//      Serial.print(1);
+//      Serial.print(",");
+//      Serial.println(switches);
+//    }
+//  }
 }
