@@ -75,7 +75,7 @@ namespace RetroSpy.Readers
 
         private static string MapObjectName(string name)
         {
-            switch (name.ToUpper())
+             switch (name.ToUpper())
             {
                 case "Y AXIS":
                 case "Y-ACHSE":
@@ -84,14 +84,17 @@ namespace RetroSpy.Readers
                 case "X-ACHSE":
                     return "X";
                 case "Y ROTATION":
+                case "Y-ROTATION":
                     return "RotationY";
                 case "X ROTATION":
+                case "X-ROTATION":
                     return "RotationX";
                 case "Z AXIS":
                 case "Z-ACHSE":
                     return "Z";
                 case "Z ROTATION":
                 case "RZ ROTATION":
+                case "Z-ROTATION":
                     return "RotationZ";
                 default:
                     break;
