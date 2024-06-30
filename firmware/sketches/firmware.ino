@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // RetroSpy Firmware for Arduino Uno & Teensy 3.5/4.0/4.1
-// Version: 6.4.9
+// Version: 6.5
 // RetroSpy written by zoggins of RetroSpy Technologies
 // NintendoSpy originally written by jaburns
 
