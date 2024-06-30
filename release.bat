@@ -4,17 +4,17 @@ IF "%~1"=="" GOTO release
 IF NOT "%~1"=="" set sub=1
 
 :release
-rmdir /S /Q bin\Release\net7.0
-"C:\Program Files\dotnet\dotnet.exe" build RetroSpyX\RetroSpyX.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=..\bin\Release\net7.0
+rmdir /S /Q bin\Release\net8.0
+"C:\Program Files\dotnet\dotnet.exe" build RetroSpyX\RetroSpyX.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=..\bin\Release\net8.0
 if %ERRORLEVEL% NEQ 0 goto :fail
 
-"C:\Program Files\dotnet\dotnet.exe" build GBPemuX\GBPemuX.csproj /p:Configuration=Release /p:Platform="Any CPU"  /p:OutputPath=..\bin\Release\net7.0
+"C:\Program Files\dotnet\dotnet.exe" build GBPemuX\GBPemuX.csproj /p:Configuration=Release /p:Platform="Any CPU"  /p:OutputPath=..\bin\Release\net8.0
 if %ERRORLEVEL% NEQ 0 goto :fail
 
-"C:\Program Files\dotnet\dotnet.exe" build UsbUpdaterX2\UsbUpdaterX2.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=..\bin\Release\net7.0
+"C:\Program Files\dotnet\dotnet.exe" build UsbUpdaterX2\UsbUpdaterX2.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=..\bin\Release\net8.0
 if %ERRORLEVEL% NEQ 0 goto :fail
 
-"C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\amd64\MSBuild.exe" GBPUpdaterX2\GBPUpdaterX2.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=..\bin\Release\net7.0
+"C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\amd64\MSBuild.exe" GBPUpdaterX2\GBPUpdaterX2.csproj /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=..\bin\Release\net8.0
 if %ERRORLEVEL% NEQ 0 goto :fail
 
 cd MiSTer
@@ -204,7 +204,7 @@ if exist "..\..\..\certs\codesignpasswd.txt" (
 )
 
 REM Sign all 4 executables
-cd "bin\Release\net7.0\"
+cd "bin\Release\net8.0\"
 if %ERRORLEVEL% NEQ 0 goto :fail
 
 if exist "..\..\..\..\..\..\certs\codesign.cer" (
