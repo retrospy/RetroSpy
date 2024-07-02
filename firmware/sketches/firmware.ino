@@ -100,6 +100,7 @@
 #include "NES.h"
 #include "SNES.h"
 #include "N64.h"
+#include "N64Slow.h"
 #include "GC.h"
 #include "GBA.h"
 
@@ -755,25 +756,28 @@ bool CreateSpy()
 		customSetup = true;
 		break;
 	case 0x22:
+		currentSpy = new N64Slow();
+		break;
+	case 0x23:
 		currentSpy = new DrivingControllerSpy();
 		((DrivingControllerSpy*)currentSpy)->setup(DrivingControllerSpy::CABLE_GENESIS);
 		customSetup = true;
 		break;
-	case 0x23:
+	case 0x24:
 		currentSpy = new AmigaMouseSpy();
 		((AmigaMouseSpy*)currentSpy)->setup(VIDEO_PAL, AmigaMouseSpy::CABLE_GENESIS);
 		customSetup = true;
 		break;
-	case 0x24:
+	case 0x25:
 		currentSpy = new AmigaMouseSpy();
 		((AmigaMouseSpy*)currentSpy)->setup(VIDEO_NTSC, AmigaMouseSpy::CABLE_GENESIS);
 		customSetup = true;
 		break;
-	case 0x25:
+	case 0x26:
 		currentSpy = new CDTVWiredSpy();
 		muteStartupMessage = true;
 		break;
-	case 0x26:
+	case 0x27:
 		currentSpy = new NuonSpy();
 		break;
 	}

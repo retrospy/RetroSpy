@@ -87,6 +87,7 @@
         <string>sketches\maple_out.pio.h</string>
         <string>sketches\config_esp32.h</string>
         <string>sketches\PSString.h</string>
+        <string>sketches\N64Slow.h</string>
       </OtherFiles>
     </ProjectModeSettings>
   </Project>
