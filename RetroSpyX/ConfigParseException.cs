@@ -20,8 +20,5 @@ namespace RetroSpy
 
         public ConfigParseException(string format, Exception innerException, params object[] args)
             : base(string.Format(CultureInfo.CurrentCulture, format, args), innerException) { }
-
-        protected ConfigParseException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
-            : base(serializationInfo, streamingContext) { }
     }
 }

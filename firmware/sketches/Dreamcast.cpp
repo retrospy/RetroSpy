@@ -527,10 +527,6 @@ void DreamcastSpy::setup() {
 void DreamcastSpy::loop() {
 }
 
-void DreamcastSpy::loop1() {
-}
-
-
 void DreamcastSpy::writeSerial() {
 }
 

@@ -16,9 +16,5 @@ namespace RetroSpy
         public SSHMonitorDisconnectException()
         {
         }
-
-        protected SSHMonitorDisconnectException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext) : base(serializationInfo, streamingContext)
-        {
-        }
     }
 }

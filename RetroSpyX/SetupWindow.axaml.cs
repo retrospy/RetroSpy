@@ -1051,7 +1051,7 @@ namespace RetroSpy
                 {
                     while (!_data.DataAvailable) { }
 
-                    string line = _data.ReadLine();
+                    string line = _data.ReadLine()!;
                     if (line.Contains("retrospy_end"))
                     {
                         break;
