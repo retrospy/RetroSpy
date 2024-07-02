@@ -214,7 +214,7 @@ void WiiSpy::loop1()
 				}
 			}
 			else
-			{
+			{			
 				// This is a hack, to handle a problem I don't fully understand
 				if (isKeyThing && numbytes == 9)
 				{
@@ -268,10 +268,19 @@ void WiiSpy::loop1()
 					{
 						// NES/SNES Classic return 22 bytes and have the data offset by 2 bytes
 						int offset = numbytes == 22 ? 3 : 1;
-						for (int i = 0; i < 6; i++)
+						int num_to_write = 6;
+						
+						if (numbytes == 9 && (cleanData[0] == 0x01 || cleanData[0] == 0x03) && cleanData[1] == 0xFF)
+						{
+							cleanData[0] = 3;
+							num_to_write = 8;
+						}
+						
+						for (int i = 0; i < num_to_write; i++)
 						{
 							cleanData[j] = (tempData[offset + i] & 0xF0);
 							cleanData[j + 1] = (tempData[offset + i] << 4);
+							
 							j += 2;
 						}
 					}
@@ -319,7 +328,7 @@ void WiiSpy::debugSerial()
 		Serial.print(' ');
 		j += 2;
 	}
-	Serial.print('\n');
+	Serial.println();
 }
 
 void WiiSpy::updateState() {

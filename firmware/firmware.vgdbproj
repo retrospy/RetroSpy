@@ -172,11 +172,7 @@
         <string>unix.StdCLibraryFunctions</string>
         <string>unix.Vfork</string>
       </SelectedAnalyzers>
-      <ExtraArguments>
-        <string>-analyzer-store=region</string>
-        <string>-analyzer-opt-analyze-nested-blocks</string>
-        <string>-analyzer-eagerly-assume</string>
-      </ExtraArguments>
+      <ExtraArguments />
     </CodeAnalyzerSettings>
   </CodeSense>
   <Configurations>
@@ -246,7 +242,7 @@
         <Properties>
           <Entries />
         </Properties>
-        <DebugUnoptimizedComponentTypes>Sketch</DebugUnoptimizedComponentTypes>
+        <DebugUnoptimizedComponentTypes>None</DebugUnoptimizedComponentTypes>
       </BuildSettingsExtension>
     </VisualGDBConfiguration>
     <VisualGDBConfiguration>
@@ -335,7 +331,7 @@
             </KeyValue>
           </Entries>
         </Properties>
-        <DebugUnoptimizedComponentTypes>Sketch</DebugUnoptimizedComponentTypes>
+        <DebugUnoptimizedComponentTypes>None</DebugUnoptimizedComponentTypes>
       </BuildSettingsExtension>
     </VisualGDBConfiguration>
     <VisualGDBConfiguration>
@@ -460,6 +456,22 @@
         <TimestampProviderTicksPerSecond>0</TimestampProviderTicksPerSecond>
         <KeepConsoleAfterExit>false</KeepConsoleAfterExit>
         <UnusedStackFillPattern xsi:nil="true" />
+        <SoftwareTracingSettings>
+          <TraceWhileDebugging>false</TraceWhileDebugging>
+          <AutoStart>false</AutoStart>
+          <StaticTracePrograms xsi:type="InsideWorkArea" />
+          <DynamicProgramAreaSize>0</DynamicProgramAreaSize>
+          <SkipInitiallyDisabledTracepoints>false</SkipInitiallyDisabledTracepoints>
+          <TraceProgramOptimization>Size</TraceProgramOptimization>
+          <OutputMode>NonBlocking</OutputMode>
+          <AssumeFramePointerIsValid>true</AssumeFramePointerIsValid>
+          <InstrumentWithNoFeasibleTracepoints>false</InstrumentWithNoFeasibleTracepoints>
+          <MaximumStringLength>255</MaximumStringLength>
+          <DeferVectorTablePatching>true</DeferVectorTablePatching>
+          <ShowAdvancedConfiguration>true</ShowAdvancedConfiguration>
+          <WorkAreaSize>4096</WorkAreaSize>
+          <DisableLiveCodePatching>false</DisableLiveCodePatching>
+        </SoftwareTracingSettings>
         <CheckInterfaceDrivers>true</CheckInterfaceDrivers>
       </DebugSettingsOverride>
       <BuildSettingsExtension xsi:type="com.visualgdb.build.external.arduino.extension">
@@ -484,7 +496,7 @@
             </KeyValue>
           </Entries>
         </Properties>
-        <DebugUnoptimizedComponentTypes>Sketch</DebugUnoptimizedComponentTypes>
+        <DebugUnoptimizedComponentTypes>None</DebugUnoptimizedComponentTypes>
       </BuildSettingsExtension>
     </VisualGDBConfiguration>
     <VisualGDBConfiguration>
@@ -556,7 +568,7 @@
             </KeyValue>
           </Entries>
         </Properties>
-        <DebugUnoptimizedComponentTypes>Sketch</DebugUnoptimizedComponentTypes>
+        <DebugUnoptimizedComponentTypes>None</DebugUnoptimizedComponentTypes>
       </BuildSettingsExtension>
     </VisualGDBConfiguration>
     <VisualGDBConfiguration>
@@ -619,7 +631,7 @@
         <Properties>
           <Entries />
         </Properties>
-        <DebugUnoptimizedComponentTypes>Sketch</DebugUnoptimizedComponentTypes>
+        <DebugUnoptimizedComponentTypes>None</DebugUnoptimizedComponentTypes>
       </BuildSettingsExtension>
     </VisualGDBConfiguration>
     <VisualGDBConfiguration>
@@ -699,7 +711,7 @@
             </KeyValue>
           </Entries>
         </Properties>
-        <DebugUnoptimizedComponentTypes>Sketch</DebugUnoptimizedComponentTypes>
+        <DebugUnoptimizedComponentTypes>None</DebugUnoptimizedComponentTypes>
       </BuildSettingsExtension>
     </VisualGDBConfiguration>
     <VisualGDBConfiguration>
@@ -779,7 +791,7 @@
             </KeyValue>
           </Entries>
         </Properties>
-        <DebugUnoptimizedComponentTypes>Sketch</DebugUnoptimizedComponentTypes>
+        <DebugUnoptimizedComponentTypes>None</DebugUnoptimizedComponentTypes>
       </BuildSettingsExtension>
     </VisualGDBConfiguration>
     <VisualGDBConfiguration>
@@ -888,7 +900,7 @@
             </KeyValue>
           </Entries>
         </Properties>
-        <DebugUnoptimizedComponentTypes>Sketch</DebugUnoptimizedComponentTypes>
+        <DebugUnoptimizedComponentTypes>None</DebugUnoptimizedComponentTypes>
       </BuildSettingsExtension>
     </VisualGDBConfiguration>
     <VisualGDBConfiguration>
@@ -972,7 +984,7 @@
             </KeyValue>
           </Entries>
         </Properties>
-        <DebugUnoptimizedComponentTypes>Sketch</DebugUnoptimizedComponentTypes>
+        <DebugUnoptimizedComponentTypes>None</DebugUnoptimizedComponentTypes>
       </BuildSettingsExtension>
     </VisualGDBConfiguration>
     <VisualGDBConfiguration>
@@ -1106,7 +1118,7 @@
             </KeyValue>
           </Entries>
         </Properties>
-        <DebugUnoptimizedComponentTypes>Sketch</DebugUnoptimizedComponentTypes>
+        <DebugUnoptimizedComponentTypes>None</DebugUnoptimizedComponentTypes>
       </BuildSettingsExtension>
     </VisualGDBConfiguration>
   </Configurations>

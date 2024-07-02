@@ -33,7 +33,9 @@ class DreamcastSpy : public ControllerSpy {
 public:
 	void setup();
 	FASTRUN void loop();
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 	FASTRUN void loop1();
+#endif
 	FASTRUN void writeSerial();
 	FASTRUN void debugSerial();
 	FASTRUN void updateState();
