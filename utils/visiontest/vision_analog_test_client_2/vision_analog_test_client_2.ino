@@ -32,75 +32,75 @@ void setup()
     pinMode(A0, INPUT);
 
     Serial.begin(115200);
-Serial.println("here2");
+
     while(!Serial);
 }
 
-static bool failure = true;
 static byte switches;
 
 void loop()
 {
   while(true)
   {
-    Serial.println("waiting for latch");
     pinMode(12, INPUT);
     WAIT_LEADING_EDGEB(12);
-    Serial.println("latch triggered");
     pinMode(12, OUTPUT);
     digitalWriteFast(12, LOW);
     
-//    bool didFail = false;
-//    //noInterrupts();
-    for(int i = 0; i < 2048; ++i)
+    bool didFail = false;
+
+    for(int i = 0; i < 65536; ++i)
     { 
-      Serial.println("waiting on clock");
+   
+      if (i != 0)
+      {
+        interrupts();
+        Serial.print(didFail ? 0 : 1);
+        Serial.print(",");
+        switches = 0;
+        switches = (~PINC >> 1) & 0x1F;
+        Serial.println(switches);
+      }
+      
+      //noInterrupts();
       int val = 0;
       while( digitalReadFast(5) == HIGH ){} while( digitalReadFast(5) == LOW ){}
-      Serial.println("clock triggered");
       digitalWriteFast(12, HIGH);
+      delay(1);
+      digitalWriteFast(12, LOW);
+  
+      if ((i % 2048) >= 1024)
+        val = (i % 2048) - 1024;
+      else
+        val = i % 2048;
+
+      int analogval = analogRead(A0);
+      if (analogval > 500)
+      { 
+        val |= 1024;
+      }
+
+
+      if ((val & 1024) != ((i % 2048) & 1024))
+      {
+        interrupts();  
+        Serial.print(0);
+        Serial.print(",");
+        switches = 0;
+        switches = (~PINC >> 1) & 0x1F;
+        Serial.println(switches);
+        didFail = true;
+      }
     }
-//      
-//      switches = 0;
-//      switches = (~PINC >> 1) & 0x1F;
-//  
-//      if (i >= 1024)
-//        val = i - 1024;
-//      else
-//        val = i;
-//
-//      int analogval = analogRead(A0);
-//      if (analogval > 500)
-//      { 
-//        val |= 1024;
-//      }
-//
-//
-//       Serial.print(i);
-//       Serial.print(",");
-//       Serial.print(val);
-//       Serial.print(",");
-//       Serial.println(switches);
-//    
-//      if ((val & 1024) != (i & 1024))
-//      {
-//        interrupts();
-//        
-//        Serial.print(0);
-//        Serial.print(",");
-//        Serial.println(switches);
-//        failure = true;
-//        didFail = true;
-//      }
+    interrupts();
+
+    if (!didFail)
+    {
+      Serial.print(1);
+      Serial.print(",");
+      switches = 0;
+      switches = (~PINC >> 1) & 0x1F;
+      Serial.println(switches);
     }
-//    interrupts();
-//
-//    if (!didFail)
-//    {
-//      failure = false;
-//      Serial.print(1);
-//      Serial.print(",");
-//      Serial.println(switches);
-//    }
-//  }
+  }
 }
