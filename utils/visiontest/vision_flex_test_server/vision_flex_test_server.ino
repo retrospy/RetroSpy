@@ -31,11 +31,16 @@ void setup()
   Serial.begin(115200);
 }
 
+bool slowMode = false;
+
 void loop()
 {
   int r = 0;
   while (true)
   {
+  	if (digitalRead(11) == LOW)
+  		slowMode = true;
+	
     //Serial.print("here :");
     //Serial.println(r++);
 
@@ -66,13 +71,13 @@ void loop()
       digitalWrite(0,  (i & 0b0000000000000001) != 0 ? HIGH : LOW);
 
       digitalWrite(10, HIGH);
-      if (digitalRead(11) == HIGH)
+      if (!slowMode)
         delayMicroseconds(25);
       else
         delay(1);
       
       digitalWrite(10, LOW);
-      if (digitalRead(11) == HIGH)
+      if (!slowMode)
         delayMicroseconds(25);
       else
         delay(1);
