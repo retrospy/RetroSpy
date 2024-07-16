@@ -25,6 +25,28 @@ using System.Threading.Tasks;
 
 namespace GBPUpdaterX2
 {
+    public class ThreadSafeStringBuilder
+    {
+        private readonly StringBuilder _stringBuilder = new StringBuilder();
+        private readonly object _lockObject = new object();
+
+        public void AppendLine(string value)
+        {
+            lock (_lockObject)
+            {
+                _stringBuilder.AppendLine(value);
+            }
+        }
+
+        public override string ToString()
+        {
+            lock (_lockObject)
+            {
+                return _stringBuilder.ToString();
+            }
+        }
+    }
+
     public partial class MainWindow : Window
     {
         private readonly DispatcherTimer _portListUpdateTimer;
@@ -410,8 +432,8 @@ namespace GBPUpdaterX2
                 Environment.Exit(0);
             };
 
-            SerialNumberLabel.IsVisible = true;
-            txtboxSerialNumber.IsVisible = true;
+            SerialNumberLabel.IsVisible = false;
+            txtboxSerialNumber.IsVisible = false;
             List<string> devices = new()
             {
                 "RetroSpy Pixel",
@@ -451,8 +473,8 @@ namespace GBPUpdaterX2
         {
             if (DeviceComboBox.SelectedIndex == ((int)Devices.PIXEL))
             {
-                SerialNumberLabel.IsVisible = true;
-                txtboxSerialNumber.IsVisible = true;
+                SerialNumberLabel.IsVisible = false;
+                txtboxSerialNumber.IsVisible = false;
             }
             else
             {
@@ -621,76 +643,8 @@ namespace GBPUpdaterX2
                         txtboxData.CaretIndex = int.MaxValue;
                     });
 
-                    ProcessStartInfo processInfo;
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        processInfo = new ProcessStartInfo("cmd.exe",
-                            "/c avrdude.exe -Cavrdude.conf -v -patmega328p -carduino -P" + gbpemuPort +
-                            string.Format(" -b{0} -D -Uflash:w:firmware{1}.ino.hex:i",
-                                serialNumber < 100007 || serialNumber >= 100247 ? "115200" : "57600", 
-                                serialNumber < 100007 || serialNumber >= 100247 ? "" : "-old"))
-                        {
-                            CreateNoWindow = true,
-                            UseShellExecute = false,
-                            RedirectStandardError = true,
-                            RedirectStandardOutput = true,
-                            WorkingDirectory = tempDirectory
-                        };
-                    }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    {
-                        processInfo = new ProcessStartInfo("chmod",
-                            "755 " + Path.Join(tempDirectory, "avrdude"))
-                        {
-                            CreateNoWindow = true,
-                            UseShellExecute = false
-                        };
-                        Process? p1 = Process.Start(processInfo);
-                        p1?.WaitForExit();
-
-                        processInfo = new ProcessStartInfo(Path.Join(tempDirectory, "avrdude"),
-                            "-v -patmega328p -carduino -P" + gbpemuPort +
-                            string.Format(" -b{0} -D -Uflash:w:firmware{1}.ino.hex:i",
-                                serialNumber < 100007 || serialNumber >= 100247 ? "115200" : "57600",
-                                serialNumber < 100007 || serialNumber >= 100247 ? "" : "-old"))
-                        {
-                            CreateNoWindow = true,
-                            UseShellExecute = false,
-                            RedirectStandardError = true,
-                            RedirectStandardOutput = true,
-                            WorkingDirectory = tempDirectory
-                        };
-                    }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    {
-                        processInfo = new ProcessStartInfo("avrdude",
-                            "-v -patmega328p -carduino -P" + gbpemuPort +
-                            string.Format(" -b{0} -D -Uflash:w:firmware{1}.ino.hex:i",
-                                serialNumber < 100007 || serialNumber >= 100247 ? "115200" : "57600",
-                                serialNumber < 100007 || serialNumber >= 100247 ? "" : "-old"))
-                        {
-                            CreateNoWindow = true,
-                            UseShellExecute = false,
-                            RedirectStandardError = true,
-                            RedirectStandardOutput = true,
-                            WorkingDirectory = tempDirectory
-                        };
-                    }
-                    else
-                    {
-                        throw new PlatformNotSupportedException();
-                    }
-
-                    StringBuilder sb = new();
-                    Process? p = Process.Start(processInfo);
-                    if (p != null)
-                    {
-                        p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
-                        p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
-                        p.BeginOutputReadLine();
-                        p.BeginErrorReadLine();
-                        p.WaitForExit();
-                    }
+                    ThreadSafeStringBuilder sb = new ThreadSafeStringBuilder();
+                    sb = UpdateWithAvrDude(tempDirectory, "firmware", gbpemuPort, sb);
 
                     Dispatcher.UIThread.Post(async () =>
                     {
@@ -700,7 +654,7 @@ namespace GBPUpdaterX2
 
                         try
                         {
-                            if (sb.ToString().Contains("attempt 10 of 10"))
+                            if (sb.ToString().Contains("stk500_getsync() attempt 1 of 10: not in sync:"))
                                 throw new Exception("Updating Failed.");
 
                             var m = MsBox.Avalonia.MessageBoxManager
@@ -734,6 +688,103 @@ namespace GBPUpdaterX2
                 });
 
             }
+        }
+
+        static ThreadSafeStringBuilder UpdateWithAvrDude(string tempDirectory, string filename, string port, ThreadSafeStringBuilder sb)
+        {
+            string[] baudRate = { "115200", "57600" };
+            string[] suffix = { "", "-old" };
+
+            for (int i = 0; i < 2; ++i)
+            {
+                ProcessStartInfo processInfo;
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    processInfo = new ProcessStartInfo("cmd.exe",
+                        "/c avrdude.exe -Cavrdude.conf -v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:{1}{2}.ino.hex:i",
+                            baudRate[i],
+                            filename,
+                            suffix[i]))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    processInfo = new ProcessStartInfo("chmod",
+                        "755 " + Path.Join(tempDirectory, "avrdude"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false
+                    };
+                    Process? p1 = Process.Start(processInfo);
+                    p1?.WaitForExit();
+
+                    processInfo = new ProcessStartInfo(Path.Join(tempDirectory, "avrdude"),
+                        "-v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:{1}{2}.ino.hex:i",
+                            baudRate[i],
+                            filename,
+                            suffix[i]))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    processInfo = new ProcessStartInfo("avrdude",
+                        "-v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:{1}{2}.ino.hex:i",
+                            baudRate[i],
+                            filename,
+                            suffix[i]))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else
+                {
+                    throw new PlatformNotSupportedException();
+                }
+
+                sb = new();
+                bool tryAgain = false;
+                Process? p = Process.Start(processInfo);
+                if (p != null)
+                {
+                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.BeginOutputReadLine();
+                    p.BeginErrorReadLine();
+                    while (!p.HasExited)
+                    {
+                        if (sb.ToString().Contains("stk500_getsync() attempt 1 of 10: not in sync:"))
+                        {
+                            p.Kill();
+                            tryAgain = true;
+                            break;
+                        }
+                    }
+                    p.WaitForExit();
+                    if (!tryAgain)
+                        break;
+                }
+            }
+
+            return sb;
         }
 
         private void UpdateVisionThread()
@@ -784,70 +835,8 @@ namespace GBPUpdaterX2
                     txtboxData.CaretIndex = int.MaxValue;
                 });
 
-                ProcessStartInfo processInfo;
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    processInfo = new ProcessStartInfo("cmd.exe",
-                        "/c avrdude.exe -Cavrdude.conf -v -patmega328p -carduino -P" + port +
-                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    processInfo = new ProcessStartInfo("chmod",
-                        "755 " + Path.Join(tempDirectory, "avrdude"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false
-                    };
-                    Process? p1 = Process.Start(processInfo);
-                    p1?.WaitForExit();
-
-                    processInfo = new ProcessStartInfo(Path.Join(tempDirectory, "avrdude"),
-                        "-v -patmega328p -carduino -P" + port +
-                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    processInfo = new ProcessStartInfo("avrdude",
-                        "-v -patmega328p -carduino -P" + port +
-                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else
-                {
-                    throw new PlatformNotSupportedException();
-                }
-
-                StringBuilder sb = new();
-                Process? p = Process.Start(processInfo);
-                if (p != null)
-                {
-                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
-                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
-                    p.BeginOutputReadLine();
-                    p.BeginErrorReadLine();
-                    p.WaitForExit();
-                }
+                ThreadSafeStringBuilder sb = new ThreadSafeStringBuilder();
+                sb = UpdateWithAvrDude(tempDirectory, "firmware", port, sb);
 
                 Dispatcher.UIThread.Post(async () =>
                 {
@@ -1417,70 +1406,8 @@ namespace GBPUpdaterX2
                     txtboxData.CaretIndex = int.MaxValue;
                 });
 
-                ProcessStartInfo processInfo;
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    processInfo = new ProcessStartInfo("cmd.exe",
-                        "/c avrdude.exe -Cavrdude.conf -v -patmega328p -carduino -P" + port +
-                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    processInfo = new ProcessStartInfo("chmod",
-                        "755 " + Path.Join(tempDirectory, "avrdude"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false
-                    };
-                    Process? p1 = Process.Start(processInfo);
-                    p1?.WaitForExit();
-
-                    processInfo = new ProcessStartInfo(Path.Join(tempDirectory, "avrdude"),
-                        "-v -patmega328p -carduino -P" + port +
-                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    processInfo = new ProcessStartInfo("avrdude",
-                        "-v -patmega328p -carduino -P" + port +
-                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else
-                {
-                    throw new PlatformNotSupportedException();
-                }
-
-                StringBuilder sb = new();
-                Process? p = Process.Start(processInfo);
-                if (p != null)
-                {
-                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
-                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
-                    p.BeginOutputReadLine();
-                    p.BeginErrorReadLine();
-                    p.WaitForExit();
-                }
+                ThreadSafeStringBuilder sb = new ThreadSafeStringBuilder();
+                sb = UpdateWithAvrDude(tempDirectory, "firmware", port, sb);
 
                 Dispatcher.UIThread.Post(() =>
                 {
@@ -1492,69 +1419,8 @@ namespace GBPUpdaterX2
                     txtboxData.CaretIndex = int.MaxValue;
                 });
 
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    processInfo = new ProcessStartInfo("cmd.exe",
-                        "/c avrdude.exe -Cavrdude.conf -v -patmega328p -carduino -P" + port2 +
-                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    processInfo = new ProcessStartInfo("chmod",
-                        "755 " + Path.Join(tempDirectory, "avrdude"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false
-                    };
-                    Process? p1 = Process.Start(processInfo);
-                    p1?.WaitForExit();
-
-                    processInfo = new ProcessStartInfo(Path.Join(tempDirectory, "avrdude"),
-                        "-v -patmega328p -carduino -P" + port2 +
-                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    processInfo = new ProcessStartInfo("avrdude",
-                        "-v -patmega328p -carduino -P" + port2 +
-                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else
-                {
-                    throw new PlatformNotSupportedException();
-                }
-
-                sb = new();
-                p = Process.Start(processInfo);
-                if (p != null)
-                {
-                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
-                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
-                    p.BeginOutputReadLine();
-                    p.BeginErrorReadLine();
-                    p.WaitForExit();
-                }
+                sb = new ThreadSafeStringBuilder();
+                sb = UpdateWithAvrDude(tempDirectory, "firmware", port2!, sb);
 
                 Dispatcher.UIThread.Post(async () =>
                 {
@@ -1643,70 +1509,8 @@ namespace GBPUpdaterX2
                     txtboxData.CaretIndex = int.MaxValue;
                 });
 
-                ProcessStartInfo processInfo;
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    processInfo = new ProcessStartInfo("cmd.exe",
-                        "/c avrdude.exe -Cavrdude.conf -v -patmega328p -carduino -P" + port +
-                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    processInfo = new ProcessStartInfo("chmod",
-                        "755 " + Path.Join(tempDirectory, "avrdude"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false
-                    };
-                    Process? p1 = Process.Start(processInfo);
-                    p1?.WaitForExit();
-
-                    processInfo = new ProcessStartInfo(Path.Join(tempDirectory, "avrdude"),
-                        "-v -patmega328p -carduino -P" + port +
-                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    processInfo = new ProcessStartInfo("avrdude",
-                        "-v -patmega328p -carduino -P" + port +
-                        string.Format(" -b{0} -D -Uflash:w:firmware.ino.hex:i", "57600"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else
-                {
-                    throw new PlatformNotSupportedException();
-                }
-
-                StringBuilder sb = new();
-                Process? p = Process.Start(processInfo);
-                if (p != null)
-                {
-                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
-                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
-                    p.BeginOutputReadLine();
-                    p.BeginErrorReadLine();
-                    p.WaitForExit();
-                }
+                ThreadSafeStringBuilder sb = new ThreadSafeStringBuilder();
+                sb = UpdateWithAvrDude(tempDirectory, "firmware", port, sb);
 
                 Dispatcher.UIThread.Post(async () =>
                 {
@@ -1801,70 +1605,8 @@ namespace GBPUpdaterX2
                     txtboxData.CaretIndex = int.MaxValue;
                 });
 
-                ProcessStartInfo processInfo;
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    processInfo = new ProcessStartInfo("cmd.exe",
-                        "/c avrdude.exe -Cavrdude.conf -v -patmega328p -carduino -P" + port +
-                        string.Format(" -b{0} -D -Uflash:w:firmware_1.ino.hex:i", "115200"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    processInfo = new ProcessStartInfo("chmod",
-                        "755 " + Path.Join(tempDirectory, "avrdude"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false
-                    };
-                    Process? p1 = Process.Start(processInfo);
-                    p1?.WaitForExit();
-
-                    processInfo = new ProcessStartInfo(Path.Join(tempDirectory, "avrdude"),
-                        "-v -patmega328p -carduino -P" + port +
-                        string.Format(" -b{0} -D -Uflash:w:firmware_1.ino.hex:i", "115200"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    processInfo = new ProcessStartInfo("avrdude",
-                        "-v -patmega328p -carduino -P" + port +
-                        string.Format(" -b{0} -D -Uflash:w:firmware_1.ino.hex:i", "115200"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else
-                {
-                    throw new PlatformNotSupportedException();
-                }
-
-                StringBuilder sb = new();
-                Process? p = Process.Start(processInfo);
-                if (p != null)
-                {
-                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
-                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
-                    p.BeginOutputReadLine();
-                    p.BeginErrorReadLine();
-                    p.WaitForExit();
-                }
+                ThreadSafeStringBuilder sb = new ThreadSafeStringBuilder();
+                sb = UpdateWithAvrDude(tempDirectory, "firmware_1", port, sb);
 
                 Dispatcher.UIThread.Post(() =>
                 {
@@ -1876,69 +1618,8 @@ namespace GBPUpdaterX2
                     txtboxData.CaretIndex = int.MaxValue;
                 });
 
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    processInfo = new ProcessStartInfo("cmd.exe",
-                        "/c avrdude.exe -Cavrdude.conf -v -patmega328p -carduino -P" + port2 +
-                        string.Format(" -b{0} -D -Uflash:w:firmware_2.ino.hex:i", "115200"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    processInfo = new ProcessStartInfo("chmod",
-                        "755 " + Path.Join(tempDirectory, "avrdude"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false
-                    };
-                    Process? p1 = Process.Start(processInfo);
-                    p1?.WaitForExit();
-
-                    processInfo = new ProcessStartInfo(Path.Join(tempDirectory, "avrdude"),
-                        "-v -patmega328p -carduino -P" + port2 +
-                        string.Format(" -b{0} -D -Uflash:w:firmware_2.ino.hex:i", "115200"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    processInfo = new ProcessStartInfo("avrdude",
-                        "-v -patmega328p -carduino -P" + port2 +
-                        string.Format(" -b{0} -D -Uflash:w:firmware_2.ino.hex:i", "115200"))
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true,
-                        WorkingDirectory = tempDirectory
-                    };
-                }
-                else
-                {
-                    throw new PlatformNotSupportedException();
-                }
-
-                sb = new();
-                p = Process.Start(processInfo);
-                if (p != null)
-                {
-                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
-                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
-                    p.BeginOutputReadLine();
-                    p.BeginErrorReadLine();
-                    p.WaitForExit();
-                }
+                sb = new ThreadSafeStringBuilder();
+                sb = UpdateWithAvrDude(tempDirectory, "firmware_2", port2!, sb);
 
                 Dispatcher.UIThread.Post(async () =>
                 {

@@ -65,6 +65,22 @@ if exist "..\..\..\Firmware\Vision_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*#define.*RS_VISION/\/\/#define RS_VISION/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
+  del ..\..\..\..\Vision_Firmware\firmware-old.ino.hex
+  copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\Vision_Firmware\firmware-old.ino.hex
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  cd ..
+  if %ERRORLEVEL% NEQ 0 goto :fail
+)
+
+if exist "..\..\..\Firmware\Vision_Firmware\" (
+  cd firmware
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  ..\sed -i "s/.*\/\/#define.*RS_VISION$/#define RS_VISION/" sketches\common.h
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=arduino:avr:nano:cpu=atmega328 -build-path D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools "C:/Program Files (x86)/Arduino/hardware/tools/avr" -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  ..\sed -i "s/.*#define.*RS_VISION/\/\/#define RS_VISION/" sketches\common.h
+  if %ERRORLEVEL% NEQ 0 goto :fail
   del ..\..\..\..\Vision_Firmware\firmware.ino.hex
   copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\Vision_Firmware\firmware.ino.hex
   if %ERRORLEVEL% NEQ 0 goto :fail
@@ -97,6 +113,22 @@ if exist "..\..\..\Firmware\CV_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*#define.*RS_VISION_COLECOVISION/\/\/#define RS_VISION_COLECOVISION/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
+  del ..\..\..\..\CV_Firmware\firmware-old.ino.hex
+  copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\CV_Firmware\firmware-old.ino.hex
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  cd ..
+  if %ERRORLEVEL% NEQ 0 goto :fail
+)
+
+if exist "..\..\..\Firmware\CV_Firmware\" (
+  cd firmware
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  ..\sed -i "s/.*\/\/#define.*RS_VISION_COLECOVISION/#define RS_VISION_COLECOVISION/" sketches\common.h
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=arduino:avr:nano:cpu=atmega328 -build-path D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools "C:/Program Files (x86)/Arduino/hardware/tools/avr" -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  ..\sed -i "s/.*#define.*RS_VISION_COLECOVISION/\/\/#define RS_VISION_COLECOVISION/" sketches\common.h
+  if %ERRORLEVEL% NEQ 0 goto :fail
   del ..\..\..\..\CV_Firmware\firmware.ino.hex
   copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\CV_Firmware\firmware.ino.hex
   if %ERRORLEVEL% NEQ 0 goto :fail
@@ -110,6 +142,22 @@ if exist "..\..\..\Firmware\ADB_Firmware\" (
   ..\sed -i "s/.*\/\/#define.*RS_VISION_PIPPIN/#define RS_VISION_PIPPIN/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
   C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=arduino:avr:nano:cpu=atmega328old -build-path D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools "C:/Program Files (x86)/Arduino/hardware/tools/avr" -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  ..\sed -i "s/.*#define.*RS_VISION_PIPPIN/\/\/#define RS_VISION_PIPPIN/" sketches\common.h
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  del ..\..\..\..\ADB_Firmware\firmware-old.ino.hex
+  copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\ADB_Firmware\firmware-old.ino.hex
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  cd ..
+  if %ERRORLEVEL% NEQ 0 goto :fail
+)
+
+if exist "..\..\..\Firmware\ADB_Firmware\" (
+  cd firmware
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  ..\sed -i "s/.*\/\/#define.*RS_VISION_PIPPIN/#define RS_VISION_PIPPIN/" sketches\common.h
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=arduino:avr:nano:cpu=atmega328 -build-path D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools "C:/Program Files (x86)/Arduino/hardware/tools/avr" -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*#define.*RS_VISION_PIPPIN/\/\/#define RS_VISION_PIPPIN/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
@@ -161,7 +209,7 @@ if exist "..\..\..\Firmware\Analog_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*#define.*RS_VISION_ANALOG_1/\/\/#define RS_VISION_ANALOG_1/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
-  del ..\..\..\..\Analog_Firmware\firmware.ino.hex
+  del ..\..\..\..\Analog_Firmware\firmware_1.ino.hex
   copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\Analog_Firmware\firmware_1.ino.hex
   if %ERRORLEVEL% NEQ 0 goto :fail
   
@@ -171,8 +219,34 @@ if exist "..\..\..\Firmware\Analog_Firmware\" (
   if %ERRORLEVEL% NEQ 0 goto :fail
   ..\sed -i "s/.*#define.*RS_VISION_ANALOG_2/\/\/#define RS_VISION_ANALOG_2/" sketches\common.h
   if %ERRORLEVEL% NEQ 0 goto :fail
-  del ..\..\..\..\Analog_Firmware\firmware.ino.hex
+  del ..\..\..\..\Analog_Firmware\firmware_2.ino.hex
   copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\Analog_Firmware\firmware_2.ino.hex
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  cd ..
+  if %ERRORLEVEL% NEQ 0 goto :fail
+)
+
+if exist "..\..\..\Firmware\Analog_Firmware\" (
+  cd firmware
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  ..\sed -i "s/.*\/\/#define.*RS_VISION_ANALOG_1/#define RS_VISION_ANALOG_1/" sketches\common.h
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=arduino:avr:nano:cpu=atmega328old -build-path D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools "C:/Program Files (x86)/Arduino/hardware/tools/avr" -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  ..\sed -i "s/.*#define.*RS_VISION_ANALOG_1/\/\/#define RS_VISION_ANALOG_1/" sketches\common.h
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  del ..\..\..\..\Analog_Firmware\firmware-old.ino.hex
+  copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\Analog_Firmware\firmware_1-old.ino.hex
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  
+  ..\sed -i "s/.*\/\/#define.*RS_VISION_ANALOG_2/#define RS_VISION_ANALOG_2/" sketches\common.h
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\arduino-builder.exe -compile -logger=machine -fqbn=arduino:avr:nano:cpu=atmega328old -build-path D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release -verbose -hardware "C:/Program Files (x86)/Arduino/hardware" -tools "C:/Program Files (x86)/Arduino/tools-builder" -tools "C:/Program Files (x86)/Arduino/hardware/tools/avr" -built-in-libraries "C:/Program Files (x86)/Arduino/libraries" -libraries C:\Users\Administrator\Documents/Arduino/Libraries -prefs=runtime.tools.ctags.path=C:\Users\Administrator\AppData\Local\VisualGDB\Arduino\tools-builder\ctags\5.8-arduino11 sketches/firmware.ino
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  ..\sed -i "s/.*#define.*RS_VISION_ANALOG_2/\/\/#define RS_VISION_ANALOG_2/" sketches\common.h
+  if %ERRORLEVEL% NEQ 0 goto :fail
+  del ..\..\..\..\Analog_Firmware\firmware-old.ino.hex
+  copy D:\src\Repos\retrospy\RetroSpy\firmware\Output\Arduino_Nano\Release\firmware.ino.hex ..\..\..\..\Firmware\Analog_Firmware\firmware_2-old.ino.hex
   if %ERRORLEVEL% NEQ 0 goto :fail
   cd ..
   if %ERRORLEVEL% NEQ 0 goto :fail
@@ -344,6 +418,8 @@ if %ERRORLEVEL% NEQ 0 goto :fail
 if %ERRORLEVEL% NEQ 0 goto :fail
 "C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Firmware\Vision_Firmware\firmware.ino.hex
 if %ERRORLEVEL% NEQ 0 goto :fail
+"C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Firmware\Vision_Firmware\firmware-old.ino.hex
+if %ERRORLEVEL% NEQ 0 goto :fail
 "C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Firmware\Vision_Firmware\libusb0.dll
 if %ERRORLEVEL% NEQ 0 goto :fail
 "C:\Program Files\7-Zip\7z.exe" a Vision_Firmware.zip ..\..\..\Firmware\Vision_Firmware\avrdude
@@ -382,6 +458,8 @@ if %ERRORLEVEL% NEQ 0 goto :fail
 if %ERRORLEVEL% NEQ 0 goto :fail
 "C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\Firmware\CV_Firmware\firmware.ino.hex
 if %ERRORLEVEL% NEQ 0 goto :fail
+"C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\Firmware\CV_Firmware\firmware-old.ino.hex
+if %ERRORLEVEL% NEQ 0 goto :fail
 "C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\Firmware\CV_Firmware\libusb0.dll
 if %ERRORLEVEL% NEQ 0 goto :fail
 "C:\Program Files\7-Zip\7z.exe" a CV_Firmware.zip ..\..\..\Firmware\CV_Firmware\avrdude
@@ -405,6 +483,8 @@ if %ERRORLEVEL% NEQ 0 goto :fail
 "C:\Program Files\7-Zip\7z.exe" a ADB_Firmware.zip ..\..\..\Firmware\ADB_Firmware\avrdude.conf
 if %ERRORLEVEL% NEQ 0 goto :fail
 "C:\Program Files\7-Zip\7z.exe" a ADB_Firmware.zip ..\..\..\Firmware\ADB_Firmware\firmware.ino.hex
+if %ERRORLEVEL% NEQ 0 goto :fail
+"C:\Program Files\7-Zip\7z.exe" a ADB_Firmware.zip ..\..\..\Firmware\ADB_Firmware\firmware-old.ino.hex
 if %ERRORLEVEL% NEQ 0 goto :fail
 "C:\Program Files\7-Zip\7z.exe" a ADB_Firmware.zip ..\..\..\Firmware\ADB_Firmware\libusb0.dll
 if %ERRORLEVEL% NEQ 0 goto :fail
@@ -454,9 +534,13 @@ if %ERRORLEVEL% NEQ 0 goto :fail
 "C:\Program Files\7-Zip\7z.exe" a Analog_Firmware.zip ..\..\..\Firmware\Analog_Firmware\avrdude.conf
 if %ERRORLEVEL% NEQ 0 goto :fail
 "C:\Program Files\7-Zip\7z.exe" a Analog_Firmware.zip ..\..\..\Firmware\Analog_Firmware\firmware_1.ino.hex
-if %ERRORLEVEL% NEQ 0 goto :
+if %ERRORLEVEL% NEQ 0 goto :fail
 "C:\Program Files\7-Zip\7z.exe" a Analog_Firmware.zip ..\..\..\Firmware\Analog_Firmware\firmware_2.ino.hex
 if %ERRORLEVEL% NEQ 0 goto :fail
+"C:\Program Files\7-Zip\7z.exe" a Analog_Firmware.zip ..\..\..\Firmware\Analog_Firmware\firmware_1-old.ino.hex
+if %ERRORLEVEL% NEQ 0 goto :fail
+"C:\Program Files\7-Zip\7z.exe" a Analog_Firmware.zip ..\..\..\Firmware\Analog_Firmware\firmware_2-old.ino.hex
+if %ERRORLEVEL% NEQ 0 goto :fail+
 "C:\Program Files\7-Zip\7z.exe" a Analog_Firmware.zip ..\..\..\Firmware\Analog_Firmware\libusb0.dll
 if %ERRORLEVEL% NEQ 0 goto :fail
 "C:\Program Files\7-Zip\7z.exe" a Analog_Firmware.zip ..\..\..\Firmware\Analog_Firmware\avrdude
