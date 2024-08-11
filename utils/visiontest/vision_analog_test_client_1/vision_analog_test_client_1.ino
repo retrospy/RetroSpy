@@ -19,11 +19,10 @@ static int count = 0;
 
 void setup()
 {
-  Serial.println("here1");
-    count = 0;
+
     for(int i = 2; i < 13; ++i)
     {
-      pinMode(i, INPUT_PULLUP);
+      pinMode(i, INPUT);
     }
 
     for(int i = A1; i < A6; ++i)
@@ -33,7 +32,6 @@ void setup()
 
     Serial.begin(115200);
 
-    while(!Serial);
 }
 
 static byte switches;
@@ -50,7 +48,7 @@ void loop()
     
     bool didFail = false;
     
-    //noInterrupts();
+
     for(int i = 0; i < 65536; ++i)
     { 
       if (i != 0)
@@ -63,7 +61,7 @@ void loop()
         Serial.println(switches);
       }
       
-      //noInterrupts();
+	  noInterrupts();
       int val =  0;
       WAIT_LEADING_EDGEB(4);
 

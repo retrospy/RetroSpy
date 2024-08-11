@@ -16,16 +16,30 @@ static int count = 0;
 
 void setup()
 {
-    count = 0;
-    for(int i = 0; i < 19; ++i)
-    {
-      pinMode(i, INPUT_PULLUP);
-    }
+  for (int i = 0; i < 19; ++i)
+  {
+	if (i != 11)
+	{
+		pinMode(i, INPUT);
+		digitalWrite(i, LOW);
+	}
+  }
+  
+  pinMode(11, INPUT_PULLUP);
+  pinMode(19, INPUT_PULLUP);
+  pinMode(20, INPUT_PULLUP);
+  pinMode(26, INPUT_PULLUP);
+  pinMode(27, INPUT_PULLUP);  
 
-    pinMode(21, OUTPUT);
-    pinMode(22, OUTPUT);
+  pinMode(28, OUTPUT);
+  digitalWrite(28, LOW);
+  
+  pinMode(21, OUTPUT);
+  pinMode(22, OUTPUT);
+  digitalWrite(21, HIGH);
+  digitalWrite(22, HIGH);
 
-    delay(5000);
+  Serial.begin(115200);
 }
 
 void loop()

@@ -13,21 +13,27 @@ void setup()
 {
   for (int i = 0; i < 19; ++i)
   {
-    pinMode(i, OUTPUT);
-    digitalWrite(i, LOW);
+	if (i != 11)
+	{
+		pinMode(i, OUTPUT);
+		digitalWrite(i, LOW);
+	}
   }
 
   pinMode(11, INPUT_PULLUP);
   pinMode(19, INPUT_PULLUP);
   pinMode(20, INPUT_PULLUP);
-  pinMode(21, INPUT_PULLUP);
-  pinMode(16, INPUT_PULLUP);
+  pinMode(26, INPUT_PULLUP);
   pinMode(27, INPUT_PULLUP);  
 
+  pinMode(28, OUTPUT);
+  digitalWrite(28, LOW);
+  
   pinMode(21, OUTPUT);
   pinMode(22, OUTPUT);
   digitalWrite(21, HIGH);
   digitalWrite(22, LOW);
+  
   Serial.begin(115200);
 }
 
@@ -40,9 +46,6 @@ void loop()
   {
   	if (digitalRead(11) == LOW)
   		slowMode = true;
-	
-    //Serial.print("here :");
-    //Serial.println(r++);
 
     digitalWrite(9, HIGH);
     delay(1);

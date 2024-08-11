@@ -25,6 +25,28 @@ using System.Threading.Tasks;
 
 namespace VisionTester
 {
+    public class ThreadSafeStringBuilder
+    {
+        private readonly StringBuilder _stringBuilder = new StringBuilder();
+        private readonly object _lockObject = new object();
+
+        public void AppendLine(string value)
+        {
+            lock (_lockObject)
+            {
+                _stringBuilder.AppendLine(value);
+            }
+        }
+
+        public override string ToString()
+        {
+            lock (_lockObject)
+            {
+                return _stringBuilder.ToString();
+            }
+        }
+    }
+
     public partial class MainWindow : Window
     {
         private readonly DispatcherTimer _portListUpdateTimer;
@@ -388,6 +410,7 @@ namespace VisionTester
         public enum Devices
         {
             VISION_FLEX = 0,
+            VISION_ANALOG = 1
         }
 
 
@@ -406,6 +429,7 @@ namespace VisionTester
             List<string> devices = new()
             {
                 "RetroSpy Vision Flex",
+                "RetroSpy Vision Analog",
             };
 
             DeviceComboBox.ItemsSource = devices;
@@ -433,15 +457,26 @@ namespace VisionTester
                 COMPortLabel.IsVisible = true;
                 COMPortComboBox.IsVisible = true;
             }
+            else if (DeviceComboBox.SelectedIndex == ((int)Devices.VISION_ANALOG))
+            {
+                COMPortComboBox.SelectedIndex = 0;
+                COMPortLabel.IsVisible = true;
+                COMPortComboBox.IsVisible = true;
+                COMPortComboBox2.IsVisible = true;
+
+                COMPortLabel2.IsVisible = true;
+            }
             else
             {
                 COMPortLabel.IsVisible = false;
                 COMPortComboBox.IsVisible = false;
+                COMPortComboBox2.IsVisible = false;
+                COMPortLabel2.IsVisible = false;
             }
 
-            COMPortComboBox2.IsVisible = false;
             txtboxData.Margin = new Thickness(10, 55, 5, 0);
-            COMPortLabel2.IsVisible = false;
+
+
         }
 
 
@@ -569,228 +604,488 @@ namespace VisionTester
                     S8Green.IsVisible = false && LED8Master;
                 });
 
-                SerialPort? _serialPort = null;
+                if (DeviceComboBox.SelectedIndex == 1)
+                { 
+                    SerialPort? _serialPort = null;
+                    SerialPort? _serialPort2 = null;
 
-                string? port = (string?)COMPortComboBox.SelectedItem;
-                port ??= "No Arduino/Teensy Found";
+                    string? port = (string?)COMPortComboBox.SelectedItem;
+                    port ??= "No Arduino/Teensy Found";
 
-                using (_serialPort = new SerialPort(port != null ? port.Split(' ')[0] : "", 115200, Parity.None, 8, StopBits.One)
-                {
-                    Handshake = Handshake.None,
+                    string? port2 = (string?)COMPortComboBox2.SelectedItem;
+                    port2 ??= "No Arduino/Teensy Found";
 
-                    DtrEnable = true,
-                    ReadTimeout = 5000,
-                    WriteTimeout = 5000
-                })
-                {
-                    _serialPort.Open();
-
-                    while (testRunning && !isClosing)
+                    using (_serialPort = new SerialPort(port != null ? port.Split(' ')[0] : "", 115200, Parity.None, 8, StopBits.One)
                     {
-                        string message = _serialPort.ReadLine();
+                        Handshake = Handshake.None,
 
-                        var splits = message.Split(',');
-                        if (splits.Length != 2)
+                        DtrEnable = false,
+                        ReadTimeout = 5000,
+                        WriteTimeout = 5000
+                    })
+                    using (_serialPort2= new SerialPort(port2 != null ? port2.Split(' ')[0] : "", 115200, Parity.None, 8, StopBits.One)
+                    {
+                        Handshake = Handshake.None,
+
+                        DtrEnable = false,
+                        ReadTimeout = 5000,
+                        WriteTimeout = 5000
+                    })
+                    {
+                        _serialPort.Open();
+                        _serialPort2.Open();
+
+                        while (testRunning && !isClosing)
                         {
+                            string message = string.Empty;
+                            string message2 = string.Empty;
+                            do
+                            {
+
+
+                                try
+                                {
+                                    message = _serialPort.ReadLine();
+                                    message2 = _serialPort2.ReadLine();
+                                }
+                                catch (TimeoutException)
+                                {
+
+                                }
+                            }
+                            while (message == string.Empty || message2 == string.Empty);
+
+                            var splits = message.Split(',');
+                            var splits2 = message2.Split(',');
+
+                            if (splits.Length != 2 && splits2.Length != 2)
+                            {
+                                Dispatcher.UIThread.Post(() =>
+                                {
+                                    T1Red.IsVisible = true;
+                                    T1Green.IsVisible = false;
+
+                                    S1Red.IsVisible = true && LED1Master;
+                                    S1Green.IsVisible = false && LED1Master;
+                                    S2Red.IsVisible = true && LED2Master;
+                                    S2Green.IsVisible = false && LED2Master;
+                                    S3Red.IsVisible = true && LED3Master;
+                                    S3Green.IsVisible = false && LED3Master;
+                                    S4Red.IsVisible = true && LED4Master;
+                                    S4Green.IsVisible = false && LED4Master;
+                                    S5Red.IsVisible = true && LED5Master;
+                                    S5Green.IsVisible = false && LED5Master;
+                                    S6Red.IsVisible = true && LED6Master;
+                                    S6Green.IsVisible = false && LED6Master;
+                                    S7Red.IsVisible = true && LED7Master;
+                                    S7Green.IsVisible = false && LED7Master;
+                                    S8Red.IsVisible = true && LED8Master;
+                                    S8Green.IsVisible = false && LED8Master;
+                                });
+                                continue;
+                            }
+
+                            if (splits[0] == "1" && splits2[0] == "1")
+                            {
+                                Dispatcher.UIThread.Post(() =>
+                                {
+                                    T1Red.IsVisible = false;
+                                    T1Green.IsVisible = true;
+                                });
+                            }
+                            else
+                            {
+                                Dispatcher.UIThread.Post(() =>
+                                {
+                                    T1Red.IsVisible = true;
+                                    T1Green.IsVisible = false;
+                                });
+                            }
                             Dispatcher.UIThread.Post(() =>
                             {
-                                T1Red.IsVisible = true;
-                                T1Green.IsVisible = false;
 
-                                S1Red.IsVisible = true && LED1Master;
-                                S1Green.IsVisible = false && LED1Master;
-                                S2Red.IsVisible = true && LED2Master;
-                                S2Green.IsVisible = false && LED2Master;
-                                S3Red.IsVisible = true && LED3Master;
-                                S3Green.IsVisible = false && LED3Master;
-                                S4Red.IsVisible = true && LED4Master;
-                                S4Green.IsVisible = false && LED4Master;
-                                S5Red.IsVisible = true && LED5Master;
-                                S5Green.IsVisible = false && LED5Master;
-                                S6Red.IsVisible = true && LED6Master;
-                                S6Green.IsVisible = false && LED6Master;
-                                S7Red.IsVisible = true && LED7Master;
-                                S7Green.IsVisible = false && LED7Master;
-                                S8Red.IsVisible = true && LED8Master;
-                                S8Green.IsVisible = false && LED8Master;
-                            });
-                            continue;
-                        }
+                                if (int.TryParse(splits[1], CultureInfo.InvariantCulture, out int switches) && int.TryParse(splits2[1], CultureInfo.InvariantCulture, out int switches2))
+                                {
+                                    if ((switches & 0x01) == 0 && (switches2 & 0x01) == 0)
+                                    {
+                                        S1Red.IsVisible = true && LED1Master;
+                                        S1Green.IsVisible = false && LED1Master;
+                                    }
+                                    else
+                                    {
+                                        S1Red.IsVisible = false && LED1Master;
+                                        S1Green.IsVisible = true && LED1Master;
+                                    }
 
-                        if (splits[0] == "1")
-                        {
-                            Dispatcher.UIThread.Post(() =>
-                            {
-                                T1Red.IsVisible = false;
-                                T1Green.IsVisible = true;
-                            });
-                        }
-                        else
-                        {
-                            Dispatcher.UIThread.Post(() =>
-                            {
-                                T1Red.IsVisible = true;
-                                T1Green.IsVisible = false;
+                                    if ((switches & 0x02) == 0 && (switches2 & 0x02) == 0)
+                                    {
+                                        S2Red.IsVisible = true && LED2Master;
+                                        S2Green.IsVisible = false && LED2Master;
+                                    }
+                                    else
+                                    {
+                                        S2Red.IsVisible = false && LED2Master;
+                                        S2Green.IsVisible = true && LED2Master;
+                                    }
+
+                                    if ((switches & 0x04) == 0 && (switches2 & 0x04) == 0)
+                                    {
+                                        S3Red.IsVisible = true && LED3Master;
+                                        S3Green.IsVisible = false && LED3Master;
+                                    }
+                                    else
+                                    {
+                                        S3Red.IsVisible = false && LED3Master;
+                                        S3Green.IsVisible = true && LED3Master;
+                                    }
+
+                                    if ((switches & 0x08) == 0 && (switches2 & 0x08) == 0)
+                                    {
+                                        S4Red.IsVisible = true && LED4Master;
+                                        S4Green.IsVisible = false && LED4Master;
+                                    }
+                                    else
+                                    {
+                                        S4Red.IsVisible = false && LED4Master;
+                                        S4Green.IsVisible = true && LED4Master;
+                                    }
+
+                                    if ((switches & 0x10) == 0 && (switches2 & 0x10) == 0)
+                                    {
+                                        S5Red.IsVisible = true && LED5Master;
+                                        S5Green.IsVisible = false && LED5Master;
+                                    }
+                                    else
+                                    {
+                                        S5Red.IsVisible = false && LED5Master;
+                                        S5Green.IsVisible = true && LED5Master;
+                                    }
+
+                                    if ((switches & 0x20) == 0 && (switches2 & 0x20) == 0)
+                                    {
+                                        S6Red.IsVisible = true && LED6Master;
+                                        S6Green.IsVisible = false && LED6Master;
+                                    }
+                                    else
+                                    {
+                                        S6Red.IsVisible = false && LED6Master;
+                                        S6Green.IsVisible = true && LED6Master;
+                                    }
+
+                                    if ((switches & 0x40) == 0 && (switches2 & 0x40) == 0)
+                                    {
+                                        S7Red.IsVisible = true && LED7Master;
+                                        S7Green.IsVisible = false && LED7Master;
+                                    }
+                                    else
+                                    {
+                                        S7Red.IsVisible = false && LED7Master;
+                                        S7Green.IsVisible = true && LED7Master;
+                                    }
+
+                                    if ((switches & 0x80) == 0 && (switches2 & 0x80) == 0)
+                                    {
+                                        S8Red.IsVisible = true && LED8Master;
+                                        S8Green.IsVisible = false && LED8Master;
+                                    }
+                                    else
+                                    {
+                                        S8Red.IsVisible = false && LED8Master;
+                                        S8Green.IsVisible = true && LED8Master;
+                                    }
+                                }
+                                else
+                                {
+                                    S1Red.IsVisible = false;
+                                    S1Green.IsVisible = false;
+                                    S2Red.IsVisible = false;
+                                    S2Green.IsVisible = false;
+                                    S3Red.IsVisible = false;
+                                    S3Green.IsVisible = false;
+                                    S4Red.IsVisible = false;
+                                    S4Green.IsVisible = false;
+                                    S5Red.IsVisible = false;
+                                    S5Green.IsVisible = false;
+                                    S6Red.IsVisible = false;
+                                    S6Green.IsVisible = false;
+                                    S7Red.IsVisible = false;
+                                    S7Green.IsVisible = false;
+                                    S8Red.IsVisible = false;
+                                    S8Green.IsVisible = false;
+
+                                    LED1Master = true;
+                                    LED2Master = true;
+                                    LED3Master = true;
+                                    LED4Master = true;
+                                    LED5Master = true;
+                                    LED6Master = true;
+                                    LED7Master = true;
+                                    LED8Master = true;
+
+                                    return;
+                                }
+
+
                             });
                         }
                         Dispatcher.UIThread.Post(() =>
                         {
+                            loadTestProgramButton.IsEnabled = true;
+                            goButton.IsEnabled = true;
+                            testButton.Content = "Start Test";
+                            S1Red.IsVisible = false;
+                            S1Green.IsVisible = false;
+                            S2Red.IsVisible = false;
+                            S2Green.IsVisible = false;
+                            S3Red.IsVisible = false;
+                            S3Green.IsVisible = false;
+                            S4Red.IsVisible = false;
+                            S4Green.IsVisible = false;
+                            S5Red.IsVisible = false;
+                            S5Green.IsVisible = false;
+                            S6Red.IsVisible = false;
+                            S6Green.IsVisible = false;
+                            S7Red.IsVisible = false;
+                            S7Green.IsVisible = false;
+                            S8Red.IsVisible = false;
+                            S8Green.IsVisible = false;
 
-                            if (int.TryParse(splits[1], CultureInfo.InvariantCulture, out int switches))
+                            LED1Master = true;
+                            LED2Master = true;
+                            LED3Master = true;
+                            LED4Master = true;
+                            LED5Master = true;
+                            LED6Master = true;
+                            LED7Master = true;
+                            LED8Master = true;
+                        });
+                    }
+                }
+                else
+                {
+                    SerialPort? _serialPort = null;
+
+                    string? port = (string?)COMPortComboBox.SelectedItem;
+                    port ??= "No Arduino/Teensy Found";
+
+                    using (_serialPort = new SerialPort(port != null ? port.Split(' ')[0] : "", 115200, Parity.None, 8, StopBits.One)
+                    {
+                        Handshake = Handshake.None,
+
+                        DtrEnable = true,
+                        ReadTimeout = 5000,
+                        WriteTimeout = 5000
+                    })
+                    {
+                        _serialPort.Open();
+
+                        while (testRunning && !isClosing)
+                        {
+                            string message = _serialPort.ReadLine();
+
+                            var splits = message.Split(',');
+                            if (splits.Length != 2)
                             {
-                                if ((switches & 0x01) == 0)
+                                Dispatcher.UIThread.Post(() =>
                                 {
+                                    T1Red.IsVisible = true;
+                                    T1Green.IsVisible = false;
+
                                     S1Red.IsVisible = true && LED1Master;
                                     S1Green.IsVisible = false && LED1Master;
-                                }
-                                else
-                                {
-                                    S1Red.IsVisible = false && LED1Master;
-                                    S1Green.IsVisible = true && LED1Master;
-                                }
-
-                                if ((switches & 0x02) == 0)
-                                {
                                     S2Red.IsVisible = true && LED2Master;
                                     S2Green.IsVisible = false && LED2Master;
-                                }
-                                else
-                                {
-                                    S2Red.IsVisible = false && LED2Master;
-                                    S2Green.IsVisible = true && LED2Master;
-                                }
-
-                                if ((switches & 0x04) == 0)
-                                {
                                     S3Red.IsVisible = true && LED3Master;
                                     S3Green.IsVisible = false && LED3Master;
-                                }
-                                else
-                                {
-                                    S3Red.IsVisible = false && LED3Master;
-                                    S3Green.IsVisible = true && LED3Master;
-                                }
-
-                                if ((switches & 0x08) == 0)
-                                {
                                     S4Red.IsVisible = true && LED4Master;
                                     S4Green.IsVisible = false && LED4Master;
-                                }
-                                else
-                                {
-                                    S4Red.IsVisible = false && LED4Master;
-                                    S4Green.IsVisible = true && LED4Master;
-                                }
-
-                                if ((switches & 0x10) == 0)
-                                {
                                     S5Red.IsVisible = true && LED5Master;
                                     S5Green.IsVisible = false && LED5Master;
-                                }
-                                else
-                                {
-                                    S5Red.IsVisible = false && LED5Master;
-                                    S5Green.IsVisible = true && LED5Master;
-                                }
-
-                                if ((switches & 0x20) == 0)
-                                {
                                     S6Red.IsVisible = true && LED6Master;
                                     S6Green.IsVisible = false && LED6Master;
-                                }
-                                else
-                                {
-                                    S6Red.IsVisible = false && LED6Master;
-                                    S6Green.IsVisible = true && LED6Master;
-                                }
-
-                                if ((switches & 0x40) == 0)
-                                {
                                     S7Red.IsVisible = true && LED7Master;
                                     S7Green.IsVisible = false && LED7Master;
-                                }
-                                else
-                                {
-                                    S7Red.IsVisible = false && LED7Master;
-                                    S7Green.IsVisible = true && LED7Master;
-                                }
-
-                                if ((switches & 0x80) == 0)
-                                {
                                     S8Red.IsVisible = true && LED8Master;
                                     S8Green.IsVisible = false && LED8Master;
-                                }
-                                else
+                                });
+                                continue;
+                            }
+
+                            if (splits[0] == "1")
+                            {
+                                Dispatcher.UIThread.Post(() =>
                                 {
-                                    S8Red.IsVisible = false && LED8Master;
-                                    S8Green.IsVisible = true && LED8Master;
-                                }
+                                    T1Red.IsVisible = false;
+                                    T1Green.IsVisible = true;
+                                });
                             }
                             else
                             {
-                                S1Red.IsVisible = false;
-                                S1Green.IsVisible = false;
-                                S2Red.IsVisible = false;
-                                S2Green.IsVisible = false;
-                                S3Red.IsVisible = false;
-                                S3Green.IsVisible = false;
-                                S4Red.IsVisible = false;
-                                S4Green.IsVisible = false;
-                                S5Red.IsVisible = false;
-                                S5Green.IsVisible = false;
-                                S6Red.IsVisible = false;
-                                S6Green.IsVisible = false;
-                                S7Red.IsVisible = false;
-                                S7Green.IsVisible = false;
-                                S8Red.IsVisible = false;
-                                S8Green.IsVisible = false;
-
-                                LED1Master = true;
-                                LED2Master = true;
-                                LED3Master = true;
-                                LED4Master = true;
-                                LED5Master = true;
-                                LED6Master = true;
-                                LED7Master = true;
-                                LED8Master = true;
-
-                                return;
+                                Dispatcher.UIThread.Post(() =>
+                                {
+                                    T1Red.IsVisible = true;
+                                    T1Green.IsVisible = false;
+                                });
                             }
+                            Dispatcher.UIThread.Post(() =>
+                            {
+
+                                if (int.TryParse(splits[1], CultureInfo.InvariantCulture, out int switches))
+                                {
+                                    if ((switches & 0x01) == 0)
+                                    {
+                                        S1Red.IsVisible = true && LED1Master;
+                                        S1Green.IsVisible = false && LED1Master;
+                                    }
+                                    else
+                                    {
+                                        S1Red.IsVisible = false && LED1Master;
+                                        S1Green.IsVisible = true && LED1Master;
+                                    }
+
+                                    if ((switches & 0x02) == 0)
+                                    {
+                                        S2Red.IsVisible = true && LED2Master;
+                                        S2Green.IsVisible = false && LED2Master;
+                                    }
+                                    else
+                                    {
+                                        S2Red.IsVisible = false && LED2Master;
+                                        S2Green.IsVisible = true && LED2Master;
+                                    }
+
+                                    if ((switches & 0x04) == 0)
+                                    {
+                                        S3Red.IsVisible = true && LED3Master;
+                                        S3Green.IsVisible = false && LED3Master;
+                                    }
+                                    else
+                                    {
+                                        S3Red.IsVisible = false && LED3Master;
+                                        S3Green.IsVisible = true && LED3Master;
+                                    }
+
+                                    if ((switches & 0x08) == 0)
+                                    {
+                                        S4Red.IsVisible = true && LED4Master;
+                                        S4Green.IsVisible = false && LED4Master;
+                                    }
+                                    else
+                                    {
+                                        S4Red.IsVisible = false && LED4Master;
+                                        S4Green.IsVisible = true && LED4Master;
+                                    }
+
+                                    if ((switches & 0x10) == 0)
+                                    {
+                                        S5Red.IsVisible = true && LED5Master;
+                                        S5Green.IsVisible = false && LED5Master;
+                                    }
+                                    else
+                                    {
+                                        S5Red.IsVisible = false && LED5Master;
+                                        S5Green.IsVisible = true && LED5Master;
+                                    }
+
+                                    if ((switches & 0x20) == 0)
+                                    {
+                                        S6Red.IsVisible = true && LED6Master;
+                                        S6Green.IsVisible = false && LED6Master;
+                                    }
+                                    else
+                                    {
+                                        S6Red.IsVisible = false && LED6Master;
+                                        S6Green.IsVisible = true && LED6Master;
+                                    }
+
+                                    if ((switches & 0x40) == 0)
+                                    {
+                                        S7Red.IsVisible = true && LED7Master;
+                                        S7Green.IsVisible = false && LED7Master;
+                                    }
+                                    else
+                                    {
+                                        S7Red.IsVisible = false && LED7Master;
+                                        S7Green.IsVisible = true && LED7Master;
+                                    }
+
+                                    if ((switches & 0x80) == 0)
+                                    {
+                                        S8Red.IsVisible = true && LED8Master;
+                                        S8Green.IsVisible = false && LED8Master;
+                                    }
+                                    else
+                                    {
+                                        S8Red.IsVisible = false && LED8Master;
+                                        S8Green.IsVisible = true && LED8Master;
+                                    }
+                                }
+                                else
+                                {
+                                    S1Red.IsVisible = false;
+                                    S1Green.IsVisible = false;
+                                    S2Red.IsVisible = false;
+                                    S2Green.IsVisible = false;
+                                    S3Red.IsVisible = false;
+                                    S3Green.IsVisible = false;
+                                    S4Red.IsVisible = false;
+                                    S4Green.IsVisible = false;
+                                    S5Red.IsVisible = false;
+                                    S5Green.IsVisible = false;
+                                    S6Red.IsVisible = false;
+                                    S6Green.IsVisible = false;
+                                    S7Red.IsVisible = false;
+                                    S7Green.IsVisible = false;
+                                    S8Red.IsVisible = false;
+                                    S8Green.IsVisible = false;
+
+                                    LED1Master = true;
+                                    LED2Master = true;
+                                    LED3Master = true;
+                                    LED4Master = true;
+                                    LED5Master = true;
+                                    LED6Master = true;
+                                    LED7Master = true;
+                                    LED8Master = true;
+
+                                    return;
+                                }
 
 
+                            });
+                        }
+                        Dispatcher.UIThread.Post(() =>
+                        {
+                            loadTestProgramButton.IsEnabled = true;
+                            goButton.IsEnabled = true;
+                            testButton.Content = "Start Test";
+                            S1Red.IsVisible = false;
+                            S1Green.IsVisible = false;
+                            S2Red.IsVisible = false;
+                            S2Green.IsVisible = false;
+                            S3Red.IsVisible = false;
+                            S3Green.IsVisible = false;
+                            S4Red.IsVisible = false;
+                            S4Green.IsVisible = false;
+                            S5Red.IsVisible = false;
+                            S5Green.IsVisible = false;
+                            S6Red.IsVisible = false;
+                            S6Green.IsVisible = false;
+                            S7Red.IsVisible = false;
+                            S7Green.IsVisible = false;
+                            S8Red.IsVisible = false;
+                            S8Green.IsVisible = false;
+
+                            LED1Master = true;
+                            LED2Master = true;
+                            LED3Master = true;
+                            LED4Master = true;
+                            LED5Master = true;
+                            LED6Master = true;
+                            LED7Master = true;
+                            LED8Master = true;
                         });
                     }
-                    Dispatcher.UIThread.Post(() =>
-                    {
-                        loadTestProgramButton.IsEnabled = true;
-                        goButton.IsEnabled = true;
-                        testButton.Content = "Start Test";
-                        S1Red.IsVisible = false;
-                        S1Green.IsVisible = false;
-                        S2Red.IsVisible = false;
-                        S2Green.IsVisible = false;
-                        S3Red.IsVisible = false;
-                        S3Green.IsVisible = false;
-                        S4Red.IsVisible = false;
-                        S4Green.IsVisible = false;
-                        S5Red.IsVisible = false;
-                        S5Green.IsVisible = false;
-                        S6Red.IsVisible = false;
-                        S6Green.IsVisible = false;
-                        S7Red.IsVisible = false;
-                        S7Green.IsVisible = false;
-                        S8Red.IsVisible = false;
-                        S8Green.IsVisible = false;
-
-                        LED1Master = true;
-                        LED2Master = true;
-                        LED3Master = true;
-                        LED4Master = true;
-                        LED5Master = true;
-                        LED6Master = true;
-                        LED7Master = true;
-                        LED8Master = true;
-                    });
                 }
             }
             catch(Exception)
@@ -846,6 +1141,117 @@ namespace VisionTester
         Thread thread = new(TestProgramThread);
                 thread.Start();
             }
+            else if (testRunning && DeviceComboBox.SelectedIndex == 1)
+            {
+                LED1Master = true;
+                LED2Master = true;
+                LED3Master = true;
+                LED4Master = true;
+                LED5Master = true;
+                LED6Master = true;
+                LED7Master = false;
+                LED8Master = false;
+
+                Thread thread = new(TestProgramThread);
+                thread.Start();
+            }
+        }
+
+        static ThreadSafeStringBuilder UpdateWithAvrDude(string tempDirectory, string filename, string port, ThreadSafeStringBuilder sb)
+        {
+            string[] baudRate = { "115200", "57600" };
+            string[] suffix = { "", "-old" };
+
+            for (int i = 0; i < 2; ++i)
+            {
+                ProcessStartInfo processInfo;
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    processInfo = new ProcessStartInfo("cmd.exe",
+                        "/c avrdude.exe -Cavrdude.conf -v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:{1}{2}.ino.hex:i",
+                            baudRate[i],
+                            filename,
+                            suffix[i]))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    processInfo = new ProcessStartInfo("chmod",
+                        "755 " + Path.Join(tempDirectory, "avrdude"))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false
+                    };
+                    Process? p1 = Process.Start(processInfo);
+                    p1?.WaitForExit();
+
+                    processInfo = new ProcessStartInfo(Path.Join(tempDirectory, "avrdude"),
+                        "-v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:{1}{2}.ino.hex:i",
+                            baudRate[i],
+                            filename,
+                            suffix[i]))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    processInfo = new ProcessStartInfo("avrdude",
+                        "-v -patmega328p -carduino -P" + port +
+                        string.Format(" -b{0} -D -Uflash:w:{1}{2}.ino.hex:i",
+                            baudRate[i],
+                            filename,
+                            suffix[i]))
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = tempDirectory
+                    };
+                }
+                else
+                {
+                    throw new PlatformNotSupportedException();
+                }
+
+                sb = new();
+                bool tryAgain = false;
+                Process? p = Process.Start(processInfo);
+                if (p != null)
+                {
+                    p.OutputDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.ErrorDataReceived += (sender, args1) => sb.AppendLine(args1.Data ?? String.Empty);
+                    p.BeginOutputReadLine();
+                    p.BeginErrorReadLine();
+                    while (!p.HasExited)
+                    {
+                        if (sb.ToString().Contains("stk500_getsync() attempt 1 of 10: not in sync:"))
+                        {
+                            p.Kill();
+                            tryAgain = true;
+                            break;
+                        }
+                    }
+                    p.WaitForExit();
+                    if (!tryAgain)
+                        break;
+                }
+            }
+
+            return sb;
         }
 
         private void LoadTestProgramThread()
@@ -856,23 +1262,10 @@ namespace VisionTester
                 L1Green.IsVisible = false;
             });
 
-            DriveInfo[] drives = DriveInfo.GetDrives();
-            bool found = false;
-            foreach (var drive in drives)
+            if (DeviceComboBox.SelectedIndex == 0)
             {
-                if (drive.IsReady && drive.VolumeLabel == "RPI-RP2")
-                {
-                    File.Copy(Path.Combine(".", "vision_flex_test_client.ino.uf2"), Path.Combine(drive.Name, "vision_flex_test_client.ino.uf2"), true);
-                    found = true;
-                }
-            }
-
-            if (!found)
-            {
-                ForcePiPicoIntoBootSel();
-
-                drives = DriveInfo.GetDrives();
-                found = false;
+                DriveInfo[] drives = DriveInfo.GetDrives();
+                bool found = false;
                 foreach (var drive in drives)
                 {
                     if (drive.IsReady && drive.VolumeLabel == "RPI-RP2")
@@ -881,29 +1274,58 @@ namespace VisionTester
                         found = true;
                     }
                 }
-            }
 
-            if (found)
+                if (!found)
+                {
+                    ForcePiPicoIntoBootSel();
+
+                    drives = DriveInfo.GetDrives();
+                    found = false;
+                    foreach (var drive in drives)
+                    {
+                        if (drive.IsReady && drive.VolumeLabel == "RPI-RP2")
+                        {
+                            File.Copy(Path.Combine(".", "vision_flex_test_client.ino.uf2"), Path.Combine(drive.Name, "vision_flex_test_client.ino.uf2"), true);
+                            found = true;
+                        }
+                    }
+                }
+
+                if (found)
+                {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        L1Red.IsVisible = false;
+                        L1Green.IsVisible = true;
+                    });
+                }
+                else
+                {
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        L1Red.IsVisible = true;
+                        L1Green.IsVisible = false;
+                    });
+                }
+            }
+            else if (DeviceComboBox.SelectedIndex == 1)
             {
+                ThreadSafeStringBuilder sb = new ThreadSafeStringBuilder();
+                sb = UpdateWithAvrDude(".", "vision_analog_test_client_1", (string?)COMPortComboBox.SelectedItem ?? "", sb);
+                sb = new ThreadSafeStringBuilder();
+                sb = UpdateWithAvrDude(".", "vision_analog_test_client_2", (string?)COMPortComboBox2.SelectedItem ?? "", sb);
+
                 Dispatcher.UIThread.Post(() =>
                 {
                     L1Red.IsVisible = false;
                     L1Green.IsVisible = true;
                 });
             }
-            else
-            {
-                Dispatcher.UIThread.Post(() =>
-                {
-                    L1Red.IsVisible = true;
-                    L1Green.IsVisible = false;
-                });
-            }
         }
 
         private void LoadTestProgramButtonButton_Click(object? sender, RoutedEventArgs? e)
         {
-            if (DeviceComboBox.SelectedIndex == 0)
+            if (DeviceComboBox.SelectedIndex == 0 || DeviceComboBox.SelectedIndex == 1)
             {
                 Thread thread = new(LoadTestProgramThread);
                 thread.Start();

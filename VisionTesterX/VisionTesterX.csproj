@@ -37,8 +37,14 @@
 	</PropertyGroup>
   <ItemGroup>
     <None Remove=".gitignore" />
+    <None Remove="avrdude.conf" />
+    <None Remove="avrdude.exe" />
     <None Remove="green.png" />
     <None Remove="red.png" />
+    <None Remove="vision_analog_test_client_1-old.ino.hex" />
+    <None Remove="vision_analog_test_client_1.ino.hex" />
+    <None Remove="vision_analog_test_client_2-old.ino.hex" />
+    <None Remove="vision_analog_test_client_2.ino.hex" />
     <None Remove="vision_flex_test_client.ino.uf2" />
   </ItemGroup>
 
@@ -71,7 +77,25 @@
 		  <Content Include="Assets\red.png">
 		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		  </Content>
+		  <Content Include="avrdude.conf">
+		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
+		  <Content Include="avrdude.exe">
+		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
 		  <Content Include="Mattahan-Buuf-Magnifying-Glass.ico" />
+		  <Content Include="vision_analog_test_client_1-old.ino.hex">
+		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
+		  <Content Include="vision_analog_test_client_1.ino.hex">
+		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
+		  <Content Include="vision_analog_test_client_2-old.ino.hex">
+		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
+		  <Content Include="vision_analog_test_client_2.ino.hex">
+		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
 		  <Content Include="vision_flex_test_client.ino.uf2">
 		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		  </Content>
