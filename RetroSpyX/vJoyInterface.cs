@@ -97,5 +97,42 @@ namespace RetroSpy
                 joystick.SetBtn(value, id, buttonNumber);
             }
         }
+
+        public static void SetPOV(int value)
+        {
+            if (inited)
+            {
+                switch (value)
+                {
+                    case 0:
+                        joystick.SetContPov(0, id, 1);
+                        break;
+                    case 1:
+                        joystick.SetContPov(4500, id, 1);
+                        break;
+                    case 2:
+                        joystick.SetContPov(9000, id, 1);
+                        break;
+                    case 3:
+                        joystick.SetContPov(13500, id, 1);
+                        break;
+                    case 4:
+                        joystick.SetContPov(18000, id, 1);
+                        break;
+                    case 5:
+                        joystick.SetContPov(22500, id, 1);
+                        break;
+                    case 6:
+                        joystick.SetContPov(27000, id, 1);
+                        break;
+                    case 7:
+                        joystick.SetContPov(31500, id, 1);
+                        break;
+                    default:
+                        joystick.SetContPov(-1, id, 1);
+                        break;
+                }
+            }
+        }
     }
 }
