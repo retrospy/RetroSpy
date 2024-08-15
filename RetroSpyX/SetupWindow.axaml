@@ -41,6 +41,11 @@
 							<CheckBox Name="UseUSB2Checkbox" Width="20" BorderThickness="0" IsChecked="{Binding UseUSB2}" Click="UseUSB2_Checked"/>
 						</MenuItem.Icon>
 					</MenuItem>
+					<MenuItem x:Name="UseVJoy" Header="Use vJoy" FontFamily="Segoe UI" FontSize="12" HorizontalAlignment="Left" Click="UseVJoy_Checked">
+						<MenuItem.Icon>
+							<CheckBox Name="UseVJoyCheckbox" Width="20" BorderThickness="0" IsChecked="{Binding UseVJoy}" Click="UseVJoy_Checked"/>
+						</MenuItem.Icon>
+					</MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Help" FontFamily="Segoe UI" FontSize="12">
                     <MenuItem FontFamily="Segoe UI" FontSize="12" x:Name="About" Header="About" HorizontalAlignment="Left" Click="About_Click"/>

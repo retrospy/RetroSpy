@@ -328,6 +328,21 @@ namespace RetroSpy.Properties {
 
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseVJoy
+        {
+            get
+            {
+                return ((bool)(this["UseVJoy"]));
+            }
+            set
+            {
+                this["UseVJoy"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("3")]
         public int PrintSize {
             get {

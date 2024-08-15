@@ -902,6 +902,8 @@
     <None Remove="skins\xbox360-controller\stick.png" />
     <None Remove="skins\xbox360-controller\trig-l.png" />
     <None Remove="skins\xbox360-controller\trig-r.png" />
+    <None Remove="vJoyInterface.dll" />
+    <None Remove="vJoyInterfaceWrap.dll" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Carlito-Regular.ttf" />
@@ -3267,6 +3269,12 @@
     <Content Include="skins\xbox360-controller\trig-r.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="vJoyInterface.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="vJoyInterfaceWrap.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -3627,6 +3635,12 @@
 
 	<ItemGroup>
 	  <Folder Include="Emulator\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="vJoyInterfaceWrap">
+	    <HintPath>vJoyInterfaceWrap.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 	
 	<Target Name="CopyAssetFiles" AfterTargets="Build">

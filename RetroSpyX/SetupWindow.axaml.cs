@@ -98,6 +98,15 @@ namespace RetroSpy
             PopulateSources();
         }
 
+        private void UseVJoy_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem)
+                UseVJoyCheckbox.IsChecked = !UseVJoyCheckbox.IsChecked;
+
+            _vm.UseVJoy = UseVJoyCheckbox.IsChecked ?? false;
+            Properties.Settings.Default.UseVJoy = UseVJoyCheckbox.IsChecked ?? false;
+        }
+
         private void UpdatePortListThread()
             {
                 if (letUpdatePortThreadRun)
@@ -270,6 +279,10 @@ namespace RetroSpy
                 _vm.UseUSB2 = Properties.Settings.Default.UseUSB2;
                 UseUSB2Checkbox.IsChecked = _vm.UseUSB2;
 
+
+                _vm.UseVJoy = Properties.Settings.Default.UseVJoy;
+                UseVJoyCheckbox.IsChecked = _vm.UseVJoy;
+
                 PopulateSources();
 
                 _vm.Username = _vm.Sources.SelectedItem == InputSource.MISTER
@@ -417,6 +430,7 @@ namespace RetroSpy
             Properties.Settings.Default.DontSavePassword = _vm.DontSavePassword;
             Properties.Settings.Default.UseLagFix = _vm.UseLagFix;
             Properties.Settings.Default.UseUSB2 = _vm.UseUSB2;
+            Properties.Settings.Default.UseVJoy = _vm.UseVJoy;
 
             if (_vm.Sources.SelectedItem == InputSource.MISTER)
             {
@@ -432,6 +446,9 @@ namespace RetroSpy
 
             try
             {
+                if (Properties.Settings.Default.UseVJoy)
+                    vJoyInterface.InitVJoy();
+
                 IControllerReader? reader = null;
                 if (_vm.Sources.SelectedItem == InputSource.PAD)
                 {
@@ -1100,6 +1117,7 @@ namespace RetroSpy
         public bool DontSavePassword { get; set; }
         public bool UseLagFix { get; set; }
         public bool UseUSB2 { get; set; }
+        public bool UseVJoy { get; set; }
 
         public string? Username { get; set; }
 
