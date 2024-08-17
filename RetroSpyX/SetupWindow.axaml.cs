@@ -19,7 +19,7 @@ using System.Resources;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;vjo
+using System.Threading.Tasks;
 using Vortice;
 using static System.Net.WebRequestMethods;
 using ComboBox = Avalonia.Controls.ComboBox;
