@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if OS_WINDOWS
 using vJoyInterfaceWrap;
+#endif
 
 namespace RetroSpy
 {
@@ -24,18 +26,20 @@ namespace RetroSpy
 
     public class vJoyInterface
     {
+        static bool inited = false;
+#if OS_WINDOWS
         static public vJoy joystick;
         static public vJoy.JoystickState iReport;
-        static bool inited = false;
+
         static public uint id = 1;
 
         static long maxval = 0;
-
+#endif
         public static void InitVJoy(uint id = 1)
         {
             if (!inited)
             {
-
+#if OS_WINDOWS
                 // Create one joystick object and a position structure.
                 joystick = new vJoy();
                 iReport = new vJoy.JoystickState();
@@ -79,14 +83,18 @@ namespace RetroSpy
                 joystick.ResetVJD(id);
 
                 inited = true;
+#endif
             }
         }
 
         public static void SetAxis(vJoyAxis axis, float value)
         {
+
             if (inited)
             {
+#if OS_WINDOWS
                 joystick.SetAxis((int)(((value + 1.0) / 2.0) * maxval), id, (HID_USAGES)axis);
+#endif
             }
         }
 
@@ -94,7 +102,9 @@ namespace RetroSpy
         {
             if (inited)
             {
+#if OS_WINDOWS
                 joystick.SetBtn(value, id, buttonNumber);
+#endif
             }
         }
 
@@ -102,6 +112,7 @@ namespace RetroSpy
         {
             if (inited)
             {
+#if OS_WINDOWS
                 switch (value)
                 {
                     case 0:
@@ -132,6 +143,7 @@ namespace RetroSpy
                         joystick.SetContPov(-1, id, 1);
                         break;
                 }
+#endif
             }
         }
     }
