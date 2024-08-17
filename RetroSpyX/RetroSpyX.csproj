@@ -902,8 +902,8 @@
     <None Remove="skins\xbox360-controller\stick.png" />
     <None Remove="skins\xbox360-controller\trig-l.png" />
     <None Remove="skins\xbox360-controller\trig-r.png" />
-    <None Remove="vJoyInterface.dll" />
-    <None Remove="vJoyInterfaceWrap.dll" />
+    <None Remove="vJoyInterface.dll" Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))'"/>
+    <None Remove="vJoyInterfaceWrap.dll" Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))'"/>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Carlito-Regular.ttf" />
@@ -3269,10 +3269,10 @@
     <Content Include="skins\xbox360-controller\trig-r.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="vJoyInterface.dll">
+    <Content Include="vJoyInterface.dll" Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="vJoyInterfaceWrap.dll">
+    <Content Include="vJoyInterfaceWrap.dll" Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -3637,7 +3637,7 @@
 	  <Folder Include="Emulator\" />
 	</ItemGroup>
 
-	<ItemGroup>
+	<ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))'">
 	  <Reference Include="vJoyInterfaceWrap">
 	    <HintPath>vJoyInterfaceWrap.dll</HintPath>
 	  </Reference>

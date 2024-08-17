@@ -19,7 +19,7 @@ using System.Resources;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using System.Threading.Tasks;vjo
 using Vortice;
 using static System.Net.WebRequestMethods;
 using ComboBox = Avalonia.Controls.ComboBox;
@@ -446,7 +446,9 @@ namespace RetroSpy
 
             try
             {
-                if (Properties.Settings.Default.UseVJoy)
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) 
+                    && RuntimeInformation.OSArchitecture == Architecture.X64 
+                    && Properties.Settings.Default.UseVJoy)
                     vJoyInterface.InitVJoy();
 
                 IControllerReader? reader = null;
