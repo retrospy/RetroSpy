@@ -100,11 +100,21 @@ namespace RetroSpy
 
         private void UseVJoy_Checked(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuItem)
-                UseVJoyCheckbox.IsChecked = !UseVJoyCheckbox.IsChecked;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.OSArchitecture == Architecture.X64)
+            {
+                if (sender is MenuItem)
+                    UseVJoyCheckbox.IsChecked = !UseVJoyCheckbox.IsChecked;
 
-            _vm.UseVJoy = UseVJoyCheckbox.IsChecked ?? false;
-            Properties.Settings.Default.UseVJoy = UseVJoyCheckbox.IsChecked ?? false;
+                _vm.UseVJoy = UseVJoyCheckbox.IsChecked ?? false;
+                Properties.Settings.Default.UseVJoy = UseVJoyCheckbox.IsChecked ?? false;
+            }
+            else
+            {
+                _vm.UseVJoy = false;
+                Properties.Settings.Default.UseVJoy = false;
+
+                AvaloniaMessageBoxDialog(_resources.GetString("RetroSpy", CultureInfo.CurrentUICulture), "vJoy only supported for 64-bit Windows.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Info);
+            }
         }
 
         private void UpdatePortListThread()
