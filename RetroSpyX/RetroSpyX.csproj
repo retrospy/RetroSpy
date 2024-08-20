@@ -9,7 +9,8 @@
     <ApplicationIcon>RetroSpy.ico</ApplicationIcon>
     <BaseOutputPath>..\bin</BaseOutputPath>
     <UseWPF>False</UseWPF>
-    <NeutralLanguage>en-US</NeutralLanguage> 
+    <NeutralLanguage>en-US</NeutralLanguage>
+	<Runtime Condition=" $([MSBuild]::IsOsPlatform('Windows')) AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X86' ">win-x86</Runtime>
   </PropertyGroup>
 	<PropertyGroup>
 		<AssemblyVersion>6.5</AssemblyVersion>
@@ -24,7 +25,6 @@
 		<CurrentDate>$([System.DateTime]::Now.ToString("ddd MM/dd/yyyy HH:mm:ss.FF"))</CurrentDate>
 		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
 	</PropertyGroup>
-	<Runtime Condition=" $([MSBuild]::IsOsPlatform('Windows')) AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X86' ">win-x86</Runtime>
 	<PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
 		<DefineConstants>OS_WINDOWS</DefineConstants>
 	</PropertyGroup>
