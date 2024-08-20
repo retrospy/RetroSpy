@@ -10,7 +10,6 @@
     <BaseOutputPath>..\bin</BaseOutputPath>
     <UseWPF>False</UseWPF>
     <NeutralLanguage>en-US</NeutralLanguage>
-	<Runtime Condition=" $([MSBuild]::IsOsPlatform('Windows')) AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X86' ">win-x86</Runtime>
   </PropertyGroup>
 	<PropertyGroup>
 		<AssemblyVersion>6.5</AssemblyVersion>
