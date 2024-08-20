@@ -24,6 +24,7 @@
 		<CurrentDate>$([System.DateTime]::Now.ToString("ddd MM/dd/yyyy HH:mm:ss.FF"))</CurrentDate>
 		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
 	</PropertyGroup>
+	<Runtime Condition=" $([MSBuild]::IsOsPlatform('Windows')) AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X86' ">win-x86</Runtime>
 	<PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
 		<DefineConstants>OS_WINDOWS</DefineConstants>
 	</PropertyGroup>
@@ -905,8 +906,8 @@
     <None Remove="skins\xbox360-controller\stick.png" />
     <None Remove="skins\xbox360-controller\trig-l.png" />
     <None Remove="skins\xbox360-controller\trig-r.png" />
-    <None Remove="vJoyInterface.dll" Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))'"/>
-    <None Remove="vJoyInterfaceWrap.dll" Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))'"/>
+    <None Remove="vJoyInterface.dll" Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))'" />
+    <None Remove="vJoyInterfaceWrap.dll" Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))'" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Carlito-Regular.ttf" />
