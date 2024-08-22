@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Avalonia.Controls;
+using System;
 using System.Text;
 using Vortice.XInput;
 
@@ -8,6 +9,7 @@ namespace RetroSpy.Readers
     {
         private const int PRO_PACKET_SIZE = 129;
         private const int POKKEN_PACKET_SIZE = 17;
+        private const int GC_PACKET_SIZE = 75;
 
         private static readonly string?[] PRO_BUTTONS = {
             "y", "x", "b", "a", null, null, "r", "zr", "-", "+", "rs", "ls", "home", "capture", null, null, "down", "up", "right", "left", null, null, "l", "zl"
@@ -25,9 +27,23 @@ namespace RetroSpy.Readers
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 13, 14, 0, 0
         };
 
+        private static readonly string?[] GC_BUTTONS = {
+            "a", "b", "x", "y", "left", "right", "down", "up", "start", "z", "r", "l", null, null, null, null
+        };
+
         private static float ReadStick(byte input)
         {
             return input < 127 ? (float)input / 128 : (float)(255 - input) / -128;
+        }
+
+        private static float ReadStickGC(byte input)
+        {
+            return (float)(input - 128) / 128;
+        }
+
+        private static float ReadTriggerGC(byte input, float maxVal = 256)
+        {
+            return (float)input / maxVal;
         }
 
         private static float ReadPokkenStick(byte input, bool invert)
@@ -242,6 +258,34 @@ namespace RetroSpy.Readers
                         outState.SetButton("down", false);
                         break;
                 }
+
+                return outState.Build();
+            }
+            else if (packet.Length == GC_PACKET_SIZE)
+            {
+                byte[] binaryPacket = StringToByteArray(Encoding.UTF8.GetString(packet, 0, packet.Length).Trim());
+
+                ControllerStateBuilder outState = new();
+                for (int i = 0; i < 2; ++i)
+                {
+                    for (int j = 0; j < 8; ++j)
+                    {
+                        if (string.IsNullOrEmpty(GC_BUTTONS[(i * 8) + j]))
+                        {
+                            continue;
+                        }
+
+                        outState.SetButton(GC_BUTTONS[(i * 8) + j], (binaryPacket[i+2] & (1 << j)) != 0x00);
+                    }
+                }
+
+                outState.SetAnalog("lstick_x", ReadStickGC(binaryPacket[4]), binaryPacket[4]);
+                outState.SetAnalog("lstick_y", ReadStickGC(binaryPacket[5]), binaryPacket[5]);
+                outState.SetAnalog("cstick_x", ReadStickGC(binaryPacket[6]), binaryPacket[6]);
+                outState.SetAnalog("cstick_y", ReadStickGC(binaryPacket[7]), binaryPacket[7]);
+
+                outState.SetAnalog("trig_l", ReadStickGC(binaryPacket[8]), binaryPacket[8]);
+                outState.SetAnalog("trig_r", ReadStickGC(binaryPacket[9]), binaryPacket[9]);
 
                 return outState.Build();
             }
