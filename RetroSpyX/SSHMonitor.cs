@@ -63,7 +63,7 @@ namespace RetroSpy
             if (_client != null)
             {
                 _client.Connect();
-                _data = _client.CreateShellStream("", 0, 0, 0, 0, 0);
+                _data = _client.CreateShellStream("", 0, 0, 0, 0, 1024);
                 if (_delayInMilliseconds > 0)
                 {
                     Thread.Sleep(_delayInMilliseconds);
