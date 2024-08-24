@@ -1,10 +1,10 @@
-﻿[Setup]
+[Setup]
 AIVersion=10.0
 AIEdition=0
 GUID={664FB1C2-C4B5-4970-B5C9-8D49236CB416}
 AppName=RetroSpy
 AppEdition=
-AppVersion=6.5
+AppVersion=6.6
 GetVerFromExe=0
 AppDescription=RetroSpy
 CompanyName=RetroSpy Technologies
