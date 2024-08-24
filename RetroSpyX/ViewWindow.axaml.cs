@@ -27,6 +27,7 @@ namespace RetroSpy
         private readonly Skin _skin;
         private readonly IControllerReader _reader;
         private readonly Keybindings? _keybindings;
+        private readonly vJoybindings? _vJoybindings;
         private readonly BlinkReductionFilter _blinkFilter = new();
         private readonly List<Tuple<Detail, Image>> _detailsWithImages = new();
         private readonly List<Tuple<Button, Image>> _buttonsWithImages = new();
@@ -280,6 +281,16 @@ namespace RetroSpy
                 StartNoKeybindingDialogThread();
             }
 
+            try
+            {
+                _vJoybindings = new vJoybindings(vJoybindings.XmlFilePath, _reader);
+            }
+            catch (ConfigParseException)
+            {
+                novJoyBindings = true;
+                StartNoKeybindingDialogThread();
+            }
+
             MassBlinkReductionEnabled = Properties.Settings.Default.MassFilter;
             AnalogBlinkReductionEnabled = Properties.Settings.Default.AnalogFilter;
             ButtonBlinkReductionEnabled = Properties.Settings.Default.ButtonFilter;
@@ -296,6 +307,17 @@ namespace RetroSpy
                 Dispatcher.UIThread.Post(() =>
                 {
                     loop = !IsVisible;
+                });
+            }
+
+            if (novJoyBindings)
+            {
+                Dispatcher.UIThread.Post(async () =>
+                {
+                    var m = MsBox.Avalonia.MessageBoxManager
+                        .GetMessageBoxStandard("RetroSpy", "Error parsing vjoybindings.xml. Not binding any controls to vJoy", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                    this.Topmost = false;
+                    await m.ShowWindowDialogAsync(this);
                 });
             }
 
@@ -319,7 +341,7 @@ namespace RetroSpy
         }
 
         readonly bool noKeyBindings = false;
-
+        readonly bool novJoyBindings = false;
         private void Reader_ControllerDisconnected(object? sender, EventArgs e)
         {
             if (Dispatcher.UIThread.CheckAccess())

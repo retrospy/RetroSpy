@@ -32,6 +32,7 @@ cp RetroSpyX/RetroSpy.icns bin/Release/RetroSpy-macOS/RetroSpy.app/Contents/Reso
 cp -aR bin/Release/net8.0/publish/* bin/Release/RetroSpy-macOS/RetroSpy.app/Contents/MacOS
 mv bin/Release/RetroSpy-macOS/RetroSpy.app/Contents/MacOS/skins bin/Release/RetroSpy-macOS/
 mv bin/Release/RetroSpy-macOS/RetroSpy.app/Contents/MacOS/keybindings.xml bin/Release/RetroSpy-macOS/
+mv bin/Release/RetroSpy-macOS/RetroSpy.app/Contents/MacOS/vjoybindings.xml bin/Release/RetroSpy-macOS/
 cp -aR bin/Release/net8.0/firmware bin/Release/RetroSpy-macOS/firmware
 
 mkdir bin/Release/RetroSpy-macOS/MiSTer

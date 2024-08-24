@@ -905,11 +905,15 @@
     <None Remove="skins\xbox360-controller\stick.png" />
     <None Remove="skins\xbox360-controller\trig-l.png" />
     <None Remove="skins\xbox360-controller\trig-r.png" />
+    <None Remove="vjoybindings.xml" />
     <None Remove="vJoyInterface.dll" Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))'" />
     <None Remove="vJoyInterfaceWrap.dll" Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))'" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Carlito-Regular.ttf" />
+    <Content Include="vjoybindings.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="keybindings.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

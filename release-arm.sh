@@ -21,6 +21,7 @@ mkdir RetroSpy-Linux/bin
 cp -r net8.0/publish/* RetroSpy-Linux/bin       
 mv RetroSpy-Linux/bin/skins RetroSpy-Linux        
 mv RetroSpy-Linux/bin/keybindings.xml RetroSpy-Linux
+mv RetroSpy-Linux/bin/vjoybindings.xml RetroSpy-Linux
 mv RetroSpy-Linux/bin/game_palettes.cfg RetroSpy-Linux
 mkdir RetroSpy-Linux/MiSTer
          

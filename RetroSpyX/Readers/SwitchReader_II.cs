@@ -15,16 +15,8 @@ namespace RetroSpy.Readers
             "y", "x", "b", "a", null, null, "r", "zr", "-", "+", "rs", "ls", "home", "capture", null, null, "down", "up", "right", "left", null, null, "l", "zl"
         };
 
-        private static readonly uint[] PRO_BUTTONS_VJOY = {
-            1, 4, 2, 3, 0, 0, 6, 8, 9, 10, 12, 11, 13, 14, 0, 0, 0, 0, 0, 0, 0, 0, 5, 7
-        };
-
         private static readonly string?[] POKKEN_BUTTONS = {
             "y", "b", "a", "x", "l", "r", "zl", "zr", "-", "+", null, null, "home", "capture", null, null
-        };
-
-        private static readonly uint[] PRO_POKEN_VJOY = {
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 13, 14, 0, 0
         };
 
         private static readonly string?[] GC_BUTTONS = {
@@ -107,56 +99,23 @@ namespace RetroSpy.Readers
                         }
 
                         outState.SetButton(PRO_BUTTONS[(i * 8) + j], (binaryPacket[i + 3] & (1 << j)) != 0x00);
-                        if (PRO_BUTTONS_VJOY[(i * 8) + j] != 0)
-                            vJoyInterface.SetButton(PRO_BUTTONS_VJOY[(i * 8) + j], (binaryPacket[i + 3] & (1 << j)) != 0x00);
                     }
                 }
 
-                bool up = (binaryPacket[5] & (1 << 1)) != 0x00;
-                bool right = (binaryPacket[5] & (1 << 2)) != 0x00;
-                bool down = (binaryPacket[5] & (1 << 0)) != 0x00;
-                bool left = (binaryPacket[5] & (1 << 3)) != 0x00;
-
-                if (up && !right && !down && !left)
-                    vJoyInterface.SetPOV(0);
-                else if (up && right && !down && !left)
-                    vJoyInterface.SetPOV(1);
-                else if (!up && right && !down && !left)
-                    vJoyInterface.SetPOV(2);
-                else if (!up && right && down && !left)
-                    vJoyInterface.SetPOV(3);
-                else if (!up && !right && down && !left)
-                    vJoyInterface.SetPOV(4);
-                else if (!up && !right && down && left)
-                    vJoyInterface.SetPOV(5);
-                else if (!up && !right && !down && left)
-                    vJoyInterface.SetPOV(6);
-                else if (up && !right && !down && left)
-                    vJoyInterface.SetPOV(7);
-                else
-                    vJoyInterface.SetPOV(-1);
-
                 outState.SetAnalog("lstick_x", ReadStick((byte)((((binaryPacket[7] & 0x0F) << 4) | ((binaryPacket[6] & 0xF0) >> 4)) + 127)), (((binaryPacket[7] & 0x0F) << 4) | ((binaryPacket[6] & 0xF0) >> 4)) + 127);
-                vJoyInterface.SetAxis(vJoyAxis.X, ReadStick((byte)((((binaryPacket[7] & 0x0F) << 4) | ((binaryPacket[6] & 0xF0) >> 4)) + 127)));
                 outState.SetAnalog("lstick_y", ReadStick((byte)(binaryPacket[8] + 127)), binaryPacket[8] + 127);
-                vJoyInterface.SetAxis(vJoyAxis.Y, ReadStick((byte)(binaryPacket[8] + 127)));
                 outState.SetAnalog("rstick_x", ReadStick((byte)((((binaryPacket[10] & 0x0F) << 4) | ((binaryPacket[9] & 0xF0) >> 4)) + 127)), (((binaryPacket[10] & 0x0F) << 4) | ((binaryPacket[9] & 0xF0) >> 4)) + 127);
-                vJoyInterface.SetAxis(vJoyAxis.Z, ReadStick((byte)((((binaryPacket[10] & 0x0F) << 4) | ((binaryPacket[9] & 0xF0) >> 4)) + 127)));
                 outState.SetAnalog("rstick_y", ReadStick((byte)(binaryPacket[11] + 127)), binaryPacket[11] + 127);
-                vJoyInterface.SetAxis(vJoyAxis.ZR, ReadStick((byte)(binaryPacket[11] + 127)));
+
                 if (binaryPacket[55] == 1)
                 {
                     outState.SetAnalog("r2", binaryPacket[63] / 255.0f, binaryPacket[63]);
-                    vJoyInterface.SetAxis(vJoyAxis.YR, binaryPacket[63] / 255.0f);
                     outState.SetAnalog("l2", binaryPacket[59] / 255.0f, binaryPacket[59]);
-                    vJoyInterface.SetAxis(vJoyAxis.XR, binaryPacket[59] / 255.0f);
                 }
                 else
                 {
                     outState.SetAnalog("r2", binaryPacket[7] != 0 ? 1.0f : 0.0f, binaryPacket[7] != 0 ? 255 : 0);
-                    vJoyInterface.SetAxis(vJoyAxis.YR, binaryPacket[7] != 0 ? 1.0f : 0.0f);
                     outState.SetAnalog("l2", binaryPacket[23] != 0 ? 1.0f : 0.0f, binaryPacket[23] != 0 ? 255 : 0);
-                    vJoyInterface.SetAxis(vJoyAxis.XR, binaryPacket[23] != 0 ? 1.0f : 0.0f);
                 }
                 return outState.Build();
 
@@ -177,21 +136,13 @@ namespace RetroSpy.Readers
                         }
 
                         outState.SetButton(POKKEN_BUTTONS[(i * 8) + j], (binaryPacket[i] & (1 << j)) != 0x00);
-                        if (PRO_POKEN_VJOY[(i * 8) + j] != 0)
-                            vJoyInterface.SetButton(PRO_POKEN_VJOY[(i * 8) + j], (binaryPacket[i] & (1 << j)) != 0x00);
                     }
                 }
 
                 outState.SetAnalog("lstick_x", ReadPokkenStick(binaryPacket[3], false), binaryPacket[3]);
-                vJoyInterface.SetAxis(vJoyAxis.X, ReadPokkenStick(binaryPacket[3], false));
                 outState.SetAnalog("lstick_y", ReadPokkenStick(binaryPacket[4], true), binaryPacket[4]);
-                vJoyInterface.SetAxis(vJoyAxis.Y, ReadPokkenStick(binaryPacket[4], false));
                 outState.SetAnalog("rstick_x", ReadPokkenStick(binaryPacket[5], false), binaryPacket[5]);
-                vJoyInterface.SetAxis(vJoyAxis.Z, ReadPokkenStick(binaryPacket[5], false));
                 outState.SetAnalog("rstick_y", ReadPokkenStick(binaryPacket[6], true), binaryPacket[6]);
-                vJoyInterface.SetAxis(vJoyAxis.ZR, ReadPokkenStick(binaryPacket[6], false));
-
-                vJoyInterface.SetPOV(binaryPacket[2]);
 
                 switch (binaryPacket[2])
                 {
@@ -284,8 +235,8 @@ namespace RetroSpy.Readers
                 outState.SetAnalog("cstick_x", ReadStickGC(binaryPacket[6]), binaryPacket[6]);
                 outState.SetAnalog("cstick_y", ReadStickGC(binaryPacket[7]), binaryPacket[7]);
 
-                outState.SetAnalog("trig_l", ReadStickGC(binaryPacket[8]), binaryPacket[8]);
-                outState.SetAnalog("trig_r", ReadStickGC(binaryPacket[9]), binaryPacket[9]);
+                outState.SetAnalog("trig_l", ReadTriggerGC(binaryPacket[8]), binaryPacket[8]);
+                outState.SetAnalog("trig_r", ReadTriggerGC(binaryPacket[9]), binaryPacket[9]);
 
                 return outState.Build();
             }

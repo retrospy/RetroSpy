@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vjoybindings>
+
+	<!-- Maps an XInput controller to a DirectInput DualShock 4
+	<pov up="up" down="down" left="left" right="right"/>
+
+	<button input="a" vjoyoutput="cross"/>
+	<button input="b" vjoyoutput="circle"/>
+	<button input="y" vjoyoutput="triangle"/>
+	<button input="x" vjoyoutput="square"/>
+
+	<analog input="lstick_x" vjoyoutput="lstick_x"/>
+	<analog input="lstick_y" vjoyoutput="lstick_y"/>
+	<analog input="rstick_x" vjoyoutput="rstick_x"/>
+	<analog input="rstick_y" vjoyoutput="rstick_y"/>
+
+	<analog input="trig_l" vjoyoutput="l2_analog"/>
+	<button input="trig_l_d" vjoyoutput="l2"/>
+	<analog input="trig_r" vjoyoutput="r2_analog"/>
+	<button input="trig_r_d" vjoyoutput="r2"/>
+
+	<button input="start" vjoyoutput="options"/>
+	<button input="back" vjoyoutput="share"/>
+	<button input="l3" vjoyoutput="l3"/>
+	<button input="r3" vjoyoutput="r3"/>
+	<button input="l" vjoyoutput="l1"/>
+	<button input="r" vjoyoutput="r1"/>
+	
+	<button input="none" vjoyoutput="home"/>
+	<button input="none" vjoyoutput="trackpad_click"/> 
+	-->
+
+	<!-- Maps a Switch Pro controller on the Switch to a vJoy DualShock 4 -->
+	<pov up="up" down="down" left="left" right="right"/>
+
+	<button input="b" vjoyoutput="cross"/>
+	<button input="x" vjoyoutput="circle"/>
+	<button input="a" vjoyoutput="triangle"/>
+	<button input="y" vjoyoutput="square"/>
+
+	<analog input="lstick_x" vjoyoutput="lstick_x"/>
+	<analog input="lstick_y" vjoyoutput="lstick_y"/>
+	<analog input="rstick_x" vjoyoutput="rstick_x"/>
+	<analog input="rstick_y" vjoyoutput="rstick_y"/>
+
+	<analog input="l2" vjoyoutput="l2_analog"/>
+	<button input="zl" vjoyoutput="l2"/>
+	<analog input="r2" vjoyoutput="r2_analog"/>
+	<button input="zr" vjoyoutput="r2"/>
+
+	<button input="+" vjoyoutput="options"/>
+	<button input="-" vjoyoutput="share"/>
+	<button input="ls" vjoyoutput="l3"/>
+	<button input="rs" vjoyoutput="r3"/>
+	<button input="l" vjoyoutput="l1"/>
+	<button input="r" vjoyoutput="r1"/>
+	
+	<button input="home" vjoyoutput="home"/>
+	<button input="capture" vjoyoutput="trackpad_click"/> 
+
+</vjoybindings>
