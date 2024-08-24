@@ -32,7 +32,7 @@ void setup()
   pinMode(27, INPUT_PULLUP);  
 
   pinMode(28, OUTPUT);
-  digitalWrite(28, LOW);
+  digitalWrite(28, HIGH);
   
   pinMode(21, OUTPUT);
   pinMode(22, OUTPUT);
