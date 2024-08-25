@@ -773,12 +773,10 @@ namespace GBPUpdaterX2
                     {
                         if (sb.ToString().Contains("stk500_getsync() attempt 1 of 10: not in sync:"))
                         {
-                            p.Kill();
+                            p.Kill(true);
                             tryAgain = true;
-                            break;
                         }
                     }
-                    p.WaitForExit();
                     if (!tryAgain)
                         break;
                 }
