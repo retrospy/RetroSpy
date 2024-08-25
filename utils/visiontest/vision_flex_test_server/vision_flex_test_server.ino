@@ -77,13 +77,13 @@ void loop()
       if (!slowMode)
         delayMicroseconds(25);
       else
-        delay(1);
+        delayMicroseconds(750);
       
       digitalWrite(10, LOW);
       if (!slowMode)
         delayMicroseconds(25);
       else
-        delay(1);
+        delayMicroseconds(750);
     }
     digitalWrite(9, LOW);
     delay(1);

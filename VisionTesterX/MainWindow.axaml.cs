@@ -1148,7 +1148,7 @@ namespace VisionTester
                 LED3Master = true;
                 LED4Master = true;
                 LED5Master = true;
-                LED6Master = true;
+                LED6Master = false;
                 LED7Master = false;
                 LED8Master = false;
 
@@ -1240,12 +1240,10 @@ namespace VisionTester
                     {
                         if (sb.ToString().Contains("stk500_getsync() attempt 1 of 10: not in sync:"))
                         {
-                            p.Kill();
+                            p.Kill(true);
                             tryAgain = true;
-                            break;
                         }
                     }
-                    p.WaitForExit();
                     if (!tryAgain)
                         break;
                 }
@@ -1323,6 +1321,76 @@ namespace VisionTester
             }
         }
 
+        private void UpdateAnalogThread()
+        {
+            try
+            {
+                string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                _ = Directory.CreateDirectory(tempDirectory);
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Downloading latest firmware...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+
+                DownloadFirmware(tempDirectory, "Analog_Firmware.zip");
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.Text += "Decompressing firmware package...";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ZipFile.ExtractToDirectory(Path.Combine(tempDirectory, "Analog_Firmware.zip"), tempDirectory);
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "done.\n\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                string? port = (string?)COMPortComboBox.SelectedItem;
+                port ??= "No Arduino/Teensy Found";
+
+                string? port2 = (string?)COMPortComboBox2.SelectedItem;
+                port ??= "No Arduino/Teensy Found";
+
+                if (port == port2)
+                    throw new Exception("Port 1 and 2 cannot be the same port.");
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    txtboxData.Text += "Updating firmware on port 1...\n";
+                    txtboxData.CaretIndex = int.MaxValue;
+                });
+
+                ThreadSafeStringBuilder sb = new ThreadSafeStringBuilder();
+                sb = UpdateWithAvrDude(tempDirectory, "firmware_1", port, sb);
+
+                sb = new ThreadSafeStringBuilder();
+                sb = UpdateWithAvrDude(tempDirectory, "firmware_2", port2!, sb);
+
+                Dispatcher.UIThread.Post(() =>
+                {
+                    P1Red.IsVisible = false;
+                    P1Green.IsVisible = true;
+                });
+
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    P1Red.IsVisible = true;
+                    P1Green.IsVisible = false;
+                });
+
+            }
+        }
+
         private void LoadTestProgramButtonButton_Click(object? sender, RoutedEventArgs? e)
         {
             if (DeviceComboBox.SelectedIndex == 0 || DeviceComboBox.SelectedIndex == 1)
@@ -1337,6 +1405,11 @@ namespace VisionTester
             if (DeviceComboBox.SelectedIndex == 0)
             {
                 Thread thread = new(UpdateFlexThread);
+                thread.Start();
+            }
+            else if (DeviceComboBox.SelectedIndex == 1)
+            {
+                Thread thread = new(UpdateAnalogThread);
                 thread.Start();
             }
         }
