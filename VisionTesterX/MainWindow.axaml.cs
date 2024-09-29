@@ -1402,6 +1402,9 @@ namespace VisionTester
 
         private void GoButton_Click(object? sender, RoutedEventArgs? e)
         {
+            P1Red.IsVisible = false;
+            P1Green.IsVisible = false;
+
             if (DeviceComboBox.SelectedIndex == 0)
             {
                 Thread thread = new(UpdateFlexThread);
