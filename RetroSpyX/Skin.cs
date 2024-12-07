@@ -304,7 +304,7 @@ namespace RetroSpy
 
                 foreach (var src in InputSource.GetAllSources())
                 {
-                    if (src.TypeTag == orgType)
+                    if (src.TypeTag == type1)
                     {
                         types.Add(new Tuple<InputSource, string>(src, orgType));
                     }
