@@ -129,7 +129,6 @@
 #define SMS_INPUT_PIN_3    20
 #define SMS_INPUT_PIN_4     5
 #define SMS_INPUT_PIN_5    16
-#define SMS_INPUT_PIN_5    21
 
 #define SMSONGEN_INPUT_PIN_0     7
 #define SMSONGEN_INPUT_PIN_1     8
@@ -137,7 +136,6 @@
 #define SMSONGEN_INPUT_PIN_3    20
 #define SMSONGEN_INPUT_PIN_4    21
 #define SMSONGEN_INPUT_PIN_5     5
-#define SMSONGEN_INPUT_PIN_6    27
 
 #define GENESIS_TH            DIGITAL_PIN_16
 #define GENESIS_TR            DIGITAL_PIN_05

@@ -41,10 +41,9 @@ public:
 	virtual const char* startupMsg();
 
 	enum cableTypes {
-		CABLE_SMS = 1,
+		CABLE_SMS     = 1,
 		CABLE_GENESIS = 2,
-		CABLE_GX4000 = 3,
-		CABLE_7800 = 4
+		CABLE_GX4000  = 3
 	};
 
 	enum outputTypes {
@@ -54,13 +53,12 @@ public:
 	
 private:
 	enum buttonTypes {
-		CC_BTN_UP = 1,
-		CC_BTN_DOWN = 2,
-		CC_BTN_LEFT = 4,
+		CC_BTN_UP    = 1,
+		CC_BTN_DOWN  = 2,
+		CC_BTN_LEFT  = 4,
 		CC_BTN_RIGHT = 8,
-		CC_BTN_1 = 16,
-		CC_BTN_2 = 32,
-		CC_BTN_3 = 64
+		CC_BTN_1     = 16,
+		CC_BTN_2     = 32
 	};
 
 	uint8_t cableType = CABLE_SMS;
@@ -68,7 +66,7 @@ private:
 
 	bool convertOutputToGenesis = false;
 	
-	static const byte CC_INPUT_PINS = 7;
+	static const byte CC_INPUT_PINS = 6;
 	static const unsigned long CC_READ_DELAY_MS = 5;
 
 	byte inputPins[CC_INPUT_PINS];

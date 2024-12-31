@@ -68,7 +68,6 @@
 #define SMS_INPUT_PIN_3    3
 #define SMS_INPUT_PIN_4    5
 #define SMS_INPUT_PIN_5    6
-#define SMS_INPUT_PIN_6    4
 
 #define SMSONGEN_INPUT_PIN_0    0
 #define SMSONGEN_INPUT_PIN_1    1
@@ -76,7 +75,6 @@
 #define SMSONGEN_INPUT_PIN_3    3
 #define SMSONGEN_INPUT_PIN_4    4
 #define SMSONGEN_INPUT_PIN_5    5
-#define SMSONGEN_INPUT_PIN_6    7
 
 #define PS_ATT             0
 #define PS_CLOCK           1

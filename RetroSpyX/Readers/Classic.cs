@@ -4,7 +4,7 @@ namespace RetroSpy.Readers
 {
     public static class Classic
     {
-        private const int PACKET_SIZE = 8;
+        private const int PACKET_SIZE = 7;
 
         private static float maxX = float.MinValue, maxY = float.MinValue;
 
