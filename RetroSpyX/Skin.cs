@@ -76,6 +76,7 @@ namespace RetroSpy
         public ElementConfig? Config { get; set; }
         public string? Name { get; set; }
         public float Precision { get; set; }
+        public bool Invert { get; set; }
     }
 
     public class RangeButton
@@ -441,7 +442,8 @@ namespace RetroSpy
                 {
                     Config = ParseStandardConfig(skinPath, elem),
                     Name = ReadStringAttr(elem, "name"),
-                    Precision = ReadFloatConfig(elem, "precision", false)
+                    Precision = ReadFloatConfig(elem, "precision", false),
+                    Invert = ReadBoolAttr(elem, "invert", false)
                 });
             }
 

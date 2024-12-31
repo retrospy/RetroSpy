@@ -415,13 +415,13 @@ namespace RetroSpy
                 {
                     if (Dispatcher.UIThread.CheckAccess())
                     {
-                        button.Item2.IsVisible = e.Buttons[button.Item1.Name ?? string.Empty];
+                        button.Item2.IsVisible = !button.Item1.Invert ? e.Buttons[button.Item1.Name ?? string.Empty] : !e.Buttons[button.Item1.Name ?? string.Empty];
                     }
                     else
                     {
                         Dispatcher.UIThread.Post(() =>
                         {
-                            button.Item2.IsVisible = e.Buttons[button.Item1.Name ?? string.Empty];
+                            button.Item2.IsVisible = !button.Item1.Invert ? e.Buttons[button.Item1.Name ?? string.Empty] : !e.Buttons[button.Item1.Name ?? string.Empty];
                         });
                     }
                 }

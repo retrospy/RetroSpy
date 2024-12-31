@@ -45,6 +45,7 @@ void SMSSpy::setup() {
 		inputPins[3] = SMS_INPUT_PIN_3;
 		inputPins[4] = SMS_INPUT_PIN_4;
 		inputPins[5] = SMS_INPUT_PIN_5;
+		inputPins[6] = SMS_INPUT_PIN_6;
 		break;
 	case CABLE_GENESIS:
 		// I don't know why these are different.
@@ -54,6 +55,7 @@ void SMSSpy::setup() {
 		inputPins[3] = SMSONGEN_INPUT_PIN_3;
 		inputPins[4] = SMSONGEN_INPUT_PIN_4;
 		inputPins[5] = SMSONGEN_INPUT_PIN_5;
+		inputPins[6] = SMSONGEN_INPUT_PIN_6;
 		break;
 	case CABLE_GX4000:
 		inputPins[0] = 2;
@@ -61,7 +63,8 @@ void SMSSpy::setup() {
 		inputPins[2] = 4;
 		inputPins[3] = 5;
 		inputPins[4] = 6;
-		inputPins[5] = 8;	
+		inputPins[5] = 8;
+		inputPins[6] = 8;
 		break;
 	}
 
@@ -103,7 +106,8 @@ void SMSSpy::updateState() {
 	if (digitalRead(inputPins[2]) == LOW) { currentState |= CC_BTN_LEFT; }
 	if (digitalRead(inputPins[3]) == LOW) { currentState |= CC_BTN_RIGHT; }
 	if (digitalRead(inputPins[4]) == LOW) { currentState |= CC_BTN_1; }
-	if (digitalRead(inputPins[5]) == LOW) { currentState |= CC_BTN_2; }
+	if (digitalRead(inputPins[5]) == LOW)  { currentState |= CC_BTN_2; }
+	if (digitalRead(inputPins[6]) == LOW)  { currentState |= CC_BTN_3; }
 	
 	interrupts();
 
@@ -114,7 +118,7 @@ void SMSSpy::writeSerial() {
 	
 	if (outputType == OUTPUT_SMS)
 	{
-		for (unsigned char i = 0; i < 6; ++i)
+		for (unsigned char i = 0; i < 7; ++i)
 		{
 			Serial.write(currentState & (1 << i) ? ONE : ZERO);
 		}
@@ -141,8 +145,8 @@ void SMSSpy::writeSerial() {
 }
 
 void SMSSpy::debugSerial() {
-	switch (cableType) {
-	case CABLE_SMS:
+	switch (outputType) {
+	case OUTPUT_SMS:
 		if (currentState == lastState)
 		{
 			return;
@@ -154,10 +158,11 @@ void SMSSpy::debugSerial() {
 		Serial.print((currentState & CC_BTN_RIGHT) ? "R" : "0");
 		Serial.print((currentState & CC_BTN_1) ? "1" : "0");
 		Serial.print((currentState & CC_BTN_2) ? "2" : "0");
-		Serial.print("\n");
+		Serial.print((currentState & CC_BTN_3) ? "3" : "0");
+		Serial.println();
 		lastState = currentState;
 		break;
-	case CABLE_GENESIS:
+	case OUTPUT_GENESIS:
 		if (currentState == lastState)
 		{
 			return;
@@ -176,7 +181,7 @@ void SMSSpy::debugSerial() {
 		Serial.print("0");
 		Serial.print("0");
 		Serial.print("0");
-		Serial.print("\n");
+		Serial.println();
 		lastState = currentState;
 		break;
 	}

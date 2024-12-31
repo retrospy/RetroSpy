@@ -23,7 +23,7 @@ namespace RetroSpy
         public static readonly InputSource ATARI5200 = new("atari5200", "Atari 5200", true, false, false, true, false, 3, false, (port, port2, useLagFix) => new SerialControllerReader2(port, port2, useLagFix, SuperNESandNES.ReadFromPacketAtari52001, SuperNESandNES.ReadFromPacketAtari52002));
         public static readonly InputSource JAGUAR = new("jaguar", "Atari Jaguar", true, false, false, false, false, 3, false, (port, useLagFix) => new SerialControllerReader(port, useLagFix, SuperNESandNES.ReadFromPacketJaguar));
         public static readonly InputSource ATARIVCS = new("vcs", "Atari VCS", false, false, true, false, false, 0, false, (hostname, username, password) => new SSHControllerReader(hostname, "sudo pkill -9 usb-mitm ; sudo usb-mitm 2> /dev/null -V", VCS.ReadFromPacket, username, password, null, 0));
-
+ 
         public static readonly InputSource PIPPIN = new("pippin", "Bandai Pippin", true, false, false, false, false, 3, false, (port, useLagFix) => new SerialControllerReader(port, useLagFix, Pippin.ReadFromPacket));
 
         public static readonly InputSource EVERCADE = new("evercade", "Blaze Evercade Vs", false, false, true, false, false, 0, false, (hostname, username, password) => new SSHControllerReader(hostname, "sudo pkill -9 usb-mitm ; sudo usb-mitm 2> /dev/null -n", EVS.ReadFromPacket, username, password, null, 0));
@@ -111,6 +111,7 @@ namespace RetroSpy
         public static readonly InputSource NEOGEOMINI_II = new("neogeomini", "SNK NeoGeo Mini", true, false, false, false, false, 1, false, (port, useLagFix) => new SuperSerialControllerReader(port, useLagFix, true, NeoGeoMini_II.ReadFromPacket));
         public static readonly InputSource ATARIVCS_II = new("vcs", "Atari VCS", true, false, false, false, false, 1, false, (port, useLagFix) => new SuperSerialControllerReader(port, useLagFix, true, VCS.ReadFromPacket));
         public static readonly InputSource USBMOUSE = new("usbmouse", "Windows USB Mouse", true, false, false, false, false, 4, false, (port, useLagFix) => new SuperSerialControllerReader(port, useLagFix, false, USBMouse.ReadFromPacket));
+        public static readonly InputSource THE400MINI = new("the400mini", "The 400 Mini", true, false, false, false, false, 1, false, (port, useLagFix) => new SuperSerialControllerReader(port, useLagFix, false, The400Mini.ReadFromPacket));
 
         // Retired/Non-Functional
         //static public readonly InputSource MOUSETESTER = new InputSource("mousetester", "Mouse Tester", true, false, false, false, false, 3, (port, useLagFix) => new MouseTester3, (port));
@@ -121,18 +122,18 @@ namespace RetroSpy
 
         public static readonly IReadOnlyList<InputSource> ALL = new List<InputSource> {
 #pragma warning disable CS8604 // Possible null reference argument.
-            MISTER, POCKET, POCKET_II, CLASSIC, DRIVINGCONTROLLER, ATARIKEYBOARD, PADDLES, ATARI5200, JAGUAR, ATARIVCS_II, ATARIVCS, PIPPIN, EVERCADE, EVERCADE_II, COLECOVISION, CDTV, CD32, C64MINI, C64MINI_II, A500MINI, A500MINI_II, FMTOWNS, INTELLIVISION, DOLPHIN, XBOX, XBOX_II, XBOX360, XBOX360_II, TG16, PCFX, TG16MINI, TG16_II, NES, SNES, VIRTUALBOY, N64, N64EMU, GAMECUBE, WII, SWITCH, SWITCH_II, THREEDO, PC360, PAD, PCKEYBOARD, CDI, SEGA, SATURN3D, DREAMCAST, GENMINI, GENMINI1_II, GENMINI2, GENMINI2_II, NEOGEO, NEOGEOMINI_II, NEOGEOMINI, PLAYSTATION2, PS3_II, PS3, PS4_II, PS4, PS4CRONUS, PS4USB, PSCLASSIC, PSCLASSIC_II, NUON, VSMILE, VFLASH, USBMOUSE
+            MISTER, POCKET, POCKET_II, CLASSIC, DRIVINGCONTROLLER, ATARIKEYBOARD, PADDLES, ATARI5200, JAGUAR, ATARIVCS_II, ATARIVCS, THE400MINI, PIPPIN, EVERCADE, EVERCADE_II, COLECOVISION, CDTV, CD32, C64MINI, C64MINI_II, A500MINI, A500MINI_II, FMTOWNS, INTELLIVISION, DOLPHIN, XBOX, XBOX_II, XBOX360, XBOX360_II, TG16, PCFX, TG16MINI, TG16_II, NES, SNES, VIRTUALBOY, N64, N64EMU, GAMECUBE, WII, SWITCH, SWITCH_II, THREEDO, PC360, PAD, PCKEYBOARD, CDI, SEGA, SATURN3D, DREAMCAST, GENMINI, GENMINI1_II, GENMINI2, GENMINI2_II, NEOGEO, NEOGEOMINI_II, NEOGEOMINI, PLAYSTATION2, PS3_II, PS3, PS4_II, PS4, PS4CRONUS, PS4USB, PSCLASSIC, PSCLASSIC_II, NUON, VSMILE, VFLASH, USBMOUSE
 #pragma warning restore CS8604 // Possible null reference argument.
         };
 
         public static readonly IReadOnlyList<InputSource> ALL_LINUX = new List<InputSource> {
 #pragma warning disable CS8604 // Possible null reference argument.
-            MISTER, POCKET, POCKET_II, CLASSIC, DRIVINGCONTROLLER, ATARIKEYBOARD, PADDLES, ATARI5200, JAGUAR, ATARIVCS_II, ATARIVCS, PIPPIN, EVERCADE, EVERCADE_II, COLECOVISION, CDTV, CD32, C64MINI, C64MINI_II, A500MINI, A500MINI_II, FMTOWNS, INTELLIVISION, LINUX, LINUXKEY, DOLPHIN, XBOX, XBOX_II, XBOX360, XBOX360_II, TG16, PCFX, TG16MINI, TG16_II, NES, SNES, VIRTUALBOY, N64, GAMECUBE, WII, SWITCH, SWITCH_II, THREEDO, CDI, SEGA, SATURN3D, DREAMCAST, GENMINI, GENMINI1_II, GENMINI2, GENMINI2_II, NEOGEO, NEOGEOMINI, NEOGEOMINI_II, PLAYSTATION2,PS3_II, PS3, PS4, PS4_II, PS4CRONUS, PS4USB, PSCLASSIC, PSCLASSIC_II, NUON, VSMILE, VFLASH
+            MISTER, POCKET, POCKET_II, CLASSIC, DRIVINGCONTROLLER, ATARIKEYBOARD, PADDLES, ATARI5200, JAGUAR, ATARIVCS_II, ATARIVCS, THE400MINI, PIPPIN, EVERCADE, EVERCADE_II, COLECOVISION, CDTV, CD32, C64MINI, C64MINI_II, A500MINI, A500MINI_II, FMTOWNS, INTELLIVISION, LINUX, LINUXKEY, DOLPHIN, XBOX, XBOX_II, XBOX360, XBOX360_II, TG16, PCFX, TG16MINI, TG16_II, NES, SNES, VIRTUALBOY, N64, GAMECUBE, WII, SWITCH, SWITCH_II, THREEDO, CDI, SEGA, SATURN3D, DREAMCAST, GENMINI, GENMINI1_II, GENMINI2, GENMINI2_II, NEOGEO, NEOGEOMINI, NEOGEOMINI_II, PLAYSTATION2,PS3_II, PS3, PS4, PS4_II, PS4CRONUS, PS4USB, PSCLASSIC, PSCLASSIC_II, NUON, VSMILE, VFLASH
 #pragma warning restore CS8604 // Possible null reference argument.
         };
 
         public static readonly IReadOnlyList<InputSource> ALL_MACOS = new List<InputSource> {
-            MISTER, POCKET, POCKET_II, CLASSIC, DRIVINGCONTROLLER, ATARIKEYBOARD, PADDLES, ATARI5200, JAGUAR, ATARIVCS_II, ATARIVCS, PIPPIN, EVERCADE, EVERCADE_II, COLECOVISION, CDTV, CD32, C64MINI, C64MINI_II, A500MINI, A500MINI_II, FMTOWNS, INTELLIVISION, DOLPHIN, XBOX, XBOX_II, XBOX360, XBOX360_II, TG16, PCFX, TG16MINI, TG16_II, NES, SNES, VIRTUALBOY, N64, GAMECUBE, WII, SWITCH, SWITCH_II, THREEDO, CDI, SEGA, SATURN3D, DREAMCAST, GENMINI, GENMINI1_II, GENMINI2, GENMINI2_II,  NEOGEO, NEOGEOMINI, NEOGEOMINI_II, PLAYSTATION2, PS3_II, PS3, PS4_II, PS4, PS4CRONUS, PS4USB, PSCLASSIC, PSCLASSIC_II, NUON, VSMILE, VFLASH
+            MISTER, POCKET, POCKET_II, CLASSIC, DRIVINGCONTROLLER, ATARIKEYBOARD, PADDLES, ATARI5200, JAGUAR, ATARIVCS_II, ATARIVCS, THE400MINI, PIPPIN, EVERCADE, EVERCADE_II, COLECOVISION, CDTV, CD32, C64MINI, C64MINI_II, A500MINI, A500MINI_II, FMTOWNS, INTELLIVISION, DOLPHIN, XBOX, XBOX_II, XBOX360, XBOX360_II, TG16, PCFX, TG16MINI, TG16_II, NES, SNES, VIRTUALBOY, N64, GAMECUBE, WII, SWITCH, SWITCH_II, THREEDO, CDI, SEGA, SATURN3D, DREAMCAST, GENMINI, GENMINI1_II, GENMINI2, GENMINI2_II,  NEOGEO, NEOGEOMINI, NEOGEOMINI_II, PLAYSTATION2, PS3_II, PS3, PS4_II, PS4, PS4CRONUS, PS4USB, PSCLASSIC, PSCLASSIC_II, NUON, VSMILE, VFLASH
         };
 
         public static IReadOnlyList<InputSource> GetAllSources()
