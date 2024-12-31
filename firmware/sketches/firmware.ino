@@ -684,7 +684,7 @@ bool CreateSpy()
 		currentSpy = new FMTownsKeyboardAndMouseSpy();
 		break;
 	case 0x0E:
-		currentSpy = new TG16Spy();
+		currentSpy = new TG16Spy(4);
 		break;
 	case 0x0F:
 		currentSpy = new NeoGeoSpy();
