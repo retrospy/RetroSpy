@@ -31,6 +31,11 @@
 
 class TG16Spy : public ControllerSpy {
 public:
+	TG16Spy(int picoDelay)
+		: picoDelay(picoDelay)
+	{
+	}
+	
 	void loop();
 	void writeSerial();
 	void debugSerial();
@@ -45,6 +50,7 @@ private:
 	bool highButtons = true;
 	bool seenHighButtons = false;
 	word currentState;
+	int picoDelay;
 };
 
 #endif

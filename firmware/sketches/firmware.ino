@@ -780,6 +780,9 @@ bool CreateSpy()
 	case 0x27:
 		currentSpy = new NuonSpy();
 		break;
+	case 0x28:
+		currentSpy = new TG16Spy(2);
+		break;
 	}
 #elif defined(MODE_DETECT)
 	if (!PINC_READ(MODEPIN_SNES))

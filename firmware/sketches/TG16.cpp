@@ -49,7 +49,7 @@ void TG16Spy::updateState() {
 	while ((READ_PORTD(0b01000000)) == 0) {}
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 	unsigned long start = micros(); 
-	while (micros() - start < 4) ;
+	while (micros() - start < picoDelay) ;
 #else
 	asm volatile("nop\nnop\n");
 #endif
