@@ -30,7 +30,7 @@
 
 void TG16Spy::loop() {
 
-	noInterrupts();
+
 	updateState();
 	interrupts();
 #if !defined(DEBUG)
@@ -45,48 +45,69 @@ static int roundsSince6Button = 0;
 void TG16Spy::updateState() {
 	word temp = 0;
 	currentState = 0;
-
-	while ((READ_PORTD(0b01000000)) == 0) {}
-#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-	unsigned long start = micros(); 
-	while (micros() - start < picoDelay) ;
-#else
-	asm volatile("nop\nnop\n");
-#endif
+try_again: 
+	unsigned long start = millis();
 	
+	while ((READ_PORTD(0b01000000)) == 0) {}
+	
+	if (millis() - start < 16)
+		goto try_again;
+	
+	noInterrupts();
+	
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	delayMicroseconds(4);
+#else
+	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS);
+#endif
 	temp = ((READ_PORTD(0b00111100)) >> 2);
-	if ((temp & 0b00001111) == 0b00000000) {
-		currentState |= lastDirections;
-		seenHighButtons = true;
-		has6buttons = true;
-		roundsSince6Button = 0;
-	}
-	else {
-		
-		if (++roundsSince6Button == 2)
-		{
-			has6buttons = false;
-			lastHighButtons = 0x00F0;
-		}
-		
-		seenHighButtons = false;
+	if ((temp & 0b00001111) == 0b00000000)  // We have 6 buttons
+	{
+try_again1:
+		while ((READ_PORTD(0b01000000)) != 0) {}
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+		delayMicroseconds(3);
+#else
+		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS );
+#endif
+		temp = ((READ_PORTD(0b00111100)) << 6);	// Get III, IV, V and VI
 		currentState |= temp;
-		lastDirections = temp;
+		while ((READ_PORTD(0b01000000)) == 0) {}
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+		delayMicroseconds(5);
+#else
+		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS);
+#endif
 	}
+	else
+	{
+		currentState = 0x0F00;
 
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+		WAIT_LEADING_EDGE(4);
+		delayMicroseconds(5);
+#else
+		WAIT_LEADING_EDGE(6);
+		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS);
+#endif
+	}
+	
+	// Get U,D,L & R
+	temp = ((READ_PORTD(0b00111100)) >> 2);
+	if ((temp & 0b00001111) == 0b00000000)  // Are we burst checking III, IV, V and VI?
+		goto try_again1;
+	
+	currentState |= temp;
+
+	// Get Select, Run, I and II
 	while ((READ_PORTD(0b01000000)) != 0) {}
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	delayMicroseconds(2);
+#else
 	asm volatile(MICROSECOND_NOPS);
+#endif
 	temp = ((READ_PORTD(0b00111100)) << 2);
-	if (seenHighButtons == has6buttons ? false : true) {
-		currentState |= (temp << 4);
-		lastHighButtons = temp;
-		currentState |= lastButtons;
-	}
-	else {
-		currentState |= temp;
-		lastButtons = temp;
-		currentState |= (lastHighButtons << 4);
-	}
+	currentState |= temp;
 
 	currentState = ~currentState;
 }

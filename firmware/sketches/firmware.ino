@@ -684,7 +684,7 @@ bool CreateSpy()
 		currentSpy = new FMTownsKeyboardAndMouseSpy();
 		break;
 	case 0x0E:
-		currentSpy = new TG16Spy(4);
+		currentSpy = new TG16Spy();
 		break;
 	case 0x0F:
 		currentSpy = new NeoGeoSpy();
@@ -781,7 +781,7 @@ bool CreateSpy()
 		currentSpy = new NuonSpy();
 		break;
 	case 0x28:
-		currentSpy = new TG16Spy(2);
+		currentSpy = new TG16Spy();
 		break;
 	}
 #elif defined(MODE_DETECT)

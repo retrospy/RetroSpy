@@ -31,11 +31,7 @@
 
 class TG16Spy : public ControllerSpy {
 public:
-	TG16Spy(int picoDelay)
-		: picoDelay(picoDelay)
-	{
-	}
-	
+
 	void loop();
 	void writeSerial();
 	void debugSerial();
@@ -44,13 +40,7 @@ public:
 	virtual const char* startupMsg();
 
 private:
-	word lastDirections = 0;
-	word lastHighButtons = 0x00F0;
-	word lastButtons = 0;
-	bool highButtons = true;
-	bool seenHighButtons = false;
 	word currentState;
-	int picoDelay;
 };
 
 #endif
