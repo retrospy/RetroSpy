@@ -147,6 +147,8 @@
 #include "VSmile.h"
 #include "VFlash.h"
 
+#include "Duo.h"
+
 bool CreateSpy();
 
 ControllerSpy* currentSpy = NULL;
@@ -781,7 +783,7 @@ bool CreateSpy()
 		currentSpy = new NuonSpy();
 		break;
 	case 0x28:
-		currentSpy = new TG16Spy();
+		currentSpy = new DuoSpy();
 		break;
 	}
 #elif defined(MODE_DETECT)
