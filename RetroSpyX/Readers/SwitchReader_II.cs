@@ -71,6 +71,11 @@ namespace RetroSpy.Readers
                 if (binaryPacket[0] != 0x30)
                     return null;
 
+                // I have no idea why this code exists
+                // "if" seems to be checking for a specific controller (what controller?)
+                // The "else" seems to be checking for an OEM pro controller,
+                // but it prevents 8bitdo Pro 2 Bluetooth Gamepad from working.
+                // Worst case I break another controller. Someone will complain if its important. :)
                 if (binaryPacket[55] == 1)
                 {
                     for (int i = 0; i < 8; ++i)
@@ -79,14 +84,14 @@ namespace RetroSpy.Readers
                             return null;
                     }
                 }
-                else
-                {
-                    for (int i = 0; i < 15; ++i)
-                    {
-                        if (binaryPacket[binaryPacket.Length - i - 1] != 0x00)
-                            return null;
-                    }
-                }
+                //else
+                //{
+                //    for (int i = 0; i < 15; ++i)
+                //    {
+                //        if (binaryPacket[binaryPacket.Length - i - 1] != 0x00)
+                //            return null;
+                //    }
+                //}
                 ControllerStateBuilder outState = new();
 
                 for (int i = 0; i < 3; ++i)
