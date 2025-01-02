@@ -1,10 +1,10 @@
 //
-// TG16.cpp
+// Duo.cpp
 //
 // Author:
 //       Christopher "Zoggins" Mallery <zoggins@retro-spy.com>
 //
-// Copyright (c) 2020 RetroSpy Technologies
+// Copyright (c) 2025 RetroSpy Technologies
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,13 +24,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "TG16.h"
+#include "Duo.h"
 
-#if !(defined(__arm__) && defined(CORE_TEENSY)) 
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
 
-void TG16Spy::loop() {
-
-
+void DuoSpy::loop() 
+{
+	noInterrupts();
 	updateState();
 	interrupts();
 #if !defined(DEBUG)
@@ -40,86 +40,49 @@ void TG16Spy::loop() {
 #endif
 	delay(1);
 }
-static bool has6buttons = false;
-static int roundsSince6Button = 0;
-void TG16Spy::updateState() {
+
+void DuoSpy::updateState() {
 	word temp = 0;
 	currentState = 0;
 try_again: 
-	unsigned long start = millis();
-	
-	while ((READ_PORTD(0b01000000)) == 0) {}
-	
-	if (millis() - start < 16)
+
+	// Get U, D, L & R
+	WAIT_LEADING_EDGE(4);
+	delayMicroseconds(1);
+	temp = READ_PORTD(0b01111100);
+	if ((temp & 0b00111100) == 0 || (temp & 0b01000000) == 0)
 		goto try_again;
+	currentState |= (temp & 0b00111100)  >> 2;
 	
-	noInterrupts();
+	// Get Run, Select, I and II
+	while (READ_PORTD(0b01000000) != 0) ;
+	delayMicroseconds(1);
+	temp = READ_PORTD(0b01111100);
+	if ((temp & 0b01000000) != 0)
+		goto try_again;
+	currentState |= (temp & 0b00111100) << 2;
 	
-#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-	delayMicroseconds(4);
-#else
-	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS);
-#endif
-	temp = ((READ_PORTD(0b00111100)) >> 2);
-	if ((temp & 0b00001111) == 0b00000000)  // We have 6 buttons
-	{
-try_again1:
-		while ((READ_PORTD(0b01000000)) != 0) {}
-#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-		delayMicroseconds(3);
-#else
-		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS );
-#endif
-		temp = ((READ_PORTD(0b00111100)) << 6);	// Get III, IV, V and VI
-		currentState |= temp;
-		while ((READ_PORTD(0b01000000)) == 0) {}
-#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-		delayMicroseconds(5);
-#else
-		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS);
-#endif
-	}
-	else
-	{
-		currentState = 0x0F00;
-
-#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-		WAIT_LEADING_EDGE(4);
-		delayMicroseconds(5);
-#else
-		WAIT_LEADING_EDGE(6);
-		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS MICROSECOND_NOPS);
-#endif
-	}
+	// Get III, IV, V & VI 
+	// Or it will grab Run, Select, I and II again for 2 button controllers
+	while (READ_PORTD(0b01111100) != 0b01000000) ;
+	while (READ_PORTD(0b01000000) != 0) ;
+	delayMicroseconds(1);
+	temp = READ_PORTD(0b01111100);
+	if ((temp & 0b01000000) != 0)
+		goto try_again;
+	currentState |= (temp & 0b00111100)  << 6;
 	
-	// Get U,D,L & R
-	temp = ((READ_PORTD(0b00111100)) >> 2);
-	if ((temp & 0b00001111) == 0b00000000)  // Are we burst checking III, IV, V and VI?
-		goto try_again1;
-	
-	currentState |= temp;
-
-	// Get Select, Run, I and II
-	while ((READ_PORTD(0b01000000)) != 0) {}
-#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-	delayMicroseconds(2);
-#else
-	asm volatile(MICROSECOND_NOPS);
-#endif
-	temp = ((READ_PORTD(0b00111100)) << 2);
-	currentState |= temp;
-
 	currentState = ~currentState;
 }
 
-void TG16Spy::writeSerial() {
+void DuoSpy::writeSerial() {
 	for (unsigned char i = 0; i < 12; ++i) {
 		Serial.write(currentState & (1 << i) ? ONE : ZERO);
 	}
 	Serial.write(SPLIT);
 }
 
-void TG16Spy::debugSerial() {
+void DuoSpy::debugSerial() {
 	Serial.print((currentState & 0b0000000000000001) ? "U" : "0");
 	Serial.print((currentState & 0b0000000000000010) ? "R" : "0");
 	Serial.print((currentState & 0b0000000000000100) ? "D" : "0");
@@ -136,17 +99,17 @@ void TG16Spy::debugSerial() {
 }
 
 #else
-void TG16Spy::loop() {}
+void DuoSpy::loop() {}
 
-void TG16Spy::writeSerial() {}
+void DuoSpy::writeSerial() {}
 
-void TG16Spy::debugSerial() {}
+void DuoSpy::debugSerial() {}
 
-void TG16Spy::updateState() {}
+void DuoSpy::updateState() {}
 
 #endif
 
-const char* TG16Spy::startupMsg()
+const char* DuoSpy::startupMsg()
 {
-	return "TG16";
+	return "Analogue Duo";
 }

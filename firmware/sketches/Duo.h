@@ -1,10 +1,10 @@
 //
-// TG16.h
+// Duo.h
 //
 // Author:
 //       Christopher "Zoggins" Mallery <zoggins@retro-spy.com>
 //
-// Copyright (c) 2020 RetroSpy Technologies
+// Copyright (c) 2025 RetroSpy Technologies
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +24,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef TG16Spy_h
-#define TG16Spy_h
+#ifndef DuoSpy_h
+#define DuoSpy_h
 
 #include "ControllerSpy.h"
 
-class TG16Spy : public ControllerSpy {
+class DuoSpy : public ControllerSpy {
 public:
 
 	void loop();
@@ -44,3 +44,4 @@ private:
 };
 
 #endif
+#pragma once
