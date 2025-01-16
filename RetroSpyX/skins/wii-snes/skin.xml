@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<skin name="SNES Controller" author="jaburns" type="wii;snes;switch;mister;generic;mister.snestomee">
+<skin name="SNES Controller" author="jaburns" type="wii;snes;switch;mister;generic;mister.snestomee;mister.sn30">
 
   <background name="Default" image="snes.png" />
 
@@ -14,6 +14,17 @@
     <button name="b0" image="circle.png" x="175" y="69" width="24" height="24" />
     <button name="b3" image="circle.png" x="174" y="32" width="24" height="24" />
     <button name="b2" image="circle.png" x="153" y="50" width="24" height="24" />
+  </section>
+  <section type="mister.sn30" name="8bitdo SN30">
+    <button name="b1" image="circle.png" x="196" y="50" width="24" height="24" />
+    <button name="b0" image="circle.png" x="175" y="69" width="24" height="24" />
+    <button name="b3" image="circle.png" x="174" y="32" width="24" height="24" />
+    <button name="b2" image="circle.png" x="153" y="50" width="24" height="24" />
+
+	<button name="y-" image="circle.png" x="46" y="41" width="16" height="16" direction="fade"/>
+	<button name="y+" image="circle.png" x="46" y="69" width="16" height="16" direction="fade"/>
+	<button name="x-" image="circle.png" x="32" y="55" width="16" height="16" direction="fade"/>
+	<button name="x+" image="circle.png" x="60" y="55" width="16" height="16" direction="fade"/>
   </section>
   <section type="mister;mister.snestomee">
     <button name="b4" image="circle.png" x="35" y="7" width="44" height="14" />
@@ -54,10 +65,11 @@
     <button name="+" image="circle.png" x="113" y="62" width="28" height="17" />
     <button name="-" image="circle.png" x="83" y="62" width="28" height="17" />
   </section>
-  
-  <button name="up" image="circle.png" x="46" y="41" width="16" height="16" />
-  <button name="down" image="circle.png" x="46" y="69" width="16" height="16" />
-  <button name="left" image="circle.png" x="32" y="55" width="16" height="16" />
-  <button name="right" image="circle.png" x="60" y="55" width="16" height="16" />
 
+	<section type="wii;snes;switch;mister;generic;mister.snestomee">
+		<button name="up" image="circle.png" x="46" y="41" width="16" height="16" />
+		<button name="down" image="circle.png" x="46" y="69" width="16" height="16" />
+		<button name="left" image="circle.png" x="32" y="55" width="16" height="16" />
+		<button name="right" image="circle.png" x="60" y="55" width="16" height="16" />
+	</section>
 </skin>
