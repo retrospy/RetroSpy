@@ -5,9 +5,29 @@
     be pressed at the same time on the monitored gamepad in order to
     send a HOME keypress to the OS.
 
-    <binding output-key="home">
-        <input button="r" />
-        <input button="l" />
-    </binding>
+	<binding output-key="home" >
+		<input button="r" />
+		<input button="l" />
+	</binding>
+
+	The following example binding requires that both "up" and "left"
+    be pressed at the same time on the monitored gamepad in order to
+    send a END keypress to the OS.  This binding will only be active
+	when you select PlayStation 4 as your controller source.
+
+	<binding output-key="end" type="ps4">
+		<input button="up" />
+		<input button="left" />
+	</binding>
+
+	The following example binding requires that both "down" and "right"
+    be pressed at the same time on the monitored gamepad in order to
+    send a DELETE keypress to the OS.  This binding will only be active
+	when you select PlayStation 2, PC 360 or PlayStation 4 as your controller source.
+
+	<binding output-key="delete" type="ps2;pc360;ps4">
+		<input button="down" />
+		<input button="right" />
+	</binding>
     -->
 </keybindings>

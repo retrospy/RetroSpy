@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Desktop.Robot;
 using System.Runtime.InteropServices;
+using System.Linq;
 
 namespace RetroSpy
 {
@@ -17,12 +18,15 @@ namespace RetroSpy
             public readonly Key OutputKey;
             public readonly IReadOnlyList<string> RequiredButtons;
 
+            public readonly IReadOnlyList<string>? Platforms;
+
             public bool CurrentlyDepressed;
 
-            public Binding(Key outputKey, IReadOnlyList<string> requiredButtons)
+            public Binding(Key outputKey, IReadOnlyList<string> requiredButtons, IReadOnlyList<string>? platforms)
             {
                 OutputKey = outputKey;
                 RequiredButtons = requiredButtons;
+                Platforms = platforms;
             }
         }
 
@@ -60,6 +64,9 @@ namespace RetroSpy
             {
                 foreach (XElement binding in doc.Root.Elements("binding"))
                 {
+                    string type = binding.Attribute("type")?.Value ?? string.Empty;
+                    string[] typesVec = type != null ? type.Split(';') : Array.Empty<string>();
+
                     Key outputKey = ReadKeybinding(binding.Attribute("output-key")?.Value ?? string.Empty);
                     if (outputKey == Key.Shift)
                     {
@@ -79,7 +86,7 @@ namespace RetroSpy
                         continue;
                     }
 
-                    _bindings.Add(new Binding(outputKey, requiredButtons));
+                    _bindings.Add(new Binding(outputKey, requiredButtons, typesVec.Length == 1 && typesVec[0] == string.Empty ? null : typesVec));
                 }
             }
 
@@ -99,26 +106,31 @@ namespace RetroSpy
             _reader.ControllerStateChanged -= Reader_ControllerStateChanged;
         }
 
+        public string CurrentlyActiveType { get; set; }
+
         private void Reader_ControllerStateChanged(object? reader, ControllerStateEventArgs e)
         {
             foreach (Binding binding in _bindings)
             {
-                bool allRequiredButtonsDown = true;
+                if (binding.Platforms == null || binding.Platforms.Contains(CurrentlyActiveType))
+                {
+                    bool allRequiredButtonsDown = true;
 
-                foreach (string requiredButton in binding.RequiredButtons)
-                {
-                    allRequiredButtonsDown &= e.Buttons[requiredButton];
-                }
+                    foreach (string requiredButton in binding.RequiredButtons)
+                    {
+                        allRequiredButtonsDown &= e.Buttons[requiredButton];
+                    }
 
-                if (allRequiredButtonsDown && !binding.CurrentlyDepressed)
-                {
-                    SendKeys.PressKey(binding.OutputKey);
-                    binding.CurrentlyDepressed = true;
-                }
-                else if (!allRequiredButtonsDown && binding.CurrentlyDepressed)
-                {
-                    SendKeys.ReleaseKey(binding.OutputKey);
-                    binding.CurrentlyDepressed = false;
+                    if (allRequiredButtonsDown && !binding.CurrentlyDepressed)
+                    {
+                        SendKeys.PressKey(binding.OutputKey);
+                        binding.CurrentlyDepressed = true;
+                    }
+                    else if (!allRequiredButtonsDown && binding.CurrentlyDepressed)
+                    {
+                        SendKeys.ReleaseKey(binding.OutputKey);
+                        binding.CurrentlyDepressed = false;
+                    }
                 }
             }
         }

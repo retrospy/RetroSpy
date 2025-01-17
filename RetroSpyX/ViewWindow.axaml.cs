@@ -50,7 +50,7 @@ namespace RetroSpy
 
         private readonly SetupWindow _sw;
 
-        public ViewWindow(SetupWindow sw, Skin? skin, Background? skinBackground, IControllerReader? reader, bool staticViewerWindowName)
+        public ViewWindow(SetupWindow sw, Skin? skin, Background? skinBackground, IControllerReader? reader, bool staticViewerWindowName, string typeTag)
         {
             Closing += (s, e) =>
             {
@@ -274,6 +274,7 @@ namespace RetroSpy
             try
             {
                 _keybindings = new Keybindings(Keybindings.XmlFilePath, _reader);
+                _keybindings.CurrentlyActiveType = typeTag;
             }
             catch (ConfigParseException)
             {

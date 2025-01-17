@@ -579,11 +579,10 @@ namespace RetroSpy
                     reader = new DelayedControllerReader(reader, _vm.DelayInMilliseconds, _vm.LegacyKeybindingBehavior);
                 }
 
-
                 _portListUpdateTimer.Stop();
                 v = new ViewWindow(this, _vm.Skins.SelectedItem,
                                _vm.Backgrounds.SelectedItem,
-                               reader, _vm.StaticViewerWindowName);
+                               reader, _vm.StaticViewerWindowName, _vm.Sources.SelectedItem?.TypeTag ?? "none");
                 v.Loaded += OnViewerLoaded;
                 Show();
                 await v.ShowDialog(this);
