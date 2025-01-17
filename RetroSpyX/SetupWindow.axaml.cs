@@ -617,11 +617,6 @@ namespace RetroSpy
             Show();
         }
 
-        private void V_Loaded(object? sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         private void PopulateSources()
         {
             List<InputSource> prunedSources = new();
