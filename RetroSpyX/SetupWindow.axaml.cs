@@ -212,7 +212,7 @@ namespace RetroSpy
         }
 
         private readonly bool letUpdatePortThreadRun = false;
-        public SetupWindow(bool skipSetup = false)
+        public SetupWindow(bool skipSetup = false, string? startsource = null, string? startskin = null, string? startdelay = null)
         {
             try
             {
@@ -394,8 +394,52 @@ namespace RetroSpy
 
                 if (skipSetup)
                 {
+                    startsource = startsource?.Replace("\"", "");
+                    if(startsource != null && SourcesComboBox != null)
+                    {
+                        int i;
+                        for (i = 0; i < SourcesComboBox.Items.Count; ++i)
+                        {
+                            if(_vm.Sources[i].Name == startsource)
+                                break;
+                        }
+
+                        if (i == _vm.Sources.Count)
+                        {
+                            Show();
+                            AvaloniaMessageBoxDialog(_resources.GetString("RetroSpy", CultureInfo.CurrentUICulture), "Source specified on the command line cannot be found.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                            return;
+                        }
+                        SourcesComboBox.SelectedIndex = i;
+                    }
                     SourceSelectComboBox_SelectionChanged(null, null);
+
+                    startskin = startskin?.Replace("\"", "");
+                    if (startskin != null && SkinListBox != null)
+                    {
+                        int i;
+                        for (i = 0; i < SkinListBox.Items.Count; ++i)
+                        {
+                            if (_vm.Skins[i].Name == startskin)
+                                break;
+                        }
+
+                        if (i == _vm.Skins.Count)
+                        {
+                            Show();
+                            AvaloniaMessageBoxDialog(_resources.GetString("RetroSpy", CultureInfo.CurrentUICulture), "Skin specified on the command line cannot be found.", ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                            return;
+                        }
+
+                        SkinListBox.SelectedIndex = i;
+                    }
+
                     Skin_SelectionChanged(null, null);
+
+                    startdelay = startdelay?.Replace("\"", "");
+                    if (startdelay != null)
+                        txtDelay.Text = startdelay;
+
                     GoButton_Click(null, null);
                 }
                 else
@@ -413,6 +457,11 @@ namespace RetroSpy
                 AvaloniaMessageBox(_resources == null ? "Invalid Resource Handle" : _resources.GetString("RetroSpy", CultureInfo.CurrentUICulture) ?? "Unknown Resource String: RetroSpy", ex.Message + "\n\n" + ex.StackTrace, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
                 Environment.Exit(-1);
             }
+        }
+
+        private void OnViewerLoaded(object? sender, System.EventArgs? e)
+        {
+            Hide();
         }
 
         private async void GoButton_Click(object? sender, RoutedEventArgs? e)
@@ -535,6 +584,8 @@ namespace RetroSpy
                 v = new ViewWindow(this, _vm.Skins.SelectedItem,
                                _vm.Backgrounds.SelectedItem,
                                reader, _vm.StaticViewerWindowName);
+                v.Loaded += OnViewerLoaded;
+                Show();
                 await v.ShowDialog(this);
                 _portListUpdateTimer.Start();
 
@@ -564,6 +615,11 @@ namespace RetroSpy
             }
 
             Show();
+        }
+
+        private void V_Loaded(object? sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void PopulateSources()

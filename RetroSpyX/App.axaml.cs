@@ -17,9 +17,28 @@ namespace RetroSpy
             {
                 desktop!.Startup += (sender, args) =>
                 {
-                    bool skipSetup = args.Args.Length == 1 && args.Args[0] == "-skipSetup";
+                    string? source = null;
+                    string? skin = null;
+                    string? delay = null;
+                    bool skipSetup = args.Args.Length >= 1 && args.Args[0] == "-skipSetup";
 
-                    desktop.MainWindow = new SetupWindow(skipSetup);
+                    foreach (var item in args.Args)
+                    {
+                        if (item.StartsWith("-source="))
+                        {
+                            source = item.Substring(8);
+                        }
+                        else if (item.StartsWith("-skin="))
+                        {
+                            skin = item.Substring(6);
+                        }
+                        else if (item.StartsWith("-delay="))
+                        {
+                            delay = item.Substring(7);
+                        }
+                    }
+
+                    desktop.MainWindow = new SetupWindow(skipSetup, source, skin, delay);
                 };
             }
 
