@@ -89,13 +89,13 @@ void GCSpy::loop1()
 {
 	if (sendRequest)
 	{
-		memcpy(sendData, rawData, 34 + GC_PREFIX + GC_BITCOUNT);
+		memcpy(sendData, rawData, GC_PREFIX + GC_BITCOUNT);
 		sendHeaderVal = headerVal;
 		sendRequest = false;
 	
 #if !defined(DEBUG)
-		if (sendHeaderVal == 0x40)
-			sendRawData(sendData, GC_PREFIX, (sendData[14] | sendData[15]) == 0 ? GC_BITCOUNT - 8 : GC_BITCOUNT);
+		if (sendHeaderVal == 0x40)  // Extra 12 are for the poll mode, rumble mode and stop bit
+			sendRawData(sendData, GC_PREFIX - 12, GC_BITCOUNT + 12);
 		else if (sendHeaderVal == 0x14 && ++show % 2 == 0)  // Gameboy Player polls too damn many times, slows down display.
 			writeSerial(); // This doesn't seem to negatively affect other games.
 		else if(sendHeaderVal == 0x54)
