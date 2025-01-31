@@ -11,9 +11,9 @@
   </PropertyGroup>
 
 	<PropertyGroup>
-		<AssemblyVersion>6.8</AssemblyVersion>
-		<FileVersion>6.8</FileVersion>
-		<Version>6.8</Version>
+		<AssemblyVersion>6.8.1</AssemblyVersion>
+		<FileVersion>6.8.1</FileVersion>
+		<Version>6.8.1</Version>
 		<Copyright>Copyright © 2022</Copyright>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<ApplicationIcon>UsbUpdater.ico</ApplicationIcon>
