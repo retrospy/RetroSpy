@@ -94,10 +94,14 @@ namespace RetroSpy.Readers
             {
                 for(int i = 0; i <  pollFormatCounts.Length; ++i)
                 {
-                    pollFormatCounts[i] = 0;
+                    if (i != pollFormat)
+                        pollFormatCounts[i] = 0;
                 }
             }
-            pollFormatCounts[pollFormat]++;
+            else
+            {
+                pollFormatCounts[pollFormat]++;
+            }
         }
 
         public static ControllerStateEventArgs? ReadFromSecondPacket(byte[]? packet)
