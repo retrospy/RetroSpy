@@ -53,7 +53,7 @@
 #endif
 
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-#define WORKING_WAIT waitStart = micros(); while (micros() - waitStart < 2) ;
+#define WORKING_WAIT waitStart = micros(); while (micros() - waitStart < 1) ;
 #else
 #define WORKING_WAIT
 #endif
