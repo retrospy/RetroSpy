@@ -229,6 +229,8 @@ namespace RetroSpy.Readers
             switch (mode)
             {
                 case 0x00:
+                    if (SignalTool.ReadByte(data, BUTTONS.Length + 40) != 0)
+                        return null;
                     state.SetAnalog("cstick_x", ReadStick(SignalTool.ReadByte(data, BUTTONS.Length + 16)), SignalTool.ReadByte(packet, BUTTONS.Length + 16));
                     state.SetAnalog("cstick_y", ReadStick(SignalTool.ReadByte(data, BUTTONS.Length + 24)), SignalTool.ReadByte(packet, BUTTONS.Length + 24));
                     state.SetAnalog("trig_l", ReadTrigger(SignalTool.ReadByte(data, BUTTONS.Length + 32, 4), 15), SignalTool.ReadByte(packet, BUTTONS.Length + 32, 4));
