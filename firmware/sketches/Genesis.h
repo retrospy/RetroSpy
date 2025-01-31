@@ -45,7 +45,7 @@
 #define WAIT_FOR_STATE_SEVEN READ_PORTB(1) != 1 || READ_PORTD(MASK_PINS_TWO_THREE_FOUR_FIVE) == 0
 
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-#define WAIT_FOR_LINES_TO_SETTLE settleStart = micros(); while (micros() - settleStart < 2) ;
+#define WAIT_FOR_LINES_TO_SETTLE settleStart = micros(); while (micros() - settleStart < 1) ;
 #elif defined(__arm__) && defined(CORE_TEENSY)
 #define WAIT_FOR_LINES_TO_SETTLE asm volatile (MICROSECOND_NOPS MICROSECOND_NOPS)
 #else
