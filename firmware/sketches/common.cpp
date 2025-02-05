@@ -121,11 +121,19 @@ void sendRawData(unsigned char rawControllerData[], unsigned char first, unsigne
 
 void sendRawDataDebug(unsigned char rawControllerData[], unsigned char first, unsigned char count)
 {
-	for (unsigned char i = 0; i < first; i++) {
-		Serial.print(rawControllerData[i] ? "1" : "0");
-	}
-	Serial.print("|");
 	int j = 0;
+	for (unsigned char i = 0; i < first; i++) {
+		if (j % 8 == 0 && j != 0)
+			Serial.print("|");
+		Serial.print(rawControllerData[i] ? "1" : "0");
+		++j;
+	}
+	
+	if (j % 8 != 0)
+		Serial.print("|");
+	
+	Serial.print("|");
+	j = 0;
 	for (unsigned char i = first; i < first + count; i++) {
 		if (j % 8 == 0 && j != 0)
 			Serial.print("|");

@@ -85,6 +85,8 @@ static u_int8_t dummyStickData[] = {
 
 static short headerVal = 0;
 
+byte storedButtons[16];
+
 void GCSpy::loop1()
 {
 	if (sendRequest)
@@ -93,6 +95,19 @@ void GCSpy::loop1()
 		sendHeaderVal = headerVal;
 		sendRequest = false;
 	
+		for (int i = 0; i < 16; ++i)
+		{
+			if (storedButtons[i] == 0x00 && sendData[25 + i] != 0x00)
+			{
+				storedButtons[i] = sendData[25 + i];
+				sendData[25 + i] = 0x00;
+			}
+			else
+			{
+				storedButtons[i] = sendData[25 + i];
+			}
+		}
+		
 #if !defined(DEBUG)
 		if (sendHeaderVal == 0x40)  // Extra 12 are for the poll mode, rumble mode and stop bit
 			sendRawData(sendData, GC_PREFIX - 12, GC_BITCOUNT + 12);
@@ -106,7 +121,7 @@ void GCSpy::loop1()
 		else if (sendHeaderVal == 0x14)
 			debugSerial();
 		else
-			sendRawDataDebug(sendData, 0, GC_BITCOUNT + GC_PREFIX);
+			sendRawDataDebug(sendData, GC_PREFIX, GC_BITCOUNT);
 #endif
 	}
 }

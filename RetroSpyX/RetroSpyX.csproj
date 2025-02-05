@@ -464,7 +464,6 @@
     <None Remove="skins\img_N64\pad-twist.png" />
     <None Remove="skins\img_N64\pad-yellow.png" />
     <None Remove="skins\img_N64\pad-zelda.png" />
-    <None Remove="skins\img_N64\skin.xml" />
     <None Remove="skins\intellivision-controller\circle2.png" />
     <None Remove="skins\intellivision-controller\intellivision.png" />
     <None Remove="skins\intellivision-controller\skin.xml" />
@@ -1951,9 +1950,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="skins\img_N64\pad-zelda.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="skins\img_N64\skin.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="skins\intellivision-controller\circle2.png">
