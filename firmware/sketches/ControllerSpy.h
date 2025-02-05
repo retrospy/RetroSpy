@@ -52,7 +52,7 @@ public:
 		{
 			Serial.println("// Selected mode is unsupported on this hardware");
 		}
-		Serial.println("6.8.1"); /*VERSIONINFO*/
+		Serial.println("6.8.3"); /*VERSIONINFO*/
 		delay(1000);
 	}
 		
