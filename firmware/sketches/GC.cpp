@@ -141,8 +141,7 @@ findcmdinit:
 		noInterrupts();
 		// Wait ~2us between line reads
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-		unsigned long start = micros();
-		while (micros() - start < 2) ;
+		busy_wait_us(2);
 #else
 		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
 #endif
@@ -164,8 +163,7 @@ readCmd:
 
 	// Wait ~2us between line reads
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-	unsigned long start = micros();
-	while (micros() - start < 2) ;
+	busy_wait_us(2);
 #else
 	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
 #endif
@@ -212,8 +210,7 @@ readData:
 	
 	// Wait ~2us between line reads
 #if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-	start = micros();
-	while (micros() - start < 2) ;
+	busy_wait_us(2);
 #else
 	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
 #endif
