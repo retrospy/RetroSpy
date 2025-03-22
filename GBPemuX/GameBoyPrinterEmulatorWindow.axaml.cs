@@ -237,6 +237,26 @@ namespace GBPemu
             }
         }
 
+        void Native_ClearGamePalette(MenuItem? menuItem)
+        {
+            foreach (MenuItem? game in Palette_Games.Items.Cast<MenuItem?>())
+            {
+                if (game != null)
+                {
+                    foreach (MenuItem? palette in game.Items.Cast<MenuItem?>())
+                    {
+                        if (palette != null && palette.Icon != null)
+                        {
+                            if (palette == menuItem)
+                                ((CheckBox)palette.Icon).IsChecked = true;
+                            else
+                                ((CheckBox)palette.Icon).IsChecked = false;
+                        }
+                    }
+                }
+            }
+        }
+
         private void Native_Palette_Click(object? sender, EventArgs e)
         {
 
@@ -282,7 +302,50 @@ namespace GBPemu
 
         private void NativeGame_Palette_Click(object? sender, EventArgs e)
         {
+            int newPalette = 0;
 
+            var NativeSizeMenu = NativeMenu.GetMenu(this)?.Items[1] as NativeMenuItem;
+            var paletteMenuItems = (AvaloniaList<NativeMenuItemBase>?)NativeSizeMenu?.Menu?.Items;
+
+            int k = 1;
+            if (paletteMenuItems != null)
+                foreach (NativeMenuItem palette in paletteMenuItems)
+                {
+                    if (sender is NativeMenuItem && sender == palette)
+                    {
+                        newPalette = k;
+                        palette.IsChecked = true;
+                    }
+                    ++k;
+                }
+
+            Native_CheckPalette(newPalette);
+            Native_ClearGamePalette(null);
+
+            if (decompressedTiles == null)
+            {
+                if (SelectedPalette != -1)
+                {
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        _imageBuffer.ReplaceColor(new Pixel(palettes[SelectedPalette][0][i], palettes[SelectedPalette][1][i], palettes[SelectedPalette][2][i], 255),
+                                                  new Pixel(palettes[newPalette][0][i], palettes[newPalette][1][i], palettes[newPalette][2][i], 255));
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        _imageBuffer.ReplaceColor(new Pixel(SelectedGamePalette?.Colors[0][i], SelectedGamePalette?.Colors[1][i], SelectedGamePalette?.Colors[2][i], 255),
+                              new Pixel(palettes[newPalette][0][i], palettes[newPalette][1][i], palettes[newPalette][2][i], 255));
+                    }
+                }
+            }
+
+            SelectedPalette = newPalette;
+            Properties.Settings.Default.SelectedPalette = SelectedPalette;
+
+            DisplayImage(PrintSize, PrintSize);
         }
 
         private void Game_Palette_Click(object? sender, EventArgs e)
@@ -465,15 +528,16 @@ namespace GBPemu
 
         private void Native_CheckPalette(int paletteId)
         {
-            GrayscaleCheckbox.IsChecked = paletteId == 0;
-            DMGCheckbox.IsChecked = paletteId == 1;
-            GBPocketCheckbox.IsChecked = paletteId == 2;
-            GBCUSCheckbox.IsChecked = paletteId == 3;
-            GBCJPCheckbox.IsChecked = paletteId == 4;
-            BGBCheckbox.IsChecked = paletteId == 5;
-            GKGrayCheckbox.IsChecked = paletteId == 6;
-            GKGreenCheckbox.IsChecked = paletteId == 7;
-            BZCheckbox.IsChecked = paletteId == 8;
+            var NativePaletteMenu = NativeMenu.GetMenu(this)?.Items[1] as NativeMenuItem;
+            var paletteMenuItems = (AvaloniaList<NativeMenuItemBase>?)NativePaletteMenu?.Menu?.Items;
+
+            int i = 1;
+            if (paletteMenuItems != null)
+                foreach (NativeMenuItem palette in paletteMenuItems)
+                {
+                    palette.IsChecked = paletteId == i;
+                    ++i;
+                }
         }
 
         private void Palette_Click(object sender, RoutedEventArgs e)
