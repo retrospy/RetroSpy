@@ -259,7 +259,50 @@ namespace GBPemu
 
         private void Native_Palette_Click(object? sender, EventArgs e)
         {
+            int newPalette = 0;
 
+            var NativeSizeMenu = NativeMenu.GetMenu(this)?.Items[1] as NativeMenuItem;
+            var paletteMenuItems = (AvaloniaList<NativeMenuItemBase>?)NativeSizeMenu?.Menu?.Items;
+
+            int k = 1;
+            if (paletteMenuItems != null)
+                foreach (NativeMenuItem palette in paletteMenuItems)
+                {
+                    if (sender is NativeMenuItem && sender == palette)
+                    {
+                        newPalette = k;
+                        palette.IsChecked = true;
+                    }
+                    ++k;
+                }
+
+            Native_CheckPalette(newPalette);
+            Native_ClearGamePalette(null);
+
+            if (decompressedTiles == null)
+            {
+                if (SelectedPalette != -1)
+                {
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        _imageBuffer.ReplaceColor(new Pixel(palettes[SelectedPalette][0][i], palettes[SelectedPalette][1][i], palettes[SelectedPalette][2][i], 255),
+                                                  new Pixel(palettes[newPalette][0][i], palettes[newPalette][1][i], palettes[newPalette][2][i], 255));
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        _imageBuffer.ReplaceColor(new Pixel(SelectedGamePalette?.Colors[0][i], SelectedGamePalette?.Colors[1][i], SelectedGamePalette?.Colors[2][i], 255),
+                              new Pixel(palettes[newPalette][0][i], palettes[newPalette][1][i], palettes[newPalette][2][i], 255));
+                    }
+                }
+            }
+
+            SelectedPalette = newPalette;
+            Properties.Settings.Default.SelectedPalette = SelectedPalette;
+
+            DisplayImage(PrintSize, PrintSize);
         }
 
         private void Native_Size_Click(object? sender, EventArgs e)
@@ -300,7 +343,7 @@ namespace GBPemu
 
         }
 
-        private void NativeGame_Palette_Click(object? sender, EventArgs e)
+        private void Native_Game_Palette_Click(object? sender, EventArgs e)
         {
             int newPalette = 0;
 
@@ -320,7 +363,7 @@ namespace GBPemu
                 }
 
             Native_CheckPalette(newPalette);
-            Native_ClearGamePalette(null);
+            ClearGamePalette(null);
 
             if (decompressedTiles == null)
             {
@@ -528,8 +571,8 @@ namespace GBPemu
 
         private void Native_CheckPalette(int paletteId)
         {
-            var NativePaletteMenu = NativeMenu.GetMenu(this)?.Items[1] as NativeMenuItem;
-            var paletteMenuItems = (AvaloniaList<NativeMenuItemBase>?)NativePaletteMenu?.Menu?.Items;
+            var PaletteSizeMenu = NativeMenu.GetMenu(this)?.Items[1] as NativeMenuItem;
+            var paletteMenuItems = (AvaloniaList<NativeMenuItemBase>?)PaletteSizeMenu?.Menu?.Items;
 
             int i = 1;
             if (paletteMenuItems != null)
