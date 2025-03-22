@@ -259,7 +259,7 @@ namespace GBPemu
                     ++i;
                 }
 
-            CheckSize(PrintSize);
+            Native_CheckSize(PrintSize);
 
             Properties.Settings.Default.PrintSize = PrintSize;
 
@@ -463,6 +463,19 @@ namespace GBPemu
             BZCheckbox.IsChecked = paletteId == 8;
         }
 
+        private void Native_CheckPalette(int paletteId)
+        {
+            GrayscaleCheckbox.IsChecked = paletteId == 0;
+            DMGCheckbox.IsChecked = paletteId == 1;
+            GBPocketCheckbox.IsChecked = paletteId == 2;
+            GBCUSCheckbox.IsChecked = paletteId == 3;
+            GBCJPCheckbox.IsChecked = paletteId == 4;
+            BGBCheckbox.IsChecked = paletteId == 5;
+            GKGrayCheckbox.IsChecked = paletteId == 6;
+            GKGreenCheckbox.IsChecked = paletteId == 7;
+            BZCheckbox.IsChecked = paletteId == 8;
+        }
+
         private void Palette_Click(object sender, RoutedEventArgs e)
         {
             int newPalette = 0;
@@ -651,7 +664,9 @@ namespace GBPemu
             _reader.ControllerDisconnected += Reader_ControllerDisconnected;
 
             CheckPalette(SelectedPalette);
+            Native_CheckPalette(SelectedPalette);
             CheckSize(PrintSize);
+            Native_CheckSize(PrintSize);
 
         }
 
