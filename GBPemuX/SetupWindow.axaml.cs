@@ -91,7 +91,10 @@ namespace GBPemu
 
             _vm.FilterCOMPorts = Properties.Settings.Default.FilterCOMPorts || !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
             FilterCOMCheckbox.IsChecked = _vm.FilterCOMPorts;
-            
+            var menuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[0];
+            if (menuItem != null)
+                menuItem.IsChecked = FilterCOMCheckbox.IsChecked ?? true;
+
             MenuItem menuItem = new()
             {
                 Header = "COM Ports"
