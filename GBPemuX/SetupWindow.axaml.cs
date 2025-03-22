@@ -91,9 +91,10 @@ namespace GBPemu
 
             _vm.FilterCOMPorts = Properties.Settings.Default.FilterCOMPorts || !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
             FilterCOMCheckbox.IsChecked = _vm.FilterCOMPorts;
-            var menuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[0];
-            if (menuItem != null)
-                menuItem.IsChecked = FilterCOMCheckbox.IsChecked ?? true;
+            var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+            var autodetectCOMPortMenuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[0];
+            if (autodetectCOMPortMenuItem != null)
+                autodetectCOMPortMenuItem.IsChecked = FilterCOMCheckbox.IsChecked ?? true;
 
             MenuItem menuItem = new()
             {
@@ -119,7 +120,6 @@ namespace GBPemu
             if (_vm.FilterCOMPorts == true)
             {
                 NativeCOMMenuActive = true;
-                var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
                 ((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?.Add(NativeCOMMenu);
             }
 
