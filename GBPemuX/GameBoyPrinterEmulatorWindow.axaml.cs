@@ -217,6 +217,106 @@ namespace GBPemu
 
         }
 
+        private void Native_ParseGamePalettes()
+        {
+            bool getMaxRGBValue = false;
+            games = new List<Game>();
+            int currentGame = 0;
+            byte maxRGBValue = 255;
+            List<GamePalette> newPalettes = new();
+            bool lookingForGame = true;
+
+            baseDir = Path.GetDirectoryName(Environment.ProcessPath ?? String.Empty);
+            if (baseDir == null)
+                return;
+
+            string game_palettes_location;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && baseDir.Contains("MacOS") && File.Exists(Path.Join(baseDir, "../Info.plist")))
+                game_palettes_location = Path.Join(baseDir, Path.Join("../../../", @"game_palettes.cfg"));
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && baseDir.Contains("bin") && File.Exists(Path.Join(baseDir, Path.Join("..", @"game_palettes.cfg"))))
+                game_palettes_location = Path.Join(baseDir, Path.Join("..", @"game_palettes.cfg"));
+            else
+                game_palettes_location = Path.Join(baseDir, @"game_palettes.cfg");
+
+            foreach (string line in System.IO.File.ReadLines(game_palettes_location))
+            {
+                if (lookingForGame && line.StartsWith("Game:", System.StringComparison.Ordinal))
+                {
+                    var gameName = line.Split(':')[1];
+                    Game g = new(gameName);
+                    games.Add(g);
+                    getMaxRGBValue = true;
+                    lookingForGame = false;
+                    continue;
+                }
+
+                if (lookingForGame)
+                    break;
+
+                if (lookingForGame == false && line.StartsWith("EndGame", System.StringComparison.Ordinal))
+                {
+                    currentGame++;
+                    lookingForGame = true;
+                    continue;
+                }
+
+                if (getMaxRGBValue)
+                {
+                    maxRGBValue = byte.Parse(line, CultureInfo.CurrentCulture);
+                    getMaxRGBValue = false;
+                    continue;
+                }
+
+                byte[][] colorValues = new byte[3][];
+                colorValues[0] = new byte[4];
+                colorValues[1] = new byte[4];
+                colorValues[2] = new byte[4];
+
+                var colors = line.Split(',');
+                var paletteName = colors[0];
+                for (int i = 1; i < 5; ++i)
+                {
+                    var comps = colors[i].Split(' ');
+                    colorValues[0][i - 1] = (byte)(((byte.Parse(comps[0], CultureInfo.CurrentCulture) - 0.0) / (maxRGBValue - 0.0)) * (255.0 - 0.0) + 0.0);
+                    colorValues[1][i - 1] = (byte)(((byte.Parse(comps[1], CultureInfo.CurrentCulture) - 0.0) / (maxRGBValue - 0.0)) * (255.0 - 0.0) + 0.0);
+                    colorValues[2][i - 1] = (byte)(((byte.Parse(comps[2], CultureInfo.CurrentCulture) - 0.0) / (maxRGBValue - 0.0)) * (255.0 - 0.0) + 0.0);
+                }
+
+                games[currentGame].Palettes.Add(new GamePalette(paletteName, colorValues));
+            }
+
+
+            for (int i = 0; i < currentGame; ++i)
+            {
+                NativeMenuItem gameMenu = new NativeMenuItem
+                {
+                    Header = games[i].Name,
+                    Menu = new NativeMenu()
+                };
+
+                for (int j = 0; j < games[i].Palettes.Count; ++j)
+                {
+                    var paletteMenu = new NativeMenuItem
+                    {
+                        Header = games[i].Palettes[j].Name,
+                        ToggleType = NativeMenuItemToggleType.CheckBox
+                    };
+
+                    paletteMenu.Click += Native_Game_Palette_Click;
+
+                    // This is freaking dangerous!
+                    ((AvaloniaList<NativeMenuItemBase>?)gameMenu?.Menu?.Items)?.Add(paletteMenu);
+
+                }
+
+                // Still dangerous!
+                var PaletteMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+                int position = PaletteMenu?.Menu?.Items.Count - 1 ?? 0;
+                ((NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)PaletteMenu?.Menu?.Items)?[position])?.Menu?.Items?.Add(gameMenu!);
+
+            }
+
+        }
         void ClearGamePalette(MenuItem? menuItem)
         {
             foreach (MenuItem? game in Palette_Games.Items.Cast<MenuItem?>())
@@ -237,26 +337,31 @@ namespace GBPemu
             }
         }
 
-        void Native_ClearGamePalette(MenuItem? menuItem)
+        void Native_ClearGamePalette(NativeMenuItem? menuItem)
         {
-            foreach (MenuItem? game in Palette_Games.Items.Cast<MenuItem?>())
-            {
-                if (game != null)
+            var PaletteMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+            int position = PaletteMenu?.Menu?.Items.Count - 1 ?? 0;
+            var NativePaletteGamesItems = ((NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)PaletteMenu?.Menu?.Items)?[position])?.Menu?.Items;
+
+            if (NativePaletteGamesItems != null)
+                foreach (NativeMenuItem? game in NativePaletteGamesItems.Cast<NativeMenuItem?>())
                 {
-                    foreach (MenuItem? palette in game.Items.Cast<MenuItem?>())
+                    if (game != null)
                     {
-                        if (palette != null && palette.Icon != null)
+                        if (game != null && game.Menu != null && game.Menu.Items != null)
+                        foreach (NativeMenuItem? palette in game.Menu.Items.Cast<NativeMenuItem?>())
                         {
-                            if (palette == menuItem)
-                                ((CheckBox)palette.Icon).IsChecked = true;
-                            else
-                                ((CheckBox)palette.Icon).IsChecked = false;
+                            if (palette != null && palette.Icon != null)
+                            {
+                                if (palette == menuItem)
+                                    menuItem.IsChecked = true;
+                                else if (menuItem != null)
+                                    menuItem.IsChecked = false;
+                            }
                         }
                     }
                 }
-            }
         }
-
         private void Native_Palette_Click(object? sender, EventArgs e)
         {
             int newPalette = 0;
@@ -338,9 +443,34 @@ namespace GBPemu
             DisplayImage(PrintSize, PrintSize);
         }
 
+        [Obsolete]
         private void Native_SaveAs_Click(object? sender, EventArgs e)
         {
+            SaveFileDialog SaveFileBox = new()
+            {
+                Title = "Save Picture As..."
+            };
 
+            List<FileDialogFilter> Filters = new();
+            FileDialogFilter filter = new();
+            List<string> extension = new()
+            {
+                "png"
+            };
+            filter.Extensions = extension;
+            filter.Name = "Document Files";
+            Filters.Add(filter);
+            SaveFileBox.Filters = Filters;
+
+            SaveFileBox.DefaultExtension = "png";
+
+            var saveFilename = await SaveFileBox.ShowAsync(this);
+
+            if (saveFilename != null)
+            {
+                var image = _imageBuffer.MakeBitmap();
+                image._rawImage.SaveAsPng(saveFilename);
+            }
         }
 
         private void Native_Game_Palette_Click(object? sender, EventArgs e)
@@ -362,8 +492,11 @@ namespace GBPemu
                     ++k;
                 }
 
-            Native_CheckPalette(newPalette);
-            ClearGamePalette(null);
+            var menuItem = (NativeMenuItem?)sender;
+
+            //Clear Checks
+            Native_CheckPalette(9);
+            Native_ClearGamePalette(menuItem);
 
             if (decompressedTiles == null)
             {
@@ -739,6 +872,7 @@ namespace GBPemu
             };
 
             ParseGamePalettes();
+            Native_ParseGamePalettes();
 
             _reader = reader ?? throw new ArgumentNullException(nameof(reader));
 

@@ -22,7 +22,10 @@
 					<NativeMenuItem Header="Graphix Kid Gray" Click="Native_Palette_Click" ToggleType="CheckBox"/>
 					<NativeMenuItem Header="Graphix Kid Green" Click="Native_Palette_Click" ToggleType="CheckBox"/>
 					<NativeMenuItem Header="Black Zero" Click="Native_Palette_Click" ToggleType="CheckBox"/>
-					<NativeMenuItem Header="Games" />
+					<NativeMenuItem Header="Games">
+						<NativeMenu>
+						</NativeMenu>
+					</NativeMenuItem>
 				</NativeMenu>
 			</NativeMenuItem>
 			<NativeMenuItem Header="Print Size">
