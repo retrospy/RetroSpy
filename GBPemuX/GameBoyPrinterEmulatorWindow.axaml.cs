@@ -244,7 +244,35 @@ namespace GBPemu
 
         private void Native_Size_Click(object? sender, EventArgs e)
         {
+            var NativeSizeMenu = NativeMenu.GetMenu(this)?.Items[2] as NativeMenuItem;
+            var sizeMenuItems = (AvaloniaList<NativeMenuItemBase>?)NativeSizeMenu?.Menu?.Items;
 
+            int i = 1;
+            if (sizeMenuItems != null)
+                foreach(NativeMenuItem size in sizeMenuItems)
+                {
+                    if (sender is NativeMenuItem && sender == size)
+                    {
+                        size.IsChecked = true;
+                    }
+                    PrintSize = i;
+                    ++i;
+                }
+
+            CheckSize(PrintSize);
+
+            Properties.Settings.Default.PrintSize = PrintSize;
+
+            _imageBuffer = new BitmapPixelMaker(PrintSize * TILE_PIXEL_WIDTH * TILES_PER_LINE, PrintSize * TILE_PIXEL_HEIGHT * tile_height_count);
+
+            _image.Height = PrintSize * TILE_PIXEL_HEIGHT * tile_height_count;
+            _image.Width = PrintSize * TILE_PIXEL_WIDTH * TILES_PER_LINE;
+            GameBoyPrinterEmulatorWindowGrid.Height = PrintSize * TILE_PIXEL_HEIGHT * tile_height_count; ;
+            GameBoyPrinterEmulatorWindowGrid.Width = PrintSize * TILE_PIXEL_WIDTH * TILES_PER_LINE;
+            Height = PrintSize * TILE_PIXEL_HEIGHT * tile_height_count;
+            Width = PrintSize * TILE_PIXEL_WIDTH * TILES_PER_LINE;
+
+            DisplayImage(PrintSize, PrintSize);
         }
 
         private void Native_SaveAs_Click(object? sender, EventArgs e)
@@ -403,6 +431,20 @@ namespace GBPemu
             x6Checkbox.IsChecked = sizeId == 6;
             x7Checkbox.IsChecked = sizeId == 7;
             x8Checkbox.IsChecked = sizeId == 8;
+        }
+
+        private void Native_CheckSize(int sizeId)
+        {
+            var NativeSizeMenu = NativeMenu.GetMenu(this)?.Items[2] as NativeMenuItem;
+            var sizeMenuItems = (AvaloniaList<NativeMenuItemBase>?)NativeSizeMenu?.Menu?.Items;
+
+            int i = 1;
+            if (sizeMenuItems != null)
+                foreach (NativeMenuItem size in sizeMenuItems)
+                {
+                    size.IsChecked = sizeId == i;
+                    ++i;
+                }
         }
 
         private int SelectedPalette;
