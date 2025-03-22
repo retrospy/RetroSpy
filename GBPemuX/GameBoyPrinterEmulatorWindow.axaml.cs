@@ -253,9 +253,9 @@ namespace GBPemu
                 {
                     if (sender is NativeMenuItem && sender == size)
                     {
+                        PrintSize = i;
                         size.IsChecked = true;
                     }
-                    PrintSize = i;
                     ++i;
                 }
 
