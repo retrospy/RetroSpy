@@ -105,6 +105,20 @@ namespace GBPemu
                 ((ItemCollection)OptionsMenu.Items).Add(COMMenu);
             }
 
+            NativeMenuItem nativeMenuItem = new()
+            {
+                Header = "COM Ports"
+            };
+
+            NativeCOMMenu = nativeMenuItem;
+
+            if (_vm.FilterCOMPorts == true)
+            {
+                NativeCOMMenuActive = true;
+                var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+                ((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?.Add(NativeCOMMenu);
+            }
+
             _portListUpdateTimer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(1)
@@ -117,7 +131,68 @@ namespace GBPemu
 
 
         MenuItem COMMenu;
+        NativeMenuItem NativeCOMMenu;
         private bool COMMenuActive = false;
+        private bool NativeCOMMenuActive = false;
+
+        private void Native_FilterCOM_Checked(object sender, EventArgs args)
+        {
+            FilterCOMCheckbox.IsChecked = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || FilterCOMCheckbox.IsChecked == true;
+
+            if (sender is MenuItem)
+                FilterCOMCheckbox.IsChecked = !FilterCOMCheckbox.IsChecked == true || !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
+            if (!COMMenuActive && FilterCOMCheckbox.IsChecked == true)
+            {
+                COMMenuActive = true;
+                _vm.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
+                Properties.Settings.Default.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
+
+                MenuItem menuItem = new()
+                {
+                    Header = "COM Ports"
+                };
+
+                COMMenu = menuItem;
+
+                ((ItemCollection)OptionsMenu.Items).Add(COMMenu);
+            }
+            else if (FilterCOMCheckbox.IsChecked == false)
+            {
+                COMMenuActive = false;
+                _vm.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
+                Properties.Settings.Default.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
+
+                ((ItemCollection)OptionsMenu.Items).Remove(COMMenu);
+            }
+
+            if (!NativeCOMMenuActive && FilterCOMCheckbox.IsChecked == true)
+            {
+                NativeCOMMenuActive = true;
+                _vm.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
+                Properties.Settings.Default.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
+
+                NativeMenuItem menuItem = new()
+                {
+                    Header = "COM Ports"
+                };
+
+                NativeCOMMenu = menuItem;
+
+                var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+                ((ItemCollection?)NativeOptionsMenu?.Menu?.Items)?.Add(NativeCOMMenu);
+            }
+            else if (FilterCOMCheckbox.IsChecked == false)
+            {
+                NativeCOMMenuActive = false;
+                _vm.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
+                Properties.Settings.Default.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
+
+                var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+                ((ItemCollection?)NativeOptionsMenu?.Menu?.Items)?.Remove(NativeCOMMenuActive);
+            }
+        }
+
         private void FilterCOM_Checked(object sender, RoutedEventArgs e)
         {
             FilterCOMCheckbox.IsChecked = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || FilterCOMCheckbox.IsChecked == true;
@@ -148,9 +223,75 @@ namespace GBPemu
 
                 ((ItemCollection)OptionsMenu.Items).Remove(COMMenu);
             }
+
+            if (!NativeCOMMenuActive && FilterCOMCheckbox.IsChecked == true)
+            {
+                NativeCOMMenuActive = true;
+                _vm.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
+                Properties.Settings.Default.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
+
+                NativeMenuItem menuItem = new()
+                {
+                    Header = "COM Ports"
+                };
+
+                NativeCOMMenu = menuItem;
+
+                var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+                ((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?.Add(NativeCOMMenu);
+            }
+            else if (FilterCOMCheckbox.IsChecked == false)
+            {
+                NativeCOMMenuActive = false;
+                _vm.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
+                Properties.Settings.Default.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
+
+                var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+                ((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?.Remove(NativeCOMMenu);
+            }
         }
 
         private async void COMPortClicked(object? sender, RoutedEventArgs e)
+        {
+
+            string? port = ((MenuItem?)sender)?.Header?.ToString();
+
+            Properties.Settings.Default.Port = _vm.Ports.SelectedItem;
+            Properties.Settings.Default.FilterCOMPorts = _vm.FilterCOMPorts;
+            Properties.Settings.Default.Save();
+
+            try
+            {
+                if (Dispatcher.UIThread.CheckAccess())
+                {
+                    IControllerReader? reader = InputSource.PRINTER.BuildReader(port);
+                    var g = new GameBoyPrinterEmulatorWindow(reader, this);
+                    await g.ShowDialog(this);
+                }
+                else
+                {
+                    Dispatcher.UIThread.Post(async () =>
+                    {
+                        IControllerReader? reader = InputSource.PRINTER.BuildReader(port);
+                        var g = new GameBoyPrinterEmulatorWindow(reader, this);
+                        await g.ShowDialog(this);
+                    });
+                }
+
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                AvaloniaMessageBox(_resources.GetString("RetroSpy", CultureInfo.CurrentUICulture), ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                Show();
+            }
+            catch (Exception ex)
+            {
+                AvaloniaMessageBox(_resources.GetString("RetroSpy", CultureInfo.CurrentUICulture), ex.Message, ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
+                Show();
+            }
+        }
+
+        private async void Native_COMPortClicked(object? sender, EventArgs e)
         {
 
             string? port = ((MenuItem?)sender)?.Header?.ToString();
@@ -310,6 +451,20 @@ namespace GBPemu
                                     newMenuItem.Click += COMPortClicked;
                                     ((ItemCollection)COMMenu.Items).Add(newMenuItem);
                                 }
+
+                                if (((ItemCollection?)NativeCOMMenu?.Menu?.Items)?.Count != arduinoPorts.Count)
+                                {
+                                    ((ItemCollection?)NativeCOMMenu?.Menu?.Items)?.Clear();
+                                    foreach (var port in arduinoPorts)
+                                    {
+                                        var newMenuItem = new MenuItem
+                                        {
+                                            Header = port
+                                        };
+                                        newMenuItem.Click += Native_COMPortClicked;
+                                        ((ItemCollection?)NativeCOMMenu?.Menu?.Items)?.Add(newMenuItem);
+                                    }
+                                }
                             }
                         });
                     }
@@ -427,7 +582,31 @@ namespace GBPemu
             UpdatePortList();
         }
 
+
         private void About_Click(object sender, RoutedEventArgs e)
+        {
+            string url = String.Format("https://retro-spy.com/about-retrospy/?version={0}&buildtime={1}",
+                System.Web.HttpUtility.UrlEncode(Assembly.GetEntryAssembly()?.GetName()?.Version?.ToString()), System.Web.HttpUtility.UrlEncode(Properties.Resources.BuildDate));
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Process.Start("xdg-open", url);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                Process.Start("open", url);
+            }
+            else
+            {
+                throw new PlatformNotSupportedException();
+            }
+        }
+
+        private void Native_About_Click(object sender, EventArgs args)
         {
             string url = String.Format("https://retro-spy.com/about-retrospy/?version={0}&buildtime={1}",
                 System.Web.HttpUtility.UrlEncode(Assembly.GetEntryAssembly()?.GetName()?.Version?.ToString()), System.Web.HttpUtility.UrlEncode(Properties.Resources.BuildDate));

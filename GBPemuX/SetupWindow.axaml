@@ -5,6 +5,21 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="GBPemu.SetupWindow"
        Title="RetroSpy Pixel Viewer" SizeToContent="WidthAndHeight"  MinWidth="480" MinHeight="432" MaxWidth="480" MaxHeight="432" CanResize="false" Opened="Window_Open">
+	<NativeMenu.Menu>
+		<NativeMenu>
+			<NativeMenuItem Header="_Options">
+				<NativeMenu>
+					<NativeMenuItem Header="Don't Detect COM Port" Click="Native_FilterCOM_Checked" ToggleType="CheckBox"/>
+				</NativeMenu>
+			</NativeMenuItem>
+			<NativeMenuItemSeparator />
+			<NativeMenuItem Header="_Help">
+				<NativeMenu>
+					<NativeMenuItem Header="About" Click="Native_About_Click"/>
+				</NativeMenu>
+			</NativeMenuItem>
+		</NativeMenu>
+	</NativeMenu.Menu>
 	<Grid Height="432" Width="480">
 		<Image x:Name="SetupImage_png" Source="/Assets/SetupImage.png" Stretch="Fill"/>
 		<Grid.ContextMenu>
@@ -22,4 +37,5 @@
 			</ContextMenu>
 		</Grid.ContextMenu>
 	</Grid>
+
 </Window>
