@@ -5,6 +5,39 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="GBPemu.GameBoyPrinterEmulatorWindow"
         Title="RetroSpy Pixel Viewer" SizeToContent="WidthAndHeight" CanResize="false" Opened="Window_Open">
+	<NativeMenu.Menu>
+		<NativeMenu>
+			<NativeMenuItem Header="File">
+				<NativeMenu>
+					<NativeMenuItem Header="Save As..."  Click="Native_SaveAs_Click"/>
+				</NativeMenu>
+			</NativeMenuItem>	
+			<NativeMenuItem Header="Palette">
+				<NativeMenu>
+					<NativeMenuItem Header="Grayscale" Click="Native_Palette_Click" ToggleType="CheckBox"/>
+					<NativeMenuItem Header="DMG" Click="Native_Palette_Click" ToggleType="CheckBox"/>
+					<NativeMenuItem Header="GameBoy Pocket" Click="Native_Palette_Click" ToggleType="CheckBox"/>
+					<NativeMenuItem Header="GameBoy Color JP" Click="Native_Palette_Click" ToggleType="CheckBox"/>
+					<NativeMenuItem Header="BGB" Click="Native_Palette_Click" ToggleType="CheckBox"/>
+					<NativeMenuItem Header="Graphix Kid Gray" Click="Native_Palette_Click" ToggleType="CheckBox"/>
+					<NativeMenuItem Header="Graphix Kid Green" Click="Native_Palette_Click" ToggleType="CheckBox"/>
+					<NativeMenuItem Header="Black Zero" Click="Native_Palette_Click" ToggleType="CheckBox"/>
+					<NativeMenuItem Header="Games" />
+				</NativeMenu>
+			</NativeMenuItem>
+			<NativeMenuItem Header="Print Size">
+				<NativeMenu>
+					<NativeMenuItem Header="1x" Click="Native_Size_Click" ToggleType="CheckBox"/>
+					<NativeMenuItem Header="2x" Click="Native_Size_Click" ToggleType="CheckBox"/>
+					<NativeMenuItem Header="3x" Click="Native_Size_Click" ToggleType="CheckBox"/>
+					<NativeMenuItem Header="4x" Click="Native_Size_Click"  ToggleType="CheckBox"/>
+					<NativeMenuItem Header="5x" Click="Native_Size_Click"  ToggleType="CheckBox"/>
+					<NativeMenuItem Header="6x" Click="Native_Size_Click" ToggleType="CheckBox"/>
+					<NativeMenuItem Header="7x" Click="Native_Size_Click"  ToggleType="CheckBox"/>
+				</NativeMenu>
+			</NativeMenuItem>
+		</NativeMenu>
+		</NativeMenu.Menu>
 	<Grid x:Name="GameBoyPrinterEmulatorWindowGrid" Height="432" Width="480">
 		<Grid.ContextMenu>
 			<ContextMenu>

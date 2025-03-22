@@ -237,6 +237,26 @@ namespace GBPemu
             }
         }
 
+        private void Native_Palette_Click(object? sender, EventArgs e)
+        {
+
+        }
+
+        private void Native_Size_Click(object? sender, EventArgs e)
+        {
+
+        }
+
+        private void Native_SaveAs_Click(object? sender, EventArgs e)
+        {
+
+        }
+
+        private void NativeGame_Palette_Click(object? sender, EventArgs e)
+        {
+
+        }
+
         private void Game_Palette_Click(object? sender, EventArgs e)
         {
             MenuItem? menuItem;
