@@ -107,7 +107,8 @@ namespace GBPemu
 
             NativeMenuItem nativeMenuItem = new()
             {
-                Header = "COM Ports"
+                Header = "COM Ports",
+                Menu = new NativeMenu()
             };
 
             NativeCOMMenu = nativeMenuItem;
@@ -174,7 +175,8 @@ namespace GBPemu
 
                 NativeMenuItem menuItem = new()
                 {
-                    Header = "COM Ports"
+                    Header = "COM Ports",
+                    Menu = new NativeMenu()
                 };
 
                 NativeCOMMenu = menuItem;
@@ -232,7 +234,8 @@ namespace GBPemu
 
                 NativeMenuItem menuItem = new()
                 {
-                    Header = "COM Ports"
+                    Header = "COM Ports",
+                    Menu = new NativeMenu()
                 };
 
                 NativeCOMMenu = menuItem;
@@ -452,17 +455,17 @@ namespace GBPemu
                                     ((ItemCollection)COMMenu.Items).Add(newMenuItem);
                                 }
 
-                                if (((ItemCollection?)NativeCOMMenu?.Menu?.Items)?.Count != arduinoPorts.Count)
+                                if (((AvaloniaList<NativeMenuItemBase>?)NativeCOMMenu?.Menu?.Items)?.Count != arduinoPorts.Count)
                                 {
-                                    ((ItemCollection?)NativeCOMMenu?.Menu?.Items)?.Clear();
+                                    ((AvaloniaList<NativeMenuItemBase>?)NativeCOMMenu?.Menu?.Items)?.Clear();
                                     foreach (var port in arduinoPorts)
                                     {
-                                        var newMenuItem = new MenuItem
+                                        var newMenuItem = new NativeMenuItem
                                         {
                                             Header = port
                                         };
                                         newMenuItem.Click += Native_COMPortClicked;
-                                        ((ItemCollection?)NativeCOMMenu?.Menu?.Items)?.Add(newMenuItem);
+                                        (((AvaloniaList<NativeMenuItemBase>?)NativeCOMMenu?.Menu?.Items))?.Add(newMenuItem);
                                     }
                                 }
                             }
