@@ -140,31 +140,13 @@ namespace GBPemu
         {
             FilterCOMCheckbox.IsChecked = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || FilterCOMCheckbox.IsChecked == true;
 
-            if (sender is MenuItem)
-                FilterCOMCheckbox.IsChecked = !FilterCOMCheckbox.IsChecked == true || !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+            var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
 
-            if (!COMMenuActive && FilterCOMCheckbox.IsChecked == true)
+            if (sender is NativeMenuItem)
             {
-                COMMenuActive = true;
-                _vm.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
-                Properties.Settings.Default.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
-
-                MenuItem menuItem = new()
-                {
-                    Header = "COM Ports"
-                };
-
-                COMMenu = menuItem;
-
-                ((ItemCollection)OptionsMenu.Items).Add(COMMenu);
-            }
-            else if (FilterCOMCheckbox.IsChecked == false)
-            {
-                COMMenuActive = false;
-                _vm.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
-                Properties.Settings.Default.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
-
-                ((ItemCollection)OptionsMenu.Items).Remove(COMMenu);
+                var menuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[0];
+                if (menuItem != null)
+                    menuItem.IsChecked = FilterCOMCheckbox.IsChecked ?? true;
             }
 
             if (!NativeCOMMenuActive && FilterCOMCheckbox.IsChecked == true)
@@ -181,8 +163,7 @@ namespace GBPemu
 
                 NativeCOMMenu = menuItem;
 
-                var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
-                ((ItemCollection?)NativeOptionsMenu?.Menu?.Items)?.Add(NativeCOMMenu);
+                ((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?.Add(NativeCOMMenu);
             }
             else if (FilterCOMCheckbox.IsChecked == false)
             {
@@ -190,8 +171,7 @@ namespace GBPemu
                 _vm.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
                 Properties.Settings.Default.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
 
-                var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
-                ((ItemCollection?)NativeOptionsMenu?.Menu?.Items)?.Remove(NativeCOMMenuActive);
+                ((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?.Remove(NativeCOMMenu);
             }
         }
 
@@ -224,33 +204,6 @@ namespace GBPemu
                 Properties.Settings.Default.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
 
                 ((ItemCollection)OptionsMenu.Items).Remove(COMMenu);
-            }
-
-            if (!NativeCOMMenuActive && FilterCOMCheckbox.IsChecked == true)
-            {
-                NativeCOMMenuActive = true;
-                _vm.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
-                Properties.Settings.Default.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
-
-                NativeMenuItem menuItem = new()
-                {
-                    Header = "COM Ports",
-                    Menu = new NativeMenu()
-                };
-
-                NativeCOMMenu = menuItem;
-
-                var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
-                ((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?.Add(NativeCOMMenu);
-            }
-            else if (FilterCOMCheckbox.IsChecked == false)
-            {
-                NativeCOMMenuActive = false;
-                _vm.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
-                Properties.Settings.Default.FilterCOMPorts = FilterCOMCheckbox.IsChecked ?? false;
-
-                var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
-                ((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?.Remove(NativeCOMMenu);
             }
         }
 
