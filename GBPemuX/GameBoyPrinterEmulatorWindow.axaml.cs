@@ -574,7 +574,7 @@ namespace GBPemu
             var PaletteSizeMenu = NativeMenu.GetMenu(this)?.Items[1] as NativeMenuItem;
             var paletteMenuItems = (AvaloniaList<NativeMenuItemBase>?)PaletteSizeMenu?.Menu?.Items;
 
-            int i = 1;
+            int i = 0;
             if (paletteMenuItems != null)
                 foreach (NativeMenuItem palette in paletteMenuItems)
                 {
