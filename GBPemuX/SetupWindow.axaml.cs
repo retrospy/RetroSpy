@@ -297,7 +297,7 @@ namespace GBPemu
         private async void Native_COMPortClicked(object? sender, EventArgs e)
         {
 
-            string? port = ((MenuItem?)sender)?.Header?.ToString();
+            string? port = ((NativeMenuItem?)sender)?.Header?.ToString();
 
             Properties.Settings.Default.Port = _vm.Ports.SelectedItem;
             Properties.Settings.Default.FilterCOMPorts = _vm.FilterCOMPorts;
