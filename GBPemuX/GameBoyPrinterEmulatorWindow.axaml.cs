@@ -310,7 +310,7 @@ namespace GBPemu
                 }
 
                 // Still dangerous!
-                var PaletteMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+                var PaletteMenu = NativeMenu.GetMenu(this)?.Items[1] as NativeMenuItem;
                 int position = PaletteMenu?.Menu?.Items.Count - 1 ?? 0;
                 ((NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)PaletteMenu?.Menu?.Items)?[position])?.Menu?.Items?.Add(gameMenu!);
 
@@ -339,7 +339,7 @@ namespace GBPemu
 
         void Native_ClearGamePalette(NativeMenuItem? menuItem)
         {
-            var PaletteMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+            var PaletteMenu = NativeMenu.GetMenu(this)?.Items[1] as NativeMenuItem;
             int position = PaletteMenu?.Menu?.Items.Count - 1 ?? 0;
             var NativePaletteGamesItems = ((NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)PaletteMenu?.Menu?.Items)?[position])?.Menu?.Items;
 
@@ -351,7 +351,7 @@ namespace GBPemu
                         if (game != null && game.Menu != null && game.Menu.Items != null)
                         foreach (NativeMenuItem? palette in game.Menu.Items.Cast<NativeMenuItem?>())
                         {
-                            if (palette != null && palette.Icon != null)
+                            if (palette != null)
                             {
                                 if (palette == menuItem)
                                     menuItem.IsChecked = true;
@@ -444,7 +444,7 @@ namespace GBPemu
         }
 
         [Obsolete]
-        private void Native_SaveAs_Click(object? sender, EventArgs e)
+        private async void Native_SaveAs_Click(object? sender, EventArgs e)
         {
             SaveFileDialog SaveFileBox = new()
             {
@@ -473,30 +473,34 @@ namespace GBPemu
             }
         }
 
-        private void Native_Game_Palette_Click(object? sender, EventArgs e)
+        private void Native_Game_Palette_Click(object sender, EventArgs e)
         {
-            int newPalette = 0;
-
-            var NativeSizeMenu = NativeMenu.GetMenu(this)?.Items[1] as NativeMenuItem;
-            var paletteMenuItems = (AvaloniaList<NativeMenuItemBase>?)NativeSizeMenu?.Menu?.Items;
-
-            int k = 0;
-            if (paletteMenuItems != null)
-                foreach (NativeMenuItem palette in paletteMenuItems)
-                {
-                    if (sender is NativeMenuItem && sender == palette)
-                    {
-                        newPalette = k;
-                        palette.IsChecked = true;
-                    }
-                    ++k;
-                }
-
-            var menuItem = (NativeMenuItem?)sender;
+           var menuItem = (NativeMenuItem?)sender;
 
             //Clear Checks
             Native_CheckPalette(9);
             Native_ClearGamePalette(menuItem);
+
+            GamePalette newPalette = null;
+
+            string? gameName = (string?)(((NativeMenuItem?)menuItem?.Parent?.Parent)?.Header);
+
+            if (games != null)
+            {
+                foreach (Game game in games)
+                {
+                    if (gameName == game.Name)
+                    {
+                        foreach (GamePalette palette in game.Palettes)
+                        {
+                            if (palette.Name == (string?)menuItem?.Header)
+                            {
+                                newPalette = palette;
+                            }
+                        }
+                    }
+                }
+            }
 
             if (decompressedTiles == null)
             {
@@ -505,7 +509,7 @@ namespace GBPemu
                     for (int i = 0; i < 4; ++i)
                     {
                         _imageBuffer.ReplaceColor(new Pixel(palettes[SelectedPalette][0][i], palettes[SelectedPalette][1][i], palettes[SelectedPalette][2][i], 255),
-                                                  new Pixel(palettes[newPalette][0][i], palettes[newPalette][1][i], palettes[newPalette][2][i], 255));
+                                                new Pixel(newPalette?.Colors[0][i], newPalette?.Colors[1][i], newPalette?.Colors[2][i], 255));
                     }
                 }
                 else
@@ -513,15 +517,16 @@ namespace GBPemu
                     for (int i = 0; i < 4; ++i)
                     {
                         _imageBuffer.ReplaceColor(new Pixel(SelectedGamePalette?.Colors[0][i], SelectedGamePalette?.Colors[1][i], SelectedGamePalette?.Colors[2][i], 255),
-                              new Pixel(palettes[newPalette][0][i], palettes[newPalette][1][i], palettes[newPalette][2][i], 255));
+                                                new Pixel(newPalette?.Colors[0][i], newPalette?.Colors[1][i], newPalette?.Colors[2][i], 255));
                     }
                 }
             }
 
-            SelectedPalette = newPalette;
-            Properties.Settings.Default.SelectedPalette = SelectedPalette;
+            SelectedPalette = -1;
+            SelectedGamePalette = newPalette;
 
             DisplayImage(PrintSize, PrintSize);
+
         }
 
         private void Game_Palette_Click(object? sender, EventArgs e)
