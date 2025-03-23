@@ -111,7 +111,7 @@ namespace GBPemu
 
         private string? baseDir;
 
-        private void ParseGamePalettes()
+        private int ParseGamePalettes()
         {
             bool getMaxRGBValue = false;
             games = new List<Game>();
@@ -122,7 +122,7 @@ namespace GBPemu
 
             baseDir = Path.GetDirectoryName(Environment.ProcessPath ?? String.Empty);
             if (baseDir == null)
-                return;
+                return 0;
 
             string game_palettes_location;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && baseDir.Contains("MacOS") && File.Exists(Path.Join(baseDir, "../Info.plist")))
@@ -179,15 +179,19 @@ namespace GBPemu
                 games[currentGame].Palettes.Add(new GamePalette(paletteName, colorValues));
             }
 
+            return currentGame;
+        }
 
-            for (int i = 0; i < currentGame; ++i)
+        private void PopulateGamePalettesInContextMenu(int currentGameCount)
+        {
+            for (int i = 0; i < currentGameCount; ++i)
             {
                 var gameMenu = new MenuItem
                 {
-                    Header = games[i].Name
+                    Header = games?[i].Name
                 };
 
-                for (int j = 0; j < games[i].Palettes.Count; ++j)
+                for (int j = 0; j < games?[i].Palettes.Count; ++j)
                 {
                     var paletteMenu = new MenuItem
                     {
@@ -214,91 +218,23 @@ namespace GBPemu
                 // Still dangerous!
                 ((ItemCollection)Palette_Games.Items).Add(gameMenu);
             }
-
         }
 
-        private void Native_ParseGamePalettes()
+        private void PopulateGamePalettesInNativeMenu(int currentGameCount)
         {
-            bool getMaxRGBValue = false;
-            games = new List<Game>();
-            int currentGame = 0;
-            byte maxRGBValue = 255;
-            List<GamePalette> newPalettes = new();
-            bool lookingForGame = true;
-
-            baseDir = Path.GetDirectoryName(Environment.ProcessPath ?? String.Empty);
-            if (baseDir == null)
-                return;
-
-            string game_palettes_location;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && baseDir.Contains("MacOS") && File.Exists(Path.Join(baseDir, "../Info.plist")))
-                game_palettes_location = Path.Join(baseDir, Path.Join("../../../", @"game_palettes.cfg"));
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && baseDir.Contains("bin") && File.Exists(Path.Join(baseDir, Path.Join("..", @"game_palettes.cfg"))))
-                game_palettes_location = Path.Join(baseDir, Path.Join("..", @"game_palettes.cfg"));
-            else
-                game_palettes_location = Path.Join(baseDir, @"game_palettes.cfg");
-
-            foreach (string line in System.IO.File.ReadLines(game_palettes_location))
-            {
-                if (lookingForGame && line.StartsWith("Game:", System.StringComparison.Ordinal))
-                {
-                    var gameName = line.Split(':')[1];
-                    Game g = new(gameName);
-                    games.Add(g);
-                    getMaxRGBValue = true;
-                    lookingForGame = false;
-                    continue;
-                }
-
-                if (lookingForGame)
-                    break;
-
-                if (lookingForGame == false && line.StartsWith("EndGame", System.StringComparison.Ordinal))
-                {
-                    currentGame++;
-                    lookingForGame = true;
-                    continue;
-                }
-
-                if (getMaxRGBValue)
-                {
-                    maxRGBValue = byte.Parse(line, CultureInfo.CurrentCulture);
-                    getMaxRGBValue = false;
-                    continue;
-                }
-
-                byte[][] colorValues = new byte[3][];
-                colorValues[0] = new byte[4];
-                colorValues[1] = new byte[4];
-                colorValues[2] = new byte[4];
-
-                var colors = line.Split(',');
-                var paletteName = colors[0];
-                for (int i = 1; i < 5; ++i)
-                {
-                    var comps = colors[i].Split(' ');
-                    colorValues[0][i - 1] = (byte)(((byte.Parse(comps[0], CultureInfo.CurrentCulture) - 0.0) / (maxRGBValue - 0.0)) * (255.0 - 0.0) + 0.0);
-                    colorValues[1][i - 1] = (byte)(((byte.Parse(comps[1], CultureInfo.CurrentCulture) - 0.0) / (maxRGBValue - 0.0)) * (255.0 - 0.0) + 0.0);
-                    colorValues[2][i - 1] = (byte)(((byte.Parse(comps[2], CultureInfo.CurrentCulture) - 0.0) / (maxRGBValue - 0.0)) * (255.0 - 0.0) + 0.0);
-                }
-
-                games[currentGame].Palettes.Add(new GamePalette(paletteName, colorValues));
-            }
-
-
-            for (int i = 0; i < currentGame; ++i)
+            for (int i = 0; i < currentGameCount; ++i)
             {
                 NativeMenuItem gameMenu = new NativeMenuItem
                 {
-                    Header = games[i].Name,
+                    Header = games?[i].Name,
                     Menu = new NativeMenu()
                 };
 
-                for (int j = 0; j < games[i].Palettes.Count; ++j)
+                for (int j = 0; j < games?[i].Palettes.Count; ++j)
                 {
                     var paletteMenu = new NativeMenuItem
                     {
-                        Header = games[i].Palettes[j].Name,
+                        Header = games?[i].Palettes[j].Name,
                         ToggleType = NativeMenuItemToggleType.CheckBox
                     };
 
@@ -313,9 +249,7 @@ namespace GBPemu
                 var PaletteMenu = NativeMenu.GetMenu(this)?.Items[1] as NativeMenuItem;
                 int position = PaletteMenu?.Menu?.Items.Count - 1 ?? 0;
                 ((NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)PaletteMenu?.Menu?.Items)?[position])?.Menu?.Items?.Add(gameMenu!);
-
             }
-
         }
         void ClearGamePalette(MenuItem? menuItem)
         {
@@ -344,23 +278,27 @@ namespace GBPemu
             var NativePaletteGamesItems = ((NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)PaletteMenu?.Menu?.Items)?[position])?.Menu?.Items;
 
             if (NativePaletteGamesItems != null)
+            {
                 foreach (NativeMenuItem? game in NativePaletteGamesItems.Cast<NativeMenuItem?>())
                 {
                     if (game != null)
                     {
                         if (game != null && game.Menu != null && game.Menu.Items != null)
-                        foreach (NativeMenuItem? palette in game.Menu.Items.Cast<NativeMenuItem?>())
                         {
-                            if (palette != null)
+                            foreach (NativeMenuItem? palette in game.Menu.Items.Cast<NativeMenuItem?>())
                             {
-                                if (palette == menuItem)
-                                    palette.IsChecked = true;
-                                else if (menuItem != null)
-                                    palette.IsChecked = false;
+                                if (palette != null)
+                                {
+                                    if (palette == menuItem)
+                                        palette.IsChecked = true;
+                                    else if (menuItem != null)
+                                        palette.IsChecked = false;
+                                }
                             }
                         }
                     }
                 }
+            }
         }
         private void Native_Palette_Click(object? sender, EventArgs e)
         {
@@ -371,6 +309,7 @@ namespace GBPemu
 
             int k = 0;
             if (paletteMenuItems != null)
+            {
                 foreach (NativeMenuItem palette in paletteMenuItems)
                 {
                     if (sender is NativeMenuItem && sender == palette)
@@ -380,34 +319,12 @@ namespace GBPemu
                     }
                     ++k;
                 }
+            }
 
             Native_CheckPalette(newPalette);
             Native_ClearGamePalette(null);
-
-            if (decompressedTiles == null)
-            {
-                if (SelectedPalette != -1)
-                {
-                    for (int i = 0; i < 4; ++i)
-                    {
-                        _imageBuffer.ReplaceColor(new Pixel(palettes[SelectedPalette][0][i], palettes[SelectedPalette][1][i], palettes[SelectedPalette][2][i], 255),
-                                                  new Pixel(palettes[newPalette][0][i], palettes[newPalette][1][i], palettes[newPalette][2][i], 255));
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < 4; ++i)
-                    {
-                        _imageBuffer.ReplaceColor(new Pixel(SelectedGamePalette?.Colors[0][i], SelectedGamePalette?.Colors[1][i], SelectedGamePalette?.Colors[2][i], 255),
-                              new Pixel(palettes[newPalette][0][i], palettes[newPalette][1][i], palettes[newPalette][2][i], 255));
-                    }
-                }
-            }
-
-            SelectedPalette = newPalette;
-            Properties.Settings.Default.SelectedPalette = SelectedPalette;
-
-            DisplayImage(PrintSize, PrintSize);
+            
+            SwapPalette(newPalette);
         }
 
         private void Native_Size_Click(object? sender, EventArgs e)
@@ -417,7 +334,8 @@ namespace GBPemu
 
             int i = 1;
             if (sizeMenuItems != null)
-                foreach(NativeMenuItem size in sizeMenuItems)
+            {
+                foreach (NativeMenuItem size in sizeMenuItems)
                 {
                     if (sender is NativeMenuItem && sender == size)
                     {
@@ -426,9 +344,16 @@ namespace GBPemu
                     }
                     ++i;
                 }
+            }
 
             Native_CheckSize(PrintSize);
 
+            ResizeImage();
+
+        }
+
+        private void ResizeImage()
+        {
             Properties.Settings.Default.PrintSize = PrintSize;
 
             _imageBuffer = new BitmapPixelMaker(PrintSize * TILE_PIXEL_WIDTH * TILES_PER_LINE, PrintSize * TILE_PIXEL_HEIGHT * tile_height_count);
@@ -443,65 +368,8 @@ namespace GBPemu
             DisplayImage(PrintSize, PrintSize);
         }
 
-        [Obsolete]
-        private async void Native_SaveAs_Click(object? sender, EventArgs e)
+        private void SwapGamePalette(GamePalette? newPalette)
         {
-            SaveFileDialog SaveFileBox = new()
-            {
-                Title = "Save Picture As..."
-            };
-
-            List<FileDialogFilter> Filters = new();
-            FileDialogFilter filter = new();
-            List<string> extension = new()
-            {
-                "png"
-            };
-            filter.Extensions = extension;
-            filter.Name = "Document Files";
-            Filters.Add(filter);
-            SaveFileBox.Filters = Filters;
-
-            SaveFileBox.DefaultExtension = "png";
-
-            var saveFilename = await SaveFileBox.ShowAsync(this);
-
-            if (saveFilename != null)
-            {
-                var image = _imageBuffer.MakeBitmap();
-                image._rawImage.SaveAsPng(saveFilename);
-            }
-        }
-
-        private void Native_Game_Palette_Click(object sender, EventArgs e)
-        {
-           var menuItem = (NativeMenuItem?)sender;
-
-            //Clear Checks
-            Native_CheckPalette(9);
-            Native_ClearGamePalette(menuItem);
-
-            GamePalette newPalette = null;
-
-            string? gameName = (string?)(((NativeMenuItem?)menuItem?.Parent?.Parent)?.Header);
-
-            if (games != null)
-            {
-                foreach (Game game in games)
-                {
-                    if (gameName == game.Name)
-                    {
-                        foreach (GamePalette palette in game.Palettes)
-                        {
-                            if (palette.Name == (string?)menuItem?.Header)
-                            {
-                                newPalette = palette;
-                            }
-                        }
-                    }
-                }
-            }
-
             if (decompressedTiles == null)
             {
                 if (SelectedPalette != -1)
@@ -526,6 +394,38 @@ namespace GBPemu
             SelectedGamePalette = newPalette;
 
             DisplayImage(PrintSize, PrintSize);
+        }
+        
+        private void Native_Game_Palette_Click(object? sender, EventArgs e)
+        {
+           var menuItem = (NativeMenuItem?)sender;
+
+            //Clear Checks
+            Native_CheckPalette(9);
+            Native_ClearGamePalette(menuItem);
+
+            GamePalette? newPalette = null;
+
+            string? gameName = (string?)(((NativeMenuItem?)menuItem?.Parent?.Parent)?.Header);
+
+            if (games != null)
+            {
+                foreach (Game game in games)
+                {
+                    if (gameName == game.Name)
+                    {
+                        foreach (GamePalette palette in game.Palettes)
+                        {
+                            if (palette.Name == (string?)menuItem?.Header)
+                            {
+                                newPalette = palette;
+                            }
+                        }
+                    }
+                }
+            }
+
+            SwapGamePalette(newPalette);
 
         }
 
@@ -565,30 +465,7 @@ namespace GBPemu
                 }
             }
 
-            if (decompressedTiles == null)
-            {
-                if (SelectedPalette != -1)
-                {
-                    for (int i = 0; i < 4; ++i)
-                    {
-                        _imageBuffer.ReplaceColor(new Pixel(palettes[SelectedPalette][0][i], palettes[SelectedPalette][1][i], palettes[SelectedPalette][2][i], 255),
-                                                new Pixel(newPalette?.Colors[0][i], newPalette?.Colors[1][i], newPalette?.Colors[2][i], 255));
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < 4; ++i)
-                    {
-                        _imageBuffer.ReplaceColor(new Pixel(SelectedGamePalette?.Colors[0][i], SelectedGamePalette?.Colors[1][i], SelectedGamePalette?.Colors[2][i], 255),
-                                                new Pixel(newPalette?.Colors[0][i], newPalette?.Colors[1][i], newPalette?.Colors[2][i], 255));
-                    }
-                }
-            }
-
-            SelectedPalette = -1;
-            SelectedGamePalette = newPalette;
-
-            DisplayImage(PrintSize, PrintSize);
+            SwapGamePalette(newPalette);
         }
 
         private void Size_Click(object sender, RoutedEventArgs e)
@@ -651,18 +528,7 @@ namespace GBPemu
             }
             CheckSize(PrintSize);
 
-            Properties.Settings.Default.PrintSize = PrintSize;
-
-            _imageBuffer = new BitmapPixelMaker(PrintSize * TILE_PIXEL_WIDTH * TILES_PER_LINE, PrintSize * TILE_PIXEL_HEIGHT * tile_height_count);
-
-            _image.Height = PrintSize * TILE_PIXEL_HEIGHT * tile_height_count;
-            _image.Width = PrintSize * TILE_PIXEL_WIDTH * TILES_PER_LINE;
-            GameBoyPrinterEmulatorWindowGrid.Height = PrintSize * TILE_PIXEL_HEIGHT * tile_height_count; ;
-            GameBoyPrinterEmulatorWindowGrid.Width = PrintSize * TILE_PIXEL_WIDTH * TILES_PER_LINE;
-            Height = PrintSize * TILE_PIXEL_HEIGHT * tile_height_count;
-            Width = PrintSize * TILE_PIXEL_WIDTH * TILES_PER_LINE;
-
-            DisplayImage(PrintSize, PrintSize);
+            ResizeImage();
         }
 
         private void CheckSize(int sizeId)
@@ -785,6 +651,12 @@ namespace GBPemu
             CheckPalette(newPalette);
             ClearGamePalette(null);
 
+            SwapPalette(newPalette);
+        }
+
+        void SwapPalette(int newPalette)
+        {
+
             if (decompressedTiles == null)
             {
                 if (SelectedPalette != -1)
@@ -876,8 +748,9 @@ namespace GBPemu
                 Environment.Exit(0);
             };
 
-            ParseGamePalettes();
-            Native_ParseGamePalettes();
+            int count = ParseGamePalettes();
+            PopulateGamePalettesInContextMenu(count);
+            PopulateGamePalettesInNativeMenu(count);
 
             _reader = reader ?? throw new ArgumentNullException(nameof(reader));
 
@@ -1339,7 +1212,7 @@ namespace GBPemu
         }
 
         [Obsolete]
-        private async void SaveAs_Click(object sender, RoutedEventArgs e)
+        private async void ShowSaveAsDialog()
         {
             SaveFileDialog SaveFileBox = new()
             {
@@ -1366,6 +1239,18 @@ namespace GBPemu
                 var image = _imageBuffer.MakeBitmap();
                 image._rawImage.SaveAsPng(saveFilename);
             }
+        }
+
+        [Obsolete]
+        private void SaveAs_Click(object sender, RoutedEventArgs e)
+        {
+            ShowSaveAsDialog();
+        }
+
+        [Obsolete]
+        private void Native_SaveAs_Click(object sender, EventArgs e)
+        {
+            ShowSaveAsDialog();
         }
 
     }
