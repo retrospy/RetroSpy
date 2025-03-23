@@ -354,9 +354,9 @@ namespace GBPemu
                             if (palette != null)
                             {
                                 if (palette == menuItem)
-                                    menuItem.IsChecked = true;
+                                    palette.IsChecked = true;
                                 else if (menuItem != null)
-                                    menuItem.IsChecked = false;
+                                    palette.IsChecked = false;
                             }
                         }
                     }
