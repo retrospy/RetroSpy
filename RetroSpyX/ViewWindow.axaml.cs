@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Interactivity;
@@ -889,6 +890,11 @@ namespace RetroSpy
                 Topmost = !Topmost;
             Properties.Settings.Default.TopMost = Topmost;
             OnTopCheckbox.IsChecked = Topmost;
+
+            var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+            var OnTopNativeMenuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[0];
+            if (OnTopNativeMenuItem != null)
+                OnTopNativeMenuItem.IsChecked = Topmost;
         }
 
         private void Native_AlwaysOnTop_Click(object sender, EventArgs e)
@@ -897,6 +903,11 @@ namespace RetroSpy
                 Topmost = !Topmost;
             Properties.Settings.Default.TopMost = Topmost;
             OnTopCheckbox.IsChecked = Topmost;
+
+            var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+            var OnTopNativeMenuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[0];
+            if (OnTopNativeMenuItem != null)
+                OnTopNativeMenuItem.IsChecked = Topmost;
         }
 
         public event PropertyChangedEventHandler? PropertyChangedEvent;
@@ -922,6 +933,22 @@ namespace RetroSpy
             AnalogBlinkCheckbox.IsChecked = AnalogBlinkReductionEnabled;
             Properties.Settings.Default.MassFilter = MassBlinkReductionEnabled;
             MassBlinkCheckbox.IsChecked = MassBlinkReductionEnabled;
+
+            var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+            var AllBlinkNativeMenuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[1];
+            if (AllBlinkNativeMenuItem != null)
+                AllBlinkNativeMenuItem.IsChecked = AllBlinkReductionEnabled;
+            var ButtonBlinkNativeMenuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[2];
+            if (ButtonBlinkNativeMenuItem != null)
+                ButtonBlinkNativeMenuItem.IsChecked = ButtonBlinkReductionEnabled;
+            var AnalogBlinkNativeMenuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[3];
+            if (AnalogBlinkNativeMenuItem != null)
+                AnalogBlinkNativeMenuItem.IsChecked = AnalogBlinkReductionEnabled;
+            var MassBlinkNativeMenuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[4];
+            if (MassBlinkNativeMenuItem != null)
+                MassBlinkNativeMenuItem.IsChecked = MassBlinkReductionEnabled;
+
+
         }
 
         private void Native_ButtonBlinkReductionEnabled_Click(object sender, EventArgs e)
@@ -930,6 +957,12 @@ namespace RetroSpy
                 ButtonBlinkReductionEnabled = !ButtonBlinkReductionEnabled;
             Properties.Settings.Default.ButtonFilter = ButtonBlinkReductionEnabled;
             ButtonBlinkCheckbox.IsChecked = ButtonBlinkReductionEnabled;
+
+            var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+            var ButtonBlinkNativeMenuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[2];
+            if (ButtonBlinkNativeMenuItem != null)
+                ButtonBlinkNativeMenuItem.IsChecked = ButtonBlinkReductionEnabled;
+
         }
 
         private void Native_AnalogBlinkReductionEnabled_Click(object sender, EventArgs e)
@@ -938,6 +971,12 @@ namespace RetroSpy
                 AnalogBlinkReductionEnabled = !AnalogBlinkReductionEnabled;
             Properties.Settings.Default.AnalogFilter = AnalogBlinkReductionEnabled;
             AnalogBlinkCheckbox.IsChecked = AnalogBlinkReductionEnabled;
+
+
+            var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+            var AnalogBlinkNativeMenuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[3];
+            if (AnalogBlinkNativeMenuItem != null)
+                AnalogBlinkNativeMenuItem.IsChecked = AnalogBlinkReductionEnabled;
         }
 
         private void Native_MassBlinkReductionEnabled_Click(object sender, EventArgs e)
@@ -946,6 +985,11 @@ namespace RetroSpy
                 MassBlinkReductionEnabled = !MassBlinkReductionEnabled;
             Properties.Settings.Default.MassFilter = MassBlinkReductionEnabled;
             MassBlinkCheckbox.IsChecked = MassBlinkReductionEnabled;
+
+            var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+            var MassBlinkNativeMenuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[4];
+            if (MassBlinkNativeMenuItem != null)
+                MassBlinkNativeMenuItem.IsChecked = MassBlinkReductionEnabled;
         }
 
         private void AllBlinkReductionEnabled_Click(object sender, RoutedEventArgs e)
@@ -960,6 +1004,20 @@ namespace RetroSpy
             AnalogBlinkCheckbox.IsChecked = AnalogBlinkReductionEnabled;
             Properties.Settings.Default.MassFilter = MassBlinkReductionEnabled;
             MassBlinkCheckbox.IsChecked = MassBlinkReductionEnabled;
+
+            var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+            var AllBlinkNativeMenuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[1];
+            if (AllBlinkNativeMenuItem != null)
+                AllBlinkNativeMenuItem.IsChecked = AllBlinkReductionEnabled;
+            var ButtonBlinkNativeMenuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[2];
+            if (ButtonBlinkNativeMenuItem != null)
+                ButtonBlinkNativeMenuItem.IsChecked = ButtonBlinkReductionEnabled;
+            var AnalogBlinkNativeMenuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[3];
+            if (AnalogBlinkNativeMenuItem != null)
+                AnalogBlinkNativeMenuItem.IsChecked = AnalogBlinkReductionEnabled;
+            var MassBlinkNativeMenuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[4];
+            if (MassBlinkNativeMenuItem != null)
+                MassBlinkNativeMenuItem.IsChecked = MassBlinkReductionEnabled;
         }
 
         private void ButtonBlinkReductionEnabled_Click(object sender, RoutedEventArgs e)
@@ -968,6 +1026,11 @@ namespace RetroSpy
                 ButtonBlinkReductionEnabled = !ButtonBlinkReductionEnabled;
             Properties.Settings.Default.ButtonFilter = ButtonBlinkReductionEnabled;
             ButtonBlinkCheckbox.IsChecked = ButtonBlinkReductionEnabled;
+
+            var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+            var ButtonBlinkNativeMenuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[2];
+            if (ButtonBlinkNativeMenuItem != null)
+                ButtonBlinkNativeMenuItem.IsChecked = ButtonBlinkReductionEnabled;
         }
 
         private void AnalogBlinkReductionEnabled_Click(object sender, RoutedEventArgs e)
@@ -976,6 +1039,11 @@ namespace RetroSpy
                 AnalogBlinkReductionEnabled = !AnalogBlinkReductionEnabled;
             Properties.Settings.Default.AnalogFilter = AnalogBlinkReductionEnabled;
             AnalogBlinkCheckbox.IsChecked = AnalogBlinkReductionEnabled;
+
+            var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+            var AnalogBlinkNativeMenuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[3];
+            if (AnalogBlinkNativeMenuItem != null)
+                AnalogBlinkNativeMenuItem.IsChecked = AnalogBlinkReductionEnabled;
         }
 
         private void MassBlinkReductionEnabled_Click(object sender, RoutedEventArgs e)
@@ -984,6 +1052,11 @@ namespace RetroSpy
                 MassBlinkReductionEnabled = !MassBlinkReductionEnabled;
             Properties.Settings.Default.MassFilter = MassBlinkReductionEnabled;
             MassBlinkCheckbox.IsChecked = MassBlinkReductionEnabled;
+
+            var NativeOptionsMenu = NativeMenu.GetMenu(this)?.Items[0] as NativeMenuItem;
+            var MassBlinkNativeMenuItem = (NativeMenuItem?)((AvaloniaList<NativeMenuItemBase>?)NativeOptionsMenu?.Menu?.Items)?[4];
+            if (MassBlinkNativeMenuItem != null)
+                MassBlinkNativeMenuItem.IsChecked = MassBlinkReductionEnabled;
         }
 
         public void CalculateMagic()
