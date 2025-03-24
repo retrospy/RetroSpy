@@ -891,6 +891,14 @@ namespace RetroSpy
             OnTopCheckbox.IsChecked = Topmost;
         }
 
+        private void Native_AlwaysOnTop_Click(object sender, EventArgs e)
+        {
+            if (sender is not CheckBox)
+                Topmost = !Topmost;
+            Properties.Settings.Default.TopMost = Topmost;
+            OnTopCheckbox.IsChecked = Topmost;
+        }
+
         public event PropertyChangedEventHandler? PropertyChangedEvent;
         private void OnPropertyChanged(string prop)
         {
@@ -900,6 +908,44 @@ namespace RetroSpy
             }
 
             PropertyChangedEvent(this, new PropertyChangedEventArgs(prop));
+        }
+
+        private void Native_AllBlinkReductionEnabled_Click(object sender, EventArgs e)
+        {
+            if (sender is not CheckBox)
+                AllBlinkReductionEnabled = !ButtonBlinkReductionEnabled || !AnalogBlinkReductionEnabled || !MassBlinkReductionEnabled;
+
+            AllBlinkCheckbox.IsChecked = AllBlinkReductionEnabled;
+            Properties.Settings.Default.ButtonFilter = ButtonBlinkReductionEnabled;
+            ButtonBlinkCheckbox.IsChecked = ButtonBlinkReductionEnabled;
+            Properties.Settings.Default.AnalogFilter = AnalogBlinkReductionEnabled;
+            AnalogBlinkCheckbox.IsChecked = AnalogBlinkReductionEnabled;
+            Properties.Settings.Default.MassFilter = MassBlinkReductionEnabled;
+            MassBlinkCheckbox.IsChecked = MassBlinkReductionEnabled;
+        }
+
+        private void Native_ButtonBlinkReductionEnabled_Click(object sender, EventArgs e)
+        {
+            if (sender is not CheckBox)
+                ButtonBlinkReductionEnabled = !ButtonBlinkReductionEnabled;
+            Properties.Settings.Default.ButtonFilter = ButtonBlinkReductionEnabled;
+            ButtonBlinkCheckbox.IsChecked = ButtonBlinkReductionEnabled;
+        }
+
+        private void Native_AnalogBlinkReductionEnabled_Click(object sender, EventArgs e)
+        {
+            if (sender is not CheckBox)
+                AnalogBlinkReductionEnabled = !AnalogBlinkReductionEnabled;
+            Properties.Settings.Default.AnalogFilter = AnalogBlinkReductionEnabled;
+            AnalogBlinkCheckbox.IsChecked = AnalogBlinkReductionEnabled;
+        }
+
+        private void Native_MassBlinkReductionEnabled_Click(object sender, EventArgs e)
+        {
+            if (sender is not CheckBox)
+                MassBlinkReductionEnabled = !MassBlinkReductionEnabled;
+            Properties.Settings.Default.MassFilter = MassBlinkReductionEnabled;
+            MassBlinkCheckbox.IsChecked = MassBlinkReductionEnabled;
         }
 
         private void AllBlinkReductionEnabled_Click(object sender, RoutedEventArgs e)
@@ -914,7 +960,6 @@ namespace RetroSpy
             AnalogBlinkCheckbox.IsChecked = AnalogBlinkReductionEnabled;
             Properties.Settings.Default.MassFilter = MassBlinkReductionEnabled;
             MassBlinkCheckbox.IsChecked = MassBlinkReductionEnabled;
-
         }
 
         private void ButtonBlinkReductionEnabled_Click(object sender, RoutedEventArgs e)

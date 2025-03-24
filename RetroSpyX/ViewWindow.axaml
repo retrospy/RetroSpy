@@ -5,36 +5,49 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="RetroSpy.ViewWindow"
         Title="RetroSpy" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterOwner" CanResize="true" Opened="Window_Open">
-	<Grid Name="ControllerGrid" VerticalAlignment="Top" HorizontalAlignment="Left" >
-	        <Grid.ContextMenu>
-				<ContextMenu>
-					<MenuItem Header="Always On Top" Click="AlwaysOnTop_Click">
-						<MenuItem.Icon>
-							<CheckBox Name="OnTopCheckbox" Width="20" BorderThickness="0" Click="AlwaysOnTop_Click" IsChecked="{Binding Topmost}" />
-						</MenuItem.Icon>
-					</MenuItem>
-					<MenuItem Header="Blink Reduction:" Click="AllBlinkReductionEnabled_Click" >
-						<MenuItem.Icon>
-							<CheckBox Name="AllBlinkCheckbox" Width="20" BorderThickness="0" Click="AllBlinkReductionEnabled_Click" IsChecked="{Binding AllBlinkReductionEnabled}" />
-						</MenuItem.Icon>
-					</MenuItem>
-					<!-- Four spaces to indicate group - unsure what's preferred on Windows UI design-->
-					<MenuItem Header="    Button Blink Reduction" Click="ButtonBlinkReductionEnabled_Click">
-						<MenuItem.Icon>
-							<CheckBox Name="ButtonBlinkCheckbox" Width="20" BorderThickness="0" Click="ButtonBlinkReductionEnabled_Click" IsChecked="{Binding ButtonBlinkReductionEnabled}" />
-						</MenuItem.Icon>
-					</MenuItem>
-					<MenuItem Header="    Analog Blink Reduction" Click="AnalogBlinkReductionEnabled_Click" >
-						<MenuItem.Icon>
-							<CheckBox Name="AnalogBlinkCheckbox" Width="20" BorderThickness="0" Click="AnalogBlinkReductionEnabled_Click" IsChecked="{Binding AnalogBlinkReductionEnabled}" />
-						</MenuItem.Icon>
-					</MenuItem>
-					<MenuItem Header="    Mass Blink Reduction" Click="MassBlinkReductionEnabled_Click"  >
-						<MenuItem.Icon>
-							<CheckBox Name="MassBlinkCheckbox" Width="20" BorderThickness="0" Click="MassBlinkReductionEnabled_Click" IsChecked="{Binding MassBlinkReductionEnabled}" />
-						</MenuItem.Icon>
-					</MenuItem>
-				</ContextMenu>
+		<NativeMenu.Menu>
+			<NativeMenu>
+				<NativeMenuItem Header="Options">
+					<NativeMenu>
+						<NativeMenuItem Header="Always On Top"  Click="Native_AlwaysOnTop_Click" IsChecked="{Binding Topmost}" ToggleType="CheckBox" />
+						<NativeMenuItem Header="Blink Reduction:" Click="Native_AllBlinkReductionEnabled_Click" IsChecked="{Binding AllBlinkReductionEnabled}" ToggleType="CheckBox" />
+						<NativeMenuItem Header="    Button Blink Reduction" Click="Native_ButtonBlinkReductionEnabled_Click" IsChecked="{Binding ButtonBlinkReductionEnabled}" ToggleType="CheckBox" />
+						<NativeMenuItem Header="    Analog Blink Reduction" Click="Native_AnalogBlinkReductionEnabled_Click" IsChecked="{Binding AnalogBlinkReductionEnabled}" ToggleType="CheckBox" />
+						<NativeMenuItem Header="    Mass Blink Reduction" Click="Native_MassBlinkReductionEnabled_Click" IsChecked="{Binding MassBlinkReductionEnabled}" ToggleType="CheckBox" />
+					</NativeMenu>
+				</NativeMenuItem>
+			</NativeMenu>
+		</NativeMenu.Menu>
+		<Grid Name="ControllerGrid" VerticalAlignment="Top" HorizontalAlignment="Left" >
+	    <Grid.ContextMenu>
+			<ContextMenu>
+				<MenuItem Header="Always On Top" Click="AlwaysOnTop_Click">
+					<MenuItem.Icon>
+						<CheckBox Name="OnTopCheckbox" Width="20" BorderThickness="0" Click="AlwaysOnTop_Click" IsChecked="{Binding Topmost}" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Header="Blink Reduction:" Click="AllBlinkReductionEnabled_Click" >
+					<MenuItem.Icon>
+						<CheckBox Name="AllBlinkCheckbox" Width="20" BorderThickness="0" Click="AllBlinkReductionEnabled_Click" IsChecked="{Binding AllBlinkReductionEnabled}" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<!-- Four spaces to indicate group - unsure what's preferred on Windows UI design-->
+				<MenuItem Header="    Button Blink Reduction" Click="ButtonBlinkReductionEnabled_Click">
+					<MenuItem.Icon>
+						<CheckBox Name="ButtonBlinkCheckbox" Width="20" BorderThickness="0" Click="ButtonBlinkReductionEnabled_Click" IsChecked="{Binding ButtonBlinkReductionEnabled}" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Header="    Analog Blink Reduction" Click="AnalogBlinkReductionEnabled_Click" >
+					<MenuItem.Icon>
+						<CheckBox Name="AnalogBlinkCheckbox" Width="20" BorderThickness="0" Click="AnalogBlinkReductionEnabled_Click" IsChecked="{Binding AnalogBlinkReductionEnabled}" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<MenuItem Header="    Mass Blink Reduction" Click="MassBlinkReductionEnabled_Click"  >
+					<MenuItem.Icon>
+						<CheckBox Name="MassBlinkCheckbox" Width="20" BorderThickness="0" Click="MassBlinkReductionEnabled_Click" IsChecked="{Binding MassBlinkReductionEnabled}" />
+					</MenuItem.Icon>
+				</MenuItem>
+			</ContextMenu>
         </Grid.ContextMenu>
 	</Grid>
 </Window>
