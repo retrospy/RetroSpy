@@ -23,14 +23,14 @@ namespace RetroSpy.Readers
         private DispatcherTimer? _timer;
         private IDirectInputDevice8? _joystick;
 
-        public static Collection<int> GetDevices()
+        public static Collection<uint> GetDevices()
         {
             IDirectInput8 input = DInput.DirectInput8Create();
             int amount = input.GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly).Count;
             input.Dispose();
-            Collection<int> result = new();
+            Collection<uint> result = new();
 
-            for (int i = 0; i < amount; i++)
+            for (uint i = 0; i < amount; i++)
             {
                 result.Add(i);
             }

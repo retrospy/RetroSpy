@@ -1014,7 +1014,7 @@ namespace RetroSpy
                     int start = s.IndexOf("(COM", StringComparison.Ordinal) + 1;
                     if (start >= 0)
                     {
-                        int end = s.IndexOf(")", start + 3, StringComparison.Ordinal);
+                        int end = s.IndexOf(')', start + 3);
                         if (end >= 0)
                         {
                             // cname is like "COM14"
@@ -1053,7 +1053,7 @@ namespace RetroSpy
 
         private void UpdateMayflashList()
         {
-            List<int> controllerList = new() { 1, 2, 3, 4 };
+            List<uint> controllerList = new() { 1, 2, 3, 4 };
             _vm.XIAndGamepad.UpdateContents(controllerList);
         }
 
@@ -1117,7 +1117,7 @@ namespace RetroSpy
             try
             {
                 List<uint> controllers = new();
-                _client = new SshClient(txtHostname.Text, txtUsername.Text, txtPassword.Text);
+                _client = new SshClient(txtHostname.Text ?? "", txtUsername.Text ?? "", txtPassword.Text ?? "");
                 _client.Connect();
                 ShellStream _data = _client.CreateShellStream("", 0, 0, 0, 0, 1000);
 
@@ -1166,7 +1166,7 @@ namespace RetroSpy
     {
         public ListView<string> Ports { get; set; }
         public ListView<string> Ports2 { get; set; }
-        public ListView<int> XIAndGamepad { get; set; }
+        public ListView<uint> XIAndGamepad { get; set; }
         public ListView<uint> MisterGamepad { get; set; }
         public ListView<string> EmulatorPIDs { get; set; }
         public ListView<Skin> Skins { get; set; }
@@ -1273,7 +1273,7 @@ namespace RetroSpy
             Ports.StoreControl(setupWindow, "ComPortCombo");
             Ports2 = new ListView<string>();
             Ports2.StoreControl(setupWindow, "ComPort2Combo");
-            XIAndGamepad = new ListView<int>();
+            XIAndGamepad = new ListView<uint>();
             XIAndGamepad.StoreControl(setupWindow, "ControllerIdCombo");
             MisterGamepad = new ListView<uint>();
             MisterGamepad.StoreControl(setupWindow, "MisterControllerIdCombo");

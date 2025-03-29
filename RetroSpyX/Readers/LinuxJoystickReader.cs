@@ -274,14 +274,14 @@ public partial class LinuxJoystickReader : IControllerReader
         return ioctl(fd, JSIOCGAXMAP, axmap);
     }
 
-    public static IEnumerable<int>? GetDevices()
+    public static IEnumerable<uint>? GetDevices()
     {
-        List<int> controllers = new();
+        List<uint> controllers = new();
 
         var files = Directory.GetFiles("/dev/input/");
         foreach (var file in files)
             if (file.StartsWith("/dev/input/js"))
-                controllers.Add(int.Parse(file[13].ToString()));
+                controllers.Add(uint.Parse(file[13].ToString()));
 
         return controllers;
     }

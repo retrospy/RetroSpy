@@ -13,10 +13,10 @@ namespace RetroSpy.Readers
 
         public event EventHandler? ControllerDisconnected;
 
-        public static Collection<int> GetDevices()
+        public static Collection<uint> GetDevices()
         {
-            Collection<int> result = new();
-            for (int i = 0; i < 4; i++) //Poll all 4 possible controllers to see which are connected, thats how it works :/
+            Collection<uint> result = new();
+            for (uint i = 0; i < 4; i++) //Poll all 4 possible controllers to see which are connected, thats how it works :/
             {
                 if (XInput.GetState(i, out _))
                 {
@@ -28,10 +28,10 @@ namespace RetroSpy.Readers
 
         private const double TIMER_MS = 30;
         private DispatcherTimer? _timer;
-        private readonly int _id;
+        private readonly uint _id;
 
 
-        public XInputReader(int id = 0)
+        public XInputReader(uint id = 0)
         {
             _id = id;
             _timer = new DispatcherTimer

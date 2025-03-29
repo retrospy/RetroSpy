@@ -67,7 +67,7 @@ namespace RetroSpy
 
 #pragma warning disable CS8601 // Possible null reference assignment.
         public static readonly InputSource N64EMU = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? new("n64emu", "Project64 (SM64 only)", false, false, false, false, false, 3, true, (controllerId, useLagFix) => new EmulatorReader(controllerId ?? "0")) : null;
-        public static readonly InputSource PC360 = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? new ("pc360", "PC 360 Controller", false, true, false, false, false, 3, false, (controllerId, useLagFix) => new XInputReader(int.Parse(controllerId ?? "0", CultureInfo.CurrentCulture))) : null;
+        public static readonly InputSource PC360 = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? new ("pc360", "PC 360 Controller", false, true, false, false, false, 3, false, (controllerId, useLagFix) => new XInputReader(uint.Parse(controllerId ?? "0", CultureInfo.CurrentCulture))) : null;
         public static readonly InputSource PAD = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? new("generic", "PC Generic Gamepad", false, true, false, false, false, 3, false, (controllerId, useLagFix) => new GamepadReader(int.Parse(controllerId ?? "0", CultureInfo.CurrentCulture))) : null;
         public static readonly InputSource PCKEYBOARD = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? new("pckeyboard", "PC Keyboard & Mouse", false, false, false, false, false, 3, false, new PCKeyboardReader()) : null;
 #pragma warning restore CS8601 // Possible null reference assignment.
