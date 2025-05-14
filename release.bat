@@ -282,25 +282,25 @@ cd "bin\Release\net8.0\"
 if %ERRORLEVEL% NEQ 0 goto :fail
 
 if exist "..\..\..\..\..\..\certs\codesign.cer" (
-"C:\Program Files (x86)\Windows Kits\10\bin\10.0.22000.0\x86\SignTool" sign /f "..\..\..\..\..\..\certs\codesign.cer" /csp "eToken Base Cryptographic Provider" /k "%codesignpasswd%" /tr http://timestamp.comodoca.com  /td sha256 /fd sha256 /a Retrospy.exe
+"C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x86\SignTool" sign /f "..\..\..\..\..\..\certs\codesign.cer" /csp "eToken Base Cryptographic Provider" /k "%codesignpasswd%" /tr http://timestamp.comodoca.com  /td sha256 /fd sha256 /a Retrospy.exe
 if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
 :signgbpemu
 if exist "..\..\..\..\..\..\certs\codesign.cer" (
-"C:\Program Files (x86)\Windows Kits\10\bin\10.0.22000.0\x86\SignTool" sign /f "..\..\..\..\..\..\certs\codesign.cer" /csp "eToken Base Cryptographic Provider" /k "%codesignpasswd%" /tr http://timestamp.comodoca.com  /td sha256 /fd sha256 /a GBPemu.exe
+"C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x86\SignTool" sign /f "..\..\..\..\..\..\certs\codesign.cer" /csp "eToken Base Cryptographic Provider" /k "%codesignpasswd%" /tr http://timestamp.comodoca.com  /td sha256 /fd sha256 /a GBPemu.exe
 if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
 :signusbupdater
 if exist "..\..\..\..\..\..\certs\codesign.cer" (
-"C:\Program Files (x86)\Windows Kits\10\bin\10.0.22000.0\x86\SignTool" sign /f "..\..\..\..\..\..\certs\codesign.cer" /csp "eToken Base Cryptographic Provider" /k "%codesignpasswd%" /tr http://timestamp.comodoca.com  /td sha256 /fd sha256 /a UsbUpdater.exe
+"C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x86\SignTool" sign /f "..\..\..\..\..\..\certs\codesign.cer" /csp "eToken Base Cryptographic Provider" /k "%codesignpasswd%" /tr http://timestamp.comodoca.com  /td sha256 /fd sha256 /a UsbUpdater.exe
 if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
 :signgbpupdater
 if exist "..\..\..\..\..\..\certs\codesign.cer" (
-"C:\Program Files (x86)\Windows Kits\10\bin\10.0.22000.0\x86\SignTool" sign /f "..\..\..\..\..\..\certs\codesign.cer" /csp "eToken Base Cryptographic Provider" /k "%codesignpasswd%" /tr http://timestamp.comodoca.com  /td sha256 /fd sha256 /a GBPUpdater.exe
+"C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x86\SignTool" sign /f "..\..\..\..\..\..\certs\codesign.cer" /csp "eToken Base Cryptographic Provider" /k "%codesignpasswd%" /tr http://timestamp.comodoca.com  /td sha256 /fd sha256 /a GBPUpdater.exe
 if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
