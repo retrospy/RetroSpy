@@ -8,6 +8,9 @@ namespace RetroSpy.Readers
         private const int PACKET_SIZE = 64;
         private const int NICOHOOD_PACKET_SIZE = 8;
 
+        private static bool adjustForNoStopBit = false;
+        private static int noStopBitCount = 0;
+
         private static readonly string?[] BUTTONS = {
             null, null, null, "start", "y", "x", "b", "a", null, "l", "r", "z", "up", "down", "right", "left"
         };
@@ -162,13 +165,18 @@ namespace RetroSpy.Readers
             {
                 data = packet;
             }
-            else if (packet.Length == PACKET_SIZE + 12 && packet[11] != 0)  // throw out if no stop bit
+            else if (packet.Length == PACKET_SIZE + 12 && (adjustForNoStopBit || packet[11] != 0))  // throw out if no stop bit
             {
                 // Strip off poll mode, rumble mode and stop bit
                 Array.Copy(packet, 12, data, 0, PACKET_SIZE);
             }
             else
             {
+                if (++noStopBitCount == 10)
+                {
+                    adjustForNoStopBit = true;
+                }
+
                 return null;
             }
 
