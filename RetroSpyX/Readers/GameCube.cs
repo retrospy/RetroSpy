@@ -10,6 +10,7 @@ namespace RetroSpy.Readers
 
         private static bool adjustForNoStopBit = false;
         private static int noStopBitCount = 0;
+        private static int noStopBitTotalCount = 0;
 
         private static readonly string?[] BUTTONS = {
             null, null, null, "start", "y", "x", "b", "a", null, "l", "r", "z", "up", "down", "right", "left"
@@ -169,6 +170,12 @@ namespace RetroSpy.Readers
             {
                 // Strip off poll mode, rumble mode and stop bit
                 Array.Copy(packet, 12, data, 0, PACKET_SIZE);
+                noStopBitTotalCount++;
+                if (adjustForNoStopBit == false && noStopBitTotalCount >= 1000)
+                {
+                    noStopBitCount = 0;
+                    noStopBitTotalCount = 0;
+                }    
             }
             else
             {
