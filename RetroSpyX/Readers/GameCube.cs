@@ -171,17 +171,36 @@ namespace RetroSpy.Readers
                 // Strip off poll mode, rumble mode and stop bit
                 Array.Copy(packet, 12, data, 0, PACKET_SIZE);
                 noStopBitTotalCount++;
-                if (adjustForNoStopBit == false && noStopBitTotalCount >= 1000)
+                if (adjustForNoStopBit == false && noStopBitTotalCount >= 100)
                 {
                     noStopBitCount = 0;
                     noStopBitTotalCount = 0;
-                }    
+                }
             }
             else
             {
-                if (++noStopBitCount == 10)
+                if (packet[14] != 0)  // wii
                 {
-                    adjustForNoStopBit = true;
+                    bool foundStopBit = false;
+                    for (int i = 10; i >= 3; --i)
+                    {
+                        if (packet[i] != 0x00)
+                        {
+                            Array.Copy(packet, i + 1, data, 0, PACKET_SIZE);
+                            foundStopBit = true;
+                            break;
+                        }
+                    }
+
+                    if (!foundStopBit)
+                        return null;
+                }
+                else  // gamecube
+                {
+                    if (++noStopBitCount == 10)
+                    {
+                        adjustForNoStopBit = true;
+                    }
                 }
 
                 return null;
