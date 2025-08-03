@@ -263,12 +263,13 @@ namespace RetroSpy.Readers
             switch (mode)
             {
                 case 0x00:
-                    if (packet.Length > PACKET_SIZE - 8 && SignalTool.ReadByte(data, BUTTONS.Length + 40) != 0)
-                        return null;
-                    state.SetAnalog("cstick_x", ReadStick(SignalTool.ReadByte(data, BUTTONS.Length + 16)), SignalTool.ReadByte(packet, BUTTONS.Length + 16));
-                    state.SetAnalog("cstick_y", ReadStick(SignalTool.ReadByte(data, BUTTONS.Length + 24)), SignalTool.ReadByte(packet, BUTTONS.Length + 24));
-                    state.SetAnalog("trig_l", ReadTrigger(SignalTool.ReadByte(data, BUTTONS.Length + 32, 4), 15), SignalTool.ReadByte(packet, BUTTONS.Length + 32, 4));
-                    state.SetAnalog("trig_r", ReadTrigger(SignalTool.ReadByte(data, BUTTONS.Length + 36, 4), 15), SignalTool.ReadByte(packet, BUTTONS.Length + 36, 4));
+                    return null;
+                    //if (packet.Length > PACKET_SIZE - 8 && SignalTool.ReadByte(data, BUTTONS.Length + 40) != 0)
+                    //    return null;
+                    //state.SetAnalog("cstick_x", ReadStick(SignalTool.ReadByte(data, BUTTONS.Length + 16)), SignalTool.ReadByte(packet, BUTTONS.Length + 16));
+                    //state.SetAnalog("cstick_y", ReadStick(SignalTool.ReadByte(data, BUTTONS.Length + 24)), SignalTool.ReadByte(packet, BUTTONS.Length + 24));
+                    //state.SetAnalog("trig_l", ReadTrigger(SignalTool.ReadByte(data, BUTTONS.Length + 32, 4), 15), SignalTool.ReadByte(packet, BUTTONS.Length + 32, 4));
+                    //state.SetAnalog("trig_r", ReadTrigger(SignalTool.ReadByte(data, BUTTONS.Length + 36, 4), 15), SignalTool.ReadByte(packet, BUTTONS.Length + 36, 4));
                     //state.SetAnalog("analog_a", ReadTrigger(SignalTool.ReadByte(data, BUTTONS.Length + 40, 4), 16), SignalTool.ReadByte(packet, BUTTONS.Length + 40, 4));
                     //state.SetAnalog("analog_b", ReadTrigger(SignalTool.ReadByte(data, BUTTONS.Length + 44, 4), 16), SignalTool.ReadByte(packet, BUTTONS.Length + 44, 4));
                     break;
