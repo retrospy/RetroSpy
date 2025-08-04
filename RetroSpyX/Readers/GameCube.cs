@@ -12,6 +12,11 @@ namespace RetroSpy.Readers
         private static int noStopBitCount = 0;
         private static int noStopBitTotalCount = 0;
 
+        private static byte currentMode = 0;
+        private static int currentModeCount = 0;
+        private static byte fixedMode = 0;
+        private static bool useFixedMode = false;
+
         private static readonly string?[] BUTTONS = {
             null, null, null, "start", "y", "x", "b", "a", null, "l", "r", "z", "up", "down", "right", "left"
         };
@@ -258,20 +263,37 @@ namespace RetroSpy.Readers
             else
             {
                 mode = (packet[0] == 0x00 ? 0x00 : 0x04) | (packet[1] == 0x00 ? 0x00 : 0x02) | (packet[2] == 0x00 ? 0x00 : 0x01);
+                if (currentMode == mode)
+                {
+                    currentModeCount++;
+                    if (currentModeCount >= 5)
+                    {
+                        fixedMode = (byte)mode;
+                        useFixedMode = true;
+                    }
+                }
+                else
+                {
+                    currentMode = (byte)mode;
+                    currentModeCount = 0;
+                }
+                if (useFixedMode == true)
+                {
+                    mode = fixedMode;
+                }    
             }
 
             switch (mode)
             {
                 case 0x00:
-                    return null;
-                    //if (packet.Length > PACKET_SIZE - 8 && SignalTool.ReadByte(data, BUTTONS.Length + 40) != 0)
-                    //    return null;
-                    //state.SetAnalog("cstick_x", ReadStick(SignalTool.ReadByte(data, BUTTONS.Length + 16)), SignalTool.ReadByte(packet, BUTTONS.Length + 16));
-                    //state.SetAnalog("cstick_y", ReadStick(SignalTool.ReadByte(data, BUTTONS.Length + 24)), SignalTool.ReadByte(packet, BUTTONS.Length + 24));
-                    //state.SetAnalog("trig_l", ReadTrigger(SignalTool.ReadByte(data, BUTTONS.Length + 32, 4), 15), SignalTool.ReadByte(packet, BUTTONS.Length + 32, 4));
-                    //state.SetAnalog("trig_r", ReadTrigger(SignalTool.ReadByte(data, BUTTONS.Length + 36, 4), 15), SignalTool.ReadByte(packet, BUTTONS.Length + 36, 4));
-                    //state.SetAnalog("analog_a", ReadTrigger(SignalTool.ReadByte(data, BUTTONS.Length + 40, 4), 16), SignalTool.ReadByte(packet, BUTTONS.Length + 40, 4));
-                    //state.SetAnalog("analog_b", ReadTrigger(SignalTool.ReadByte(data, BUTTONS.Length + 44, 4), 16), SignalTool.ReadByte(packet, BUTTONS.Length + 44, 4));
+                    if (packet.Length > PACKET_SIZE - 8 && SignalTool.ReadByte(data, BUTTONS.Length + 40) != 0)
+                        return null;
+                    state.SetAnalog("cstick_x", ReadStick(SignalTool.ReadByte(data, BUTTONS.Length + 16)), SignalTool.ReadByte(packet, BUTTONS.Length + 16));
+                    state.SetAnalog("cstick_y", ReadStick(SignalTool.ReadByte(data, BUTTONS.Length + 24)), SignalTool.ReadByte(packet, BUTTONS.Length + 24));
+                    state.SetAnalog("trig_l", ReadTrigger(SignalTool.ReadByte(data, BUTTONS.Length + 32, 4), 15), SignalTool.ReadByte(packet, BUTTONS.Length + 32, 4));
+                    state.SetAnalog("trig_r", ReadTrigger(SignalTool.ReadByte(data, BUTTONS.Length + 36, 4), 15), SignalTool.ReadByte(packet, BUTTONS.Length + 36, 4));
+                    state.SetAnalog("analog_a", ReadTrigger(SignalTool.ReadByte(data, BUTTONS.Length + 40, 4), 16), SignalTool.ReadByte(packet, BUTTONS.Length + 40, 4));
+                    state.SetAnalog("analog_b", ReadTrigger(SignalTool.ReadByte(data, BUTTONS.Length + 44, 4), 16), SignalTool.ReadByte(packet, BUTTONS.Length + 44, 4));
                     break;
                 case 0x01:
                     return null;
