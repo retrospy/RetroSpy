@@ -182,7 +182,7 @@ namespace RetroSpy.Readers
                     noStopBitTotalCount = 0;
                 }
             }
-            else
+            else if (packet.Length >= PACKET_SIZE)
             {
                 if (packet[14] != 0)  // wii
                 {
@@ -191,7 +191,7 @@ namespace RetroSpy.Readers
                     {
                         if (packet[i] != 0x00)
                         {
-                            Array.Copy(packet, i + 1, data, 0, PACKET_SIZE);
+                            Array.Copy(packet, i + 1, data, 0, PACKET_SIZE - i);
                             foundStopBit = true;
                             break;
                         }
@@ -210,8 +210,10 @@ namespace RetroSpy.Readers
 
                 return null;
             }
+            else
+                return null;
 
-            ControllerStateBuilder state = new();
+                ControllerStateBuilder state = new();
 
             for (int i = 0; i < BUTTONS.Length; ++i)
             {
