@@ -204,7 +204,7 @@ namespace RetroSpy.Readers
                 {
                     if (++noStopBitCount == 10)
                     {
-                        adjustForNoStopBit = true;
+                        //adjustForNoStopBit = true;
                     }
                 }
 
