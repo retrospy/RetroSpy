@@ -271,7 +271,7 @@ namespace RetroSpy.Readers
                     if (currentModeCount >= 5)
                     {
                         fixedMode = (byte)mode;
-                        useFixedMode = true;
+                        //useFixedMode = true;
                     }
                 }
                 else
