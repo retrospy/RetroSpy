@@ -13,7 +13,7 @@
 // --------------- //
 
 #define gamecube_reader_wrap_target 0
-#define gamecube_reader_wrap 17
+#define gamecube_reader_wrap 18
 
 #define gamecube_reader_T1 4
 #define gamecube_reader_T2 12
@@ -54,15 +54,17 @@ static const uint16_t gamecube_reader_program_instructions[] = {
 	// 15: jmp    x--, 12                    
 0x008b,
 	// 16: jmp    y--, 11                    
-0xb942,
-	// 17: nop                           [25]
+0xbf42,
+	// 17: nop                           [31]
+0xbf42,
+	// 18: nop                           [31]
         //     .wrap
 };
 
 #if !PICO_NO_HARDWARE
 static const struct pio_program gamecube_reader_program = {
 	.instructions = gamecube_reader_program_instructions,
-	.length = 18,
+	.length = 19,
 	.origin = -1,
 };
 

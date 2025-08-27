@@ -89,6 +89,10 @@
         <string>sketches\PSString.h</string>
         <string>sketches\N64Slow.h</string>
         <string>sketches\Duo.h</string>
+        <string>sketches\gamecube_reader.h</string>
+        <string>sketches\gamecube_reader.pio</string>
+        <string>sketches\gamecube_trigger.pio</string>
+        <string>sketches\gamecube_trigger.h</string>
       </OtherFiles>
     </ProjectModeSettings>
   </Project>
@@ -211,6 +215,7 @@
           <EnableAsyncExecutionMode>false</EnableAsyncExecutionMode>
           <AsyncModeSupportsBreakpoints>true</AsyncModeSupportsBreakpoints>
           <TemporaryBreakConsolidationTimeout>0</TemporaryBreakConsolidationTimeout>
+          <BacktraceFrameLimit>0</BacktraceFrameLimit>
           <EnableNonStopMode>false</EnableNonStopMode>
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
@@ -284,6 +289,7 @@
           <EnableAsyncExecutionMode>false</EnableAsyncExecutionMode>
           <AsyncModeSupportsBreakpoints>true</AsyncModeSupportsBreakpoints>
           <TemporaryBreakConsolidationTimeout>0</TemporaryBreakConsolidationTimeout>
+          <BacktraceFrameLimit>0</BacktraceFrameLimit>
           <EnableNonStopMode>false</EnableNonStopMode>
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
@@ -369,6 +375,7 @@
           <EnableAsyncExecutionMode>false</EnableAsyncExecutionMode>
           <AsyncModeSupportsBreakpoints>true</AsyncModeSupportsBreakpoints>
           <TemporaryBreakConsolidationTimeout>0</TemporaryBreakConsolidationTimeout>
+          <BacktraceFrameLimit>0</BacktraceFrameLimit>
           <EnableNonStopMode>false</EnableNonStopMode>
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
@@ -438,6 +445,7 @@
           <EnableAsyncExecutionMode>false</EnableAsyncExecutionMode>
           <AsyncModeSupportsBreakpoints>true</AsyncModeSupportsBreakpoints>
           <TemporaryBreakConsolidationTimeout>0</TemporaryBreakConsolidationTimeout>
+          <BacktraceFrameLimit>0</BacktraceFrameLimit>
           <EnableNonStopMode>false</EnableNonStopMode>
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
@@ -538,6 +546,7 @@
           <EnableAsyncExecutionMode>false</EnableAsyncExecutionMode>
           <AsyncModeSupportsBreakpoints>true</AsyncModeSupportsBreakpoints>
           <TemporaryBreakConsolidationTimeout>0</TemporaryBreakConsolidationTimeout>
+          <BacktraceFrameLimit>0</BacktraceFrameLimit>
           <EnableNonStopMode>false</EnableNonStopMode>
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
@@ -606,6 +615,7 @@
           <EnableAsyncExecutionMode>false</EnableAsyncExecutionMode>
           <AsyncModeSupportsBreakpoints>true</AsyncModeSupportsBreakpoints>
           <TemporaryBreakConsolidationTimeout>0</TemporaryBreakConsolidationTimeout>
+          <BacktraceFrameLimit>0</BacktraceFrameLimit>
           <EnableNonStopMode>false</EnableNonStopMode>
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
@@ -669,6 +679,7 @@
           <EnableAsyncExecutionMode>false</EnableAsyncExecutionMode>
           <AsyncModeSupportsBreakpoints>true</AsyncModeSupportsBreakpoints>
           <TemporaryBreakConsolidationTimeout>0</TemporaryBreakConsolidationTimeout>
+          <BacktraceFrameLimit>0</BacktraceFrameLimit>
           <EnableNonStopMode>false</EnableNonStopMode>
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
@@ -749,6 +760,7 @@
           <EnableAsyncExecutionMode>false</EnableAsyncExecutionMode>
           <AsyncModeSupportsBreakpoints>true</AsyncModeSupportsBreakpoints>
           <TemporaryBreakConsolidationTimeout>0</TemporaryBreakConsolidationTimeout>
+          <BacktraceFrameLimit>0</BacktraceFrameLimit>
           <EnableNonStopMode>false</EnableNonStopMode>
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
@@ -829,6 +841,7 @@
           <EnableAsyncExecutionMode>false</EnableAsyncExecutionMode>
           <AsyncModeSupportsBreakpoints>true</AsyncModeSupportsBreakpoints>
           <TemporaryBreakConsolidationTimeout>0</TemporaryBreakConsolidationTimeout>
+          <BacktraceFrameLimit>0</BacktraceFrameLimit>
           <EnableNonStopMode>false</EnableNonStopMode>
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
@@ -938,6 +951,7 @@
           <EnableAsyncExecutionMode>false</EnableAsyncExecutionMode>
           <AsyncModeSupportsBreakpoints>true</AsyncModeSupportsBreakpoints>
           <TemporaryBreakConsolidationTimeout>0</TemporaryBreakConsolidationTimeout>
+          <BacktraceFrameLimit>0</BacktraceFrameLimit>
           <EnableNonStopMode>false</EnableNonStopMode>
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>
@@ -1022,6 +1036,7 @@
           <EnableAsyncExecutionMode>false</EnableAsyncExecutionMode>
           <AsyncModeSupportsBreakpoints>true</AsyncModeSupportsBreakpoints>
           <TemporaryBreakConsolidationTimeout>0</TemporaryBreakConsolidationTimeout>
+          <BacktraceFrameLimit>0</BacktraceFrameLimit>
           <EnableNonStopMode>false</EnableNonStopMode>
           <MaxBreakpointLimit>0</MaxBreakpointLimit>
           <EnableVerboseMode>true</EnableVerboseMode>

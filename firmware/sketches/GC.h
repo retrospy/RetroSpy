@@ -54,9 +54,11 @@ private:
 	void writeKeyboard();
 	
 	unsigned char rawData[34 + GC_PREFIX + GC_BITCOUNT];
+	unsigned char rawControllerIDByte;
 	unsigned char readBits;
 	
 	unsigned char sendData[34 + GC_PREFIX + GC_BITCOUNT];
+	unsigned char controllerIDByte;
 	volatile bool sendRequest = false;
 	short sendHeaderVal = 0;
 };
