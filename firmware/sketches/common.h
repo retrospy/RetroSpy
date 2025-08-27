@@ -126,7 +126,7 @@ enum VideoOutputType {
 #define SNES_BITCOUNT_EXT   32
 #define NES_BITCOUNT         8
 #define GC_BITCOUNT			    64
-#define GC_PREFIX           25
+#define GC_PREFIX           24
 #define ThreeDO_BITCOUNT	  32
 #define PCFX_BITCOUNT		    16
 #define CD32_BITCOUNT		     7

@@ -84,8 +84,8 @@ Global
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|LGT8F328.Build.0 = Debug|LGT8F328
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|LGT8F328P-LQFP32_MiniEVB.ActiveCfg = Debug|LGT8F328P-LQFP32_MiniEVB
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|LGT8F328P-LQFP32_MiniEVB.Build.0 = Debug|LGT8F328P-LQFP32_MiniEVB
-		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|Raspberry_Pi_Pico.ActiveCfg = Debug|Raspberry_Pi_Pico
-		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|Raspberry_Pi_Pico.Build.0 = Debug|Raspberry_Pi_Pico
+		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|Raspberry_Pi_Pico.ActiveCfg = Release|Raspberry_Pi_Pico
+		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|Raspberry_Pi_Pico.Build.0 = Release|Raspberry_Pi_Pico
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|Teensy_3 5.ActiveCfg = Debug|Teensy_3 5
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|Teensy_3 5.Build.0 = Debug|Teensy_3 5
 		{73EA1611-B8A4-4879-8D2A-A2620F1326F9}.Debug|Teensy_4 0.ActiveCfg = Debug|Teensy_4 0

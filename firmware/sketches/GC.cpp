@@ -28,6 +28,7 @@
 
 #if (defined(__arm__) && defined(CORE_TEENSY) && (defined(ARDUINO_TEENSY35) || defined(ARDUINO_TEENSY40) || defined(ARDUINO_TEENSY41))) || (defined(TP_ELAPSEDMILLIS) && (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)))
 #include <elapsedMillis.h>
+#include "gamecube_reader.h"
 
 static int show = 0;
 
@@ -87,40 +88,38 @@ static short headerVal = 0;
 
 byte storedButtons[16];
 
+GCSpy::GCSpy()
+{
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	pinMode(28, OUTPUT);
+	digitalWrite(28, LOW);
+	
+	uint offset = pio_add_program(pio0, &gamecube_reader_program);
+	gamecube_reader_program_init(pio0, 0, offset);
+#endif
+}
+
 void GCSpy::loop1()
 {
 	if (sendRequest)
 	{
 		memcpy(sendData, rawData, GC_PREFIX + GC_BITCOUNT);
-		sendHeaderVal = headerVal;
 		sendRequest = false;
 	
-		for (int i = 0; i < 16; ++i)
-		{
-			if (storedButtons[i] == 0x00 && sendData[25 + i] != 0x00)
-			{
-				storedButtons[i] = sendData[25 + i];
-				sendData[25 + i] = 0x00;
-			}
-			else
-			{
-				storedButtons[i] = sendData[25 + i];
-			}
-		}
 		
 #if !defined(DEBUG)
-		if (sendHeaderVal == 0x40)  // Extra 12 are for the poll mode, rumble mode and stop bit
-			sendRawData(sendData, GC_PREFIX - 12, GC_BITCOUNT + 12);
-		else if (sendHeaderVal == 0x14 && ++show % 2 == 0)  // Gameboy Player polls too damn many times, slows down display.
-			writeSerial(); // This doesn't seem to negatively affect other games.
-		else if(sendHeaderVal == 0x54)
-			writeKeyboard();
+		//if (sendHeaderVal == 0x40)  // Extra 12 are for the poll mode, rumble mode and stop bit
+			sendRawData(sendData, GC_PREFIX - 11, GC_BITCOUNT + 11);
+		//else if (sendHeaderVal == 0x14 && ++show % 2 == 0)  // Gameboy Player polls too damn many times, slows down display.
+		//	writeSerial(); // This doesn't seem to negatively affect other games.
+		//else if(sendHeaderVal == 0x54)
+		//	writeKeyboard();
 #else
-		if (sendHeaderVal == 0x54)
-			debugKeyboard();
-		else if (sendHeaderVal == 0x14)
-			debugSerial();
-		else
+		//if (sendHeaderVal == 0x54)
+		//	debugKeyboard();
+		//else if (sendHeaderVal == 0x14)
+		//	debugSerial();
+		//else
 			sendRawDataDebug(sendData, GC_PREFIX, GC_BITCOUNT);
 #endif
 	}
@@ -128,19 +127,10 @@ void GCSpy::loop1()
 
 void GCSpy::loop() 
 {
-	unsigned char *rawDataPtr = rawData;
 	elapsedMicros betweenLowSignal = 0;
-	int headerBits = 8;
 
 findcmdinit:
-	interrupts();
 
-	while (sendRequest)
-	{
-	}
-	headerVal = 0;
-	rawDataPtr = rawData;
-	
 	// Wait for the line to go high then low.
 	WAIT_FALLING_EDGE(GC_PIN);
 	if (betweenLowSignal < 25)
@@ -148,110 +138,38 @@ findcmdinit:
 		betweenLowSignal = 0;
 		goto findcmdinit;
 	}
-	else
+	digitalWrite(28, HIGH);
+	//digitalWrite(28, LOW);
+	
+mainloop:
+	
+	byte data[11];
+	
+	for (int i = 0; i < 11; ++i)
 	{
-		headerBits = 7;
-		betweenLowSignal = 0;
-		
-		noInterrupts();
-		// Wait ~2us between line reads
-#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-		busy_wait_us(2);
-#else
-		asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
-#endif
-			
-		// Read a bit from the line and store as a byte in "rawData"
-		*rawDataPtr = PIN_READ(GC_PIN);
-		headerVal = (*rawDataPtr != 0 ? 0x80 : 0x00);
-		++rawDataPtr;
-
-		goto readCmd;
+		data[i] = gamecube_reader_getc(pio0, 0);
+	}
+	betweenLowSignal = 0;
+	
+	while (sendRequest)
+	{
 	}
 	
-	goto findcmdinit;
-	
-readCmd:
-	
-	// Wait for the line to go high then low.
-	WAIT_FALLING_EDGE(GC_PIN);
-
-	// Wait ~2us between line reads
-#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-	busy_wait_us(2);
-#else
-	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
-#endif
-
-	// Read a bit from the line and store as a byte in "rawData"
-	*rawDataPtr = PIN_READ(GC_PIN);
-	
-	headerVal |= *rawDataPtr != 0 ? (1 << (headerBits - 1)) : 0;
-
-	++rawDataPtr;
-	if (--headerBits == 0)
+	for (int i = 0; i < 11; ++i)
 	{
-		if (headerVal == 0x40)
+		for (int j = 0; j < 8; ++j)
 		{
-			readBits = 82;
-			goto readData;
-		}
-		if (headerVal == 0x54)
-		{
-			readBits = 82;
-			goto readData;
-		}
-		if (headerVal == 0x14)
-		{
-			readBits = 25;
-			goto readData;
-		}
-		else
-		{
-#if defined(DEBUG)
-			//Serial.println(headerVal);
-#endif
-			interrupts();
-			betweenLowSignal = 0;
-			goto findcmdinit;
+			rawData[(i * 8) + j] = (data[i] & (1 << (7 - j))) == 0 ? ZERO : ONE;
 		}
 	}
-	goto readCmd;
 	
-readData:
-	
-	// Wait for the line to go high then low.
-	WAIT_FALLING_EDGE(GC_PIN);
-	
-	// Wait ~2us between line reads
-#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
-	busy_wait_us(2);
-#else
-	asm volatile(MICROSECOND_NOPS MICROSECOND_NOPS);
-#endif
-
-	// Read a bit from the line and store as a byte in "rawData"
-	*rawDataPtr = PIN_READ(GC_PIN);
-	
-	rawDataPtr++;
-	
-	if (--readBits == 0)
-	{
-		goto printData;
-	}
-	
-	goto readData;
-	
-printData:
-	interrupts();
 	sendRequest = true;
 
 #if !defined(RASPBERRYPI_PICO) && !defined(ARDUINO_RASPBERRY_PI_PICO)
 	loop1();
 #endif
 	
-	betweenLowSignal = 0;
-	goto findcmdinit;
+	goto mainloop;
 }
 
 void GCSpy::updateState() {

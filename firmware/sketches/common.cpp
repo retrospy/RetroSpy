@@ -112,10 +112,15 @@ read_loop:
 #pragma GCC push_options
 void sendRawData(unsigned char rawControllerData[], unsigned char first, unsigned char count)
 {
+#if defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)
+	Serial.write(rawControllerData + first, count);
+	Serial.write(SPLIT);
+#else
 	for (unsigned char i = first; i < first + count; i++) {
 		Serial.write(rawControllerData[i] ? ONE : ZERO);
 	}
 	Serial.write(SPLIT);
+#endif
 }
 #pragma GCC pop_options
 

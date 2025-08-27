@@ -31,6 +31,7 @@
 
 class GCSpy : public ControllerSpy {
 public:
+	GCSpy();
 	void loop();
 	void loop1();
 	void writeSerial();

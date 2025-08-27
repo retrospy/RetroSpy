@@ -171,49 +171,19 @@ namespace RetroSpy.Readers
             {
                 data = packet;
             }
-            else if (packet.Length == PACKET_SIZE + 12 && (adjustForNoStopBit || packet[11] != 0))  // throw out if no stop bit
+            else if (packet.Length == PACKET_SIZE + 12 && packet[11] != 0)  // throw out if no stop bit
             {
                 // Strip off poll mode, rumble mode and stop bit
                 Array.Copy(packet, 12, data, 0, PACKET_SIZE);
-                noStopBitTotalCount++;
-                if (adjustForNoStopBit == false && noStopBitTotalCount >= 100)
-                {
-                    noStopBitCount = 0;
-                    noStopBitTotalCount = 0;
-                }
             }
-            else if (packet.Length >= PACKET_SIZE)
+            else if (packet.Length == PACKET_SIZE + 11)
             {
-                if (packet[14] != 0)  // wii
-                {
-                    bool foundStopBit = false;
-                    for (int i = 10; i >= 3; --i)
-                    {
-                        if (packet[i] != 0x00)
-                        {
-                            Array.Copy(packet, i + 1, data, 0, PACKET_SIZE - i);
-                            foundStopBit = true;
-                            break;
-                        }
-                    }
-
-                    if (!foundStopBit)
-                        return null;
-                }
-                else  // gamecube
-                {
-                    if (++noStopBitCount == 10)
-                    {
-                        adjustForNoStopBit = true;
-                    }
-                }
-
-                return null;
+                Array.Copy(packet, 11, data, 0, PACKET_SIZE);
             }
             else
                 return null;
 
-                ControllerStateBuilder state = new();
+            ControllerStateBuilder state = new();
 
             for (int i = 0; i < BUTTONS.Length; ++i)
             {
@@ -265,31 +235,11 @@ namespace RetroSpy.Readers
             else
             {
                 mode = (packet[0] == 0x00 ? 0x00 : 0x04) | (packet[1] == 0x00 ? 0x00 : 0x02) | (packet[2] == 0x00 ? 0x00 : 0x01);
-                if (currentMode == mode)
-                {
-                    currentModeCount++;
-                    if (currentModeCount >= 5)
-                    {
-                        fixedMode = (byte)mode;
-                        useFixedMode = true;
-                    }
-                }
-                else
-                {
-                    currentMode = (byte)mode;
-                    currentModeCount = 0;
-                }
-                if (useFixedMode == true)
-                {
-                    mode = fixedMode;
-                }    
             }
 
             switch (mode)
             {
                 case 0x00:
-                    if (packet.Length > PACKET_SIZE - 8 && SignalTool.ReadByte(data, BUTTONS.Length + 40) != 0)
-                        return null;
                     state.SetAnalog("cstick_x", ReadStick(SignalTool.ReadByte(data, BUTTONS.Length + 16)), SignalTool.ReadByte(packet, BUTTONS.Length + 16));
                     state.SetAnalog("cstick_y", ReadStick(SignalTool.ReadByte(data, BUTTONS.Length + 24)), SignalTool.ReadByte(packet, BUTTONS.Length + 24));
                     state.SetAnalog("trig_l", ReadTrigger(SignalTool.ReadByte(data, BUTTONS.Length + 32, 4), 15), SignalTool.ReadByte(packet, BUTTONS.Length + 32, 4));

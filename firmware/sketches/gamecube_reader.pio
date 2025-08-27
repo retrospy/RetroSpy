@@ -1,0 +1,62 @@
+.program gamecube_reader
+.define public T1 4
+.define public T2 12
+
+.wrap_target            
+    wait 1 gpio 28              ; Get the 3 byte command packet
+    set y, 2            
+receiveCommandByte:
+    set x, 7
+getCommandBit:
+    wait 0 pin 0 [T1 + 1]         ; wait until the line goes low, then wait until a 1 bit would register as high
+    in pins 1                   ; read
+    wait 1 pin 0                ; wait for a 1 if it's a 0
+    jmp x-- getCommandBit       ; get the next bit
+    jmp y-- receiveCommandByte  ; get the next byte
+
+                                ; Skip the stop bit
+wait 0 pin 0 [T1 + 1]           ; wait until the line goes low, then wait until a 1 bit would register as high
+wait 1 pin 0                    ; wait for a 1 if it's a 0
+
+                                ; Get the 8 byte data packet
+    set y, 7    
+receiveDataByte:
+    set x, 7
+getDataBit:
+    wait 0 pin 0 [T1 + 1]       ; wait until the line goes low, then wait until a 1 bit would register as high
+    in pins 1                   ; read
+    wait 1 pin 0                ; wait for a 1 if it's a 0
+    jmp x-- getDataBit             ; get the next bit
+    jmp y-- receiveDataByte        ; get the next byte
+    nop [25]
+.wrap
+
+% c-sdk {
+#include "hardware/clocks.h"
+#include "hardware/pio.h"
+
+static inline void gamecube_reader_program_init(PIO pio, uint sm, uint offset)  
+{
+    pio_sm_config c = gamecube_reader_program_get_default_config(offset);
+
+    sm_config_set_in_pins(&c, 3);
+    pio_sm_set_pindirs_with_mask(pio, sm, ~(1u << 3), 1u << 3 );
+    pio_gpio_init(pio, 3);
+
+    sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_RX);
+    sm_config_set_in_shift(&c, false, true, 8);
+
+    int cyclesPerBit = (gamecube_reader_T1 + gamecube_reader_T2) / 4;
+    float frequency = 1000000;
+    float clockDiv = clock_get_hz(clk_sys) / (cyclesPerBit * frequency);
+    sm_config_set_clkdiv(&c, clockDiv);
+
+    pio_sm_init(pio, sm, offset, &c);
+    pio_sm_set_enabled(pio, sm, true);
+}
+
+static inline char gamecube_reader_getc(PIO pio, uint sm) 
+{
+    return pio_sm_get_blocking(pio, sm);
+} 
+%}
