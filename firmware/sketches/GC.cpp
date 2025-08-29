@@ -341,8 +341,7 @@ void GCSpy::writeKeyboard()
 
 #elif (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)) && (defined(TP_ELAPSEDMILLIS))
 #include <elapsedMillis.h>
-#include "gamecube_reader.h"
-#include "gamecube_trigger.h"
+#include "gamecube_poll_reader.h"
 
 static int show = 0;
 
@@ -417,22 +416,12 @@ GCSpy::GCSpy()
 	pinMode(28, OUTPUT);
 	digitalWrite(28, LOW);
 	
-	uint offset = pio_add_program(pio0, &gamecube_reader_program);
-	gamecube_reader_program_init(pio0, 0, offset);
+	uint offset = pio_add_program(pio0, &gamecube_poll_reader_program);
+	gamecube_poll_reader_program_init(pio0, 0, offset);
 	
-	offset = pio_add_program(pio0, &gamecube_trigger_program);
-	gamecube_trigger_program_init(pio0, 1, offset);
-	
-	pio_set_irq0_source_enabled(pio0, pis_interrupt0, true);
-	irq_set_exclusive_handler(PIO0_IRQ_0, lineTriggerRaiseISR);
-	irq_set_enabled(PIO0_IRQ_0, true);
-	
-	pio_set_irq1_source_enabled(pio0, pis_interrupt1, true);
-	irq_set_exclusive_handler(PIO0_IRQ_1, lineTriggerLowerISR);
-	irq_set_enabled(PIO0_IRQ_1, true);
 }
 
-void GCSpy::loop1()
+void __time_critical_func(GCSpy::loop1)()
 {
 	if (sendRequest)
 	{
@@ -458,7 +447,7 @@ void GCSpy::loop1()
 	}
 }
 
-void GCSpy::loop() 
+void __time_critical_func(GCSpy::loop)() 
 {
 	elapsedMillis betweenLowSignal = 0;
 
@@ -467,8 +456,7 @@ findcmdinit:
 	// Initial synchronization
 	
 	// Wait for the line to go high then low.
-	while (!lineTrigger) ; 
-	while (lineTrigger) ;
+	WAIT_FALLING_EDGE(GC_PIN);
 	
 	// wait for a 10ms gap
 	if (betweenLowSignal < 10)
@@ -480,29 +468,53 @@ findcmdinit:
 	// Start PIO Reader
 	digitalWrite(28, HIGH);
 	
-	byte data[11];
+	uint32_t data[11];
 	
 mainloop:
 	
-	for (int i = 0; i < 11; ++i)
+	data[0] = pio_sm_get_blocking(pio0, 0);
+	
+	if ((data[0] >> 16) == 0x40)
 	{
-		data[i] = gamecube_reader_getc(pio0, 0);
+		data[1] = pio_sm_get_blocking(pio0, 0);
+		data[2] = pio_sm_get_blocking(pio0, 0);
+		
+		for (int j = 0; j < 24; ++j)
+		{
+			rawData[j] = (data[0] & (1 << (23 - j))) == 0 ? ZERO : ONE;
+		}
+		for (int i = 1; i < 3; ++i)
+		{
+			for (int j = 0; j < 32; ++j)
+			{
+				rawData[24 + ((i-1) * 32) + j] = (data[i] & (1 << (31 - j))) == 0 ? ZERO : ONE;
+			}
+		}
+		rawControllerIDByte = data[0] >> 16;
 	}
+	else
+		goto mainloop;
+	
+	//for (int i = 0; i < 11; ++i)
+	//{
+	//	data[i] = pio_sm_get_blocking(pio0, 0);
+	//}
 	betweenLowSignal = 0;
 	
 	while (sendRequest)
 	{
 	}
 	
-	for (int i = 0; i < 11; ++i)
-	{
-		for (int j = 0; j < 8; ++j)
-		{
-			rawData[(i * 8) + j] = (data[i] & (1 << (7 - j))) == 0 ? ZERO : ONE;
-		}
-	}
 	
-	rawControllerIDByte = data[0];
+	//for (int i = 0; i < 11; ++i)
+	//{
+	//	for (int j = 0; j < 8; ++j)
+	//	{
+	//		rawData[(i * 8) + j] = (data[i] & (1 << (7 - j))) == 0 ? ZERO : ONE;
+	//	}
+	//}
+	
+	
 	sendRequest = true;
 	
 	goto mainloop;
