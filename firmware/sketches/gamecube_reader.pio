@@ -4,22 +4,30 @@
 
 .wrap_target            
     wait 1 gpio 28              ; Get the 3 byte command packet
-    set y, 2            
-receiveCommandByte:
+    
+    
     set x, 7
-getCommandBit:
+getCommandBit1:
     wait 0 pin 0 [T1 + 1]         ; wait until the line goes low, then wait until a 1 bit would register as high
     in pins 1                   ; read
     wait 1 pin 0                ; wait for a 1 if it's a 0
-    jmp x-- getCommandBit       ; get the next bit
-    jmp y-- receiveCommandByte  ; get the next byte
-    push
-
+    jmp x-- getCommandBit1       ; get the next bit
+    
                                 ; Skip the stop bit
     wait 0 pin 0 [T1 + 1]       ; wait until the line goes low, then wait until a 1 bit would register as high
     wait 1 pin 0                ; wait for a 1 if it's a 0
 
-                                ; Get the 8 byte data packet
+    set y, 1            
+receiveCommandByte:
+    set x, 7
+getCommandBit2:
+    wait 0 pin 0 [T1 + 1]         ; wait until the line goes low, then wait until a 1 bit would register as high
+    in pins 1                   ; read
+    wait 1 pin 0                ; wait for a 1 if it's a 0
+    jmp x-- getCommandBit2       ; get the next bit
+    jmp y-- receiveCommandByte  ; get the next byte
+    push
+                             ; Get the 8 byte data packet
     set y, 7    
 receiveDataByte:
     set x, 7
@@ -29,6 +37,7 @@ getDataBit:
     wait 1 pin 0                ; wait for a 1 if it's a 0
     jmp x-- getDataBit             ; get the next bit
     jmp y-- receiveDataByte        ; get the next byte
+    push
 .wrap
 
 % c-sdk {

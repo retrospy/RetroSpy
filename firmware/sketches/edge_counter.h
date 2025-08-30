@@ -76,7 +76,7 @@ static inline void edge_counter_program_init(PIO pio, uint sm, uint offset)
 	float clockDiv = clock_get_hz(clk_sys) / (cyclesPerBit * frequency);
 	sm_config_set_clkdiv(&c, clockDiv);
 	pio_sm_init(pio, sm, offset, &c);
-	pio_sm_put_blocking(pio, sm, 100);
+	pio_sm_put_blocking(pio, sm, 10);
 	pio_sm_set_enabled(pio, sm, true);
 }
 

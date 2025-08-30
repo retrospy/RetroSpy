@@ -13,7 +13,7 @@
 // -------------------- //
 
 #define gamecube_poll_reader_wrap_target 0
-#define gamecube_poll_reader_wrap 17
+#define gamecube_poll_reader_wrap 23
 
 #define gamecube_poll_reader_T1 4
 #define gamecube_poll_reader_T2 12
@@ -22,47 +22,59 @@ static const uint16_t gamecube_poll_reader_program_instructions[] = {
 	//     .wrap_target
 0x209c,
 	//  0: wait   1 gpio, 28                 
-0xe042,
-	//  1: set    y, 2                       
 0xe027,
-	//  2: set    x, 7                       
+	//  1: set    x, 7                       
 0x2520,
-	//  3: wait   0 pin, 0               [5] 
+	//  2: wait   0 pin, 0               [5] 
 0x4001,
-	//  4: in     pins, 1                    
+	//  3: in     pins, 1                    
 0x20a0,
-	//  5: wait   1 pin, 0                   
-0x0043,
-	//  6: jmp    x--, 3                     
-0x0082,
-	//  7: jmp    y--, 2                     
+	//  4: wait   1 pin, 0                   
+0x0042,
+	//  5: jmp    x--, 2                     
+0x2520,
+	//  6: wait   0 pin, 0               [5] 
+0x20a0,
+	//  7: wait   1 pin, 0                   
+0xe041,
+	//  8: set    y, 1                       
+0xe027,
+	//  9: set    x, 7                       
+0x2520,
+	// 10: wait   0 pin, 0               [5] 
+0x4001,
+	// 11: in     pins, 1                    
+0x20a0,
+	// 12: wait   1 pin, 0                   
+0x004a,
+	// 13: jmp    x--, 10                    
+0x0089,
+	// 14: jmp    y--, 9                     
 0x8020,
-	//  8: push   block                      
-0x2520,
-	//  9: wait   0 pin, 0               [5] 
-0x20a0,
-	// 10: wait   1 pin, 0                   
+	// 15: push   block                      
 0xe047,
-	// 11: set    y, 7                       
+	// 16: set    y, 7                       
 0xe027,
-	// 12: set    x, 7                       
+	// 17: set    x, 7                       
 0x2520,
-	// 13: wait   0 pin, 0               [5] 
+	// 18: wait   0 pin, 0               [5] 
 0x4001,
-	// 14: in     pins, 1                    
+	// 19: in     pins, 1                    
 0x20a0,
-	// 15: wait   1 pin, 0                   
-0x004d,
-	// 16: jmp    x--, 13                    
-0x008c,
-	// 17: jmp    y--, 12                    
+	// 20: wait   1 pin, 0                   
+0x0052,
+	// 21: jmp    x--, 18                    
+0x0091,
+	// 22: jmp    y--, 17                    
+0x8020,
+	// 23: push   block                      
         //     .wrap
 };
 
 #if !PICO_NO_HARDWARE
 static const struct pio_program gamecube_poll_reader_program = {
 	.instructions = gamecube_poll_reader_program_instructions,
-	.length = 18,
+	.length = 24,
 	.origin = -1,
 };
 

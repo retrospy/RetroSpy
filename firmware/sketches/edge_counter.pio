@@ -1,0 +1,49 @@
+.program edge_counter
+.define public T1 4
+.define public T2 12
+
+.wrap_target          
+    pull
+    mov y OSR
+start:
+    mov x, y
+    wait 1 pin 0
+loop:
+    jmp pin count 
+    jmp start
+count:
+    jmp x-- loop
+    jmp activate 
+activate:
+    set pins 1
+    nop [T1 + 1]
+    set pins 0
+    jmp start
+.wrap
+
+% c-sdk {
+#include "hardware/clocks.h"
+#include "hardware/pio.h"
+
+static inline void edge_counter_program_init(PIO pio, uint sm, uint offset)  
+{
+    pio_sm_config c = edge_counter_program_get_default_config(offset);
+
+    sm_config_set_in_pins(&c, 3);
+    sm_config_set_set_pins(&c, 28, 1);
+    pio_sm_set_pindirs_with_mask(pio, sm, ~(1u << 3), 1u << 3 | 1u << 28 );
+    pio_gpio_init(pio, 3);
+    pio_gpio_init(pio, 28);
+
+    sm_config_set_in_shift(&c, false, false, 32);
+
+    int cyclesPerBit = (edge_counter_T1 + edge_counter_T2) / 4;
+    float frequency = 1000000;
+    float clockDiv = clock_get_hz(clk_sys) / (cyclesPerBit * frequency);
+    sm_config_set_clkdiv(&c, clockDiv);
+
+    pio_sm_init(pio, sm, offset, &c);
+    pio_sm_put_blocking(pio, sm, 2500);
+    pio_sm_set_enabled(pio, sm, true);
+}
+%}

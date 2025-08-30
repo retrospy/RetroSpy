@@ -453,10 +453,16 @@ mainloop:
 		data[1] = pio_sm_get_blocking(pio0, 0);
 		data[2] = pio_sm_get_blocking(pio0, 0);
 		
-		for (int j = 0; j < 24; ++j)
+		for (int j = 0; j < 8; ++j)
 		{
-			rawData[j] = (data[0] & (1 << (23 - j))) == 0 ? ZERO : ONE;
+			rawData[j] = ((data[0] >> 16) & (1 << (7 - j))) == 0 ? ZERO : ONE;
 		}
+		rawData[8] = 0;
+		for (int j = 0; j < 15; ++j)
+		{
+			rawData[9+j] = (data[0] & (1 << (15 - j))) == 0 ? ZERO : ONE;
+		}
+		
 		for (int i = 1; i < 3; ++i)
 		{
 			for (int j = 0; j < 32; ++j)
@@ -466,7 +472,23 @@ mainloop:
 		}
 		rawControllerIDByte = data[0] >> 16;
 	}
-
+	else 
+		if ((data[0] >> 16) == 0x14)
+	{
+		data[1] = pio_sm_get_blocking(pio0, 0);
+		
+		for (int j = 0; j < 24; ++j)
+		{
+			rawData[j] = (data[0] & (1 << (23 - j))) == 0 ? ZERO : ONE;
+		}
+		
+		for (int j = 0; j < 24; ++j)
+		{
+			rawData[24 + j] = (data[1] & (1 << (23 - j))) == 0 ? ZERO : ONE;
+		}
+		
+		rawControllerIDByte = data[0] >> 16;
+	}
 	else
 		goto reset;
 	
