@@ -13,7 +13,7 @@
 // -------------------- //
 
 #define gamecube_poll_reader_wrap_target 0
-#define gamecube_poll_reader_wrap 19
+#define gamecube_poll_reader_wrap 17
 
 #define gamecube_poll_reader_T1 4
 #define gamecube_poll_reader_T2 12
@@ -56,17 +56,13 @@ static const uint16_t gamecube_poll_reader_program_instructions[] = {
 	// 16: jmp    x--, 13                    
 0x008c,
 	// 17: jmp    y--, 12                    
-0xbf42,
-	// 18: nop                           [31]
-0xbf42,
-	// 19: nop                           [31]
         //     .wrap
 };
 
 #if !PICO_NO_HARDWARE
 static const struct pio_program gamecube_poll_reader_program = {
 	.instructions = gamecube_poll_reader_program_instructions,
-	.length = 20,
+	.length = 18,
 	.origin = -1,
 };
 
@@ -91,7 +87,7 @@ static inline void gamecube_poll_reader_program_init(PIO pio, uint sm, uint offs
 	float clockDiv = clock_get_hz(clk_sys) / (cyclesPerBit * frequency);
 	sm_config_set_clkdiv(&c, clockDiv);
 	pio_sm_init(pio, sm, offset, &c);
-	pio_sm_set_enabled(pio, sm, true);
+	//pio_sm_set_enabled(pio, sm, true);
 }
 
 #endif

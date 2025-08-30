@@ -342,6 +342,7 @@ void GCSpy::writeKeyboard()
 #elif (defined(RASPBERRYPI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO)) && (defined(TP_ELAPSEDMILLIS))
 #include <elapsedMillis.h>
 #include "gamecube_poll_reader.h"
+#include "edge_counter.h"
 
 static int show = 0;
 
@@ -397,19 +398,6 @@ static u_int8_t dummyStickData[] = {
 	SPLIT
 };
 
-static volatile bool lineTrigger = false;
-
-static void __not_in_flash_func(lineTriggerRaiseISR)()
-{
-	lineTrigger = true;
-	pio_interrupt_clear(pio0, 0);
-}
-
-static void __not_in_flash_func(lineTriggerLowerISR)()
-{
-	lineTrigger = false;
-	pio_interrupt_clear(pio0, 1);
-}
 
 GCSpy::GCSpy()
 {
@@ -418,6 +406,9 @@ GCSpy::GCSpy()
 	
 	uint offset = pio_add_program(pio0, &gamecube_poll_reader_program);
 	gamecube_poll_reader_program_init(pio0, 0, offset);
+	
+	offset = pio_add_program(pio1, &edge_counter_program);
+	edge_counter_program_init(pio1, 0, offset);
 	
 }
 
@@ -440,7 +431,7 @@ void __time_critical_func(GCSpy::loop1)()
 		if (controllerIDByte == 0x54)
 			debugKeyboard();
 		else if (controllerIDByte == 0x14)
-			debugSerial();
+			sendRawDataDebug(sendData, 8, 40);
 		else
 			sendRawDataDebug(sendData, GC_PREFIX - 1, GC_BITCOUNT);
 #endif
@@ -449,31 +440,14 @@ void __time_critical_func(GCSpy::loop1)()
 
 void __time_critical_func(GCSpy::loop)() 
 {
-	elapsedMillis betweenLowSignal = 0;
 
-findcmdinit:
-
-	// Initial synchronization
-	
-	// Wait for the line to go high then low.
-	WAIT_FALLING_EDGE(GC_PIN);
-	
-	// wait for a 10ms gap
-	if (betweenLowSignal < 10)
-	{
-		betweenLowSignal = 0;
-		goto findcmdinit;
-	}
-	
-	// Start PIO Reader
-	digitalWrite(28, HIGH);
-	
 	uint32_t data[11];
+
+	pio_enable_sm_mask_in_sync(pio0, 0x01);
 	
 mainloop:
 	
 	data[0] = pio_sm_get_blocking(pio0, 0);
-	
 	if ((data[0] >> 16) == 0x40)
 	{
 		data[1] = pio_sm_get_blocking(pio0, 0);
@@ -487,24 +461,23 @@ mainloop:
 		{
 			for (int j = 0; j < 32; ++j)
 			{
-				rawData[24 + ((i-1) * 32) + j] = (data[i] & (1 << (31 - j))) == 0 ? ZERO : ONE;
+				rawData[24 + ((i - 1) * 32) + j] = (data[i] & (1 << (31 - j))) == 0 ? ZERO : ONE;
 			}
 		}
 		rawControllerIDByte = data[0] >> 16;
 	}
+
 	else
-		goto mainloop;
+		goto reset;
 	
 	//for (int i = 0; i < 11; ++i)
 	//{
 	//	data[i] = pio_sm_get_blocking(pio0, 0);
 	//}
-	betweenLowSignal = 0;
 	
 	while (sendRequest)
 	{
 	}
-	
 	
 	//for (int i = 0; i < 11; ++i)
 	//{
@@ -516,6 +489,12 @@ mainloop:
 	
 	
 	sendRequest = true;
+	
+reset:
+	
+	//pio_set_sm_mask_enabled(pio0, 0x07, false);
+	//pio_restart_sm_mask(pio0, 0x07);
+	pio_sm_clear_fifos(pio0, 0);
 	
 	goto mainloop;
 }
@@ -567,7 +546,7 @@ void GCSpy::debugSerial() {
 	Serial.print(128);
 	Serial.print(0);
 	Serial.print(0);
-	Serial.print("\n");
+	Serial.println();
 }
 
 
