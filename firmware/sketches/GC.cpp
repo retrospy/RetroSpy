@@ -472,19 +472,21 @@ mainloop:
 		}
 		rawControllerIDByte = data[0] >> 16;
 	}
-	else 
-		if ((data[0] >> 16) == 0x14)
+	else if ((data[0] >> 16) == 0x14)
 	{
 		data[1] = pio_sm_get_blocking(pio0, 0);
+	
+		if ((data[0] & 0x0000FF00) == 0)
+			goto reset;
 		
 		for (int j = 0; j < 24; ++j)
 		{
 			rawData[j] = (data[0] & (1 << (23 - j))) == 0 ? ZERO : ONE;
 		}
 		
-		for (int j = 0; j < 24; ++j)
+		for (int j = 0; j < 32; ++j)
 		{
-			rawData[24 + j] = (data[1] & (1 << (23 - j))) == 0 ? ZERO : ONE;
+			rawData[24 + j] = (data[1] & (1 << (31 - j))) == 0 ? ZERO : ONE;
 		}
 		
 		rawControllerIDByte = data[0] >> 16;
@@ -529,19 +531,19 @@ void GCSpy::writeSerial() {
 	Serial.write(ZERO);
 	Serial.write(ZERO);
 	Serial.write(ZERO);
-	Serial.write(sendData[21] ? ONE : ZERO);
-	Serial.write(ZERO);
-	Serial.write(ZERO);
-	Serial.write(sendData[23] ? ONE : ZERO);
-	Serial.write(sendData[24] ? ONE : ZERO);
-	Serial.write(ZERO);
-	Serial.write(sendData[31] ? ONE : ZERO);
-	Serial.write(sendData[32] ? ONE : ZERO);
-	Serial.write(sendData[22] ? ONE : ZERO);
-	Serial.write(sendData[18] ? ONE : ZERO);
-	Serial.write(sendData[17] ? ONE : ZERO);
 	Serial.write(sendData[20] ? ONE : ZERO);
+	Serial.write(ZERO);
+	Serial.write(ZERO);
+	Serial.write(sendData[22] ? ONE : ZERO);
+	Serial.write(sendData[23] ? ONE : ZERO);
+	Serial.write(ZERO);
+	Serial.write(sendData[30] ? ONE : ZERO);
+	Serial.write(sendData[31] ? ONE : ZERO);
+	Serial.write(sendData[21] ? ONE : ZERO);
+	Serial.write(sendData[17] ? ONE : ZERO);
+	Serial.write(sendData[16] ? ONE : ZERO);
 	Serial.write(sendData[19] ? ONE : ZERO);
+	Serial.write(sendData[18] ? ONE : ZERO);
 	Serial.write(dummyStickData, 49);
 }
 
@@ -549,19 +551,19 @@ void GCSpy::debugSerial() {
 	Serial.print("0");
 	Serial.print("0");
 	Serial.print("0");
-	Serial.print(sendData[21] ? "t" : "0");
+	Serial.print(sendData[20] ? "t" : "0");
 	Serial.print("0");
 	Serial.print("0");
-	Serial.print(sendData[23] ? "b" : "0");
-	Serial.print(sendData[24] ? "a" : "0");
+	Serial.print(sendData[22] ? "b" : "0");
+	Serial.print(sendData[23] ? "a" : "0");
 	Serial.print("0");
-	Serial.print(sendData[31] ? "L" : "0");
-	Serial.print(sendData[32] ? "R" : "0");
-	Serial.print(sendData[22] ? "s" : "0");
-	Serial.print(sendData[18] ? "u" : "0");
-	Serial.print(sendData[17] ? "d" : "0");
-	Serial.print(sendData[20] ? "l" : "0");
-	Serial.print(sendData[19] ? "r" : "0");
+	Serial.print(sendData[30] ? "L" : "0");
+	Serial.print(sendData[31] ? "R" : "0");
+	Serial.print(sendData[21] ? "s" : "0");
+	Serial.print(sendData[17] ? "u" : "0");
+	Serial.print(sendData[16] ? "d" : "0");
+	Serial.print(sendData[19] ? "l" : "0");
+	Serial.print(sendData[18] ? "r" : "0");
 	Serial.print(128);
 	Serial.print(128);
 	Serial.print(128);

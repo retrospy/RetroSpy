@@ -90,7 +90,9 @@
         <string>sketches\N64Slow.h</string>
         <string>sketches\Duo.h</string>
         <string>sketches\gamecube_poll_reader.h</string>
-        <string>sketches\gamecube_reader.pio</string>
+        <string>sketches\gamecube_poll_reader.pio</string>
+        <string>sketches\edge_counter.h</string>
+        <string>sketches\edge_counter.pio</string>
       </OtherFiles>
     </ProjectModeSettings>
   </Project>
