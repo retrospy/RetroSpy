@@ -15,7 +15,7 @@ namespace RetroSpy.Readers
             "y", "x", "b", "a", null, null, "r", "zr", "-", "+", "rs", "ls", "home", "capture", null, null, "down", "up", "right", "left", null, null, "l", "zl"
         };
 
-        private static readonly string?[] POKKEN_BUTTONS = {
+        private static readonly string?[] HORI_BUTTONS = {
             "y", "b", "a", "x", "l", "r", "zl", "zr", "-", "+", "ls", "rs", "home", "capture", null, null
         };
 
@@ -135,12 +135,12 @@ namespace RetroSpy.Readers
                 {
                     for (int j = 0; j < 8; ++j)
                     {
-                        if (string.IsNullOrEmpty(POKKEN_BUTTONS[(i * 8) + j]))
+                        if (string.IsNullOrEmpty(HORI_BUTTONS[(i * 8) + j]))
                         {
                             continue;
                         }
 
-                        outState.SetButton(POKKEN_BUTTONS[(i * 8) + j], (binaryPacket[i] & (1 << j)) != 0x00);
+                        outState.SetButton(HORI_BUTTONS[(i * 8) + j], (binaryPacket[i] & (1 << j)) != 0x00);
                     }
                 }
 
