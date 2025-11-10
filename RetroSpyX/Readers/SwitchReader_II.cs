@@ -16,7 +16,7 @@ namespace RetroSpy.Readers
         };
 
         private static readonly string?[] POKKEN_BUTTONS = {
-            "y", "b", "a", "x", "l", "r", "zl", "zr", "-", "+", null, null, "home", "capture", null, null
+            "y", "b", "a", "x", "l", "r", "zl", "zr", "-", "+", "ls", "rs", "home", "capture", null, null
         };
 
         private static readonly string?[] GC_BUTTONS = {
