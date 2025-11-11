@@ -8,7 +8,7 @@ namespace RetroSpy.Readers
     public static class SwitchReader_II
     {
         private const int PRO_PACKET_SIZE = 129;
-        private const int POKKEN_PACKET_SIZE = 17;
+        private const int HORI_PACKET_SIZE = 17;
         private const int GC_PACKET_SIZE = 75;
 
         private static readonly string?[] PRO_BUTTONS = {
@@ -38,7 +38,7 @@ namespace RetroSpy.Readers
             return (float)input / maxVal;
         }
 
-        private static float ReadPokkenStick(byte input, bool invert)
+        private static float ReadHoriStick(byte input, bool invert)
         {
             return invert ? -1.0f * ((float)(input - 128) / 128) : (float)(input - 128) / 128;
         }
@@ -59,7 +59,7 @@ namespace RetroSpy.Readers
                 throw new ArgumentNullException(nameof(packet));
             }
 
-            if (packet.Length < POKKEN_PACKET_SIZE)
+            if (packet.Length < HORI_PACKET_SIZE)
             {
                 return null;
             }
@@ -125,7 +125,7 @@ namespace RetroSpy.Readers
                 return outState.Build();
 
             }
-            else if (packet.Length == POKKEN_PACKET_SIZE)
+            else if (packet.Length == HORI_PACKET_SIZE)
             {
                 byte[] binaryPacket = StringToByteArray(Encoding.UTF8.GetString(packet, 0, packet.Length).Trim());
 
@@ -144,10 +144,10 @@ namespace RetroSpy.Readers
                     }
                 }
 
-                outState.SetAnalog("lstick_x", ReadPokkenStick(binaryPacket[3], false), binaryPacket[3]);
-                outState.SetAnalog("lstick_y", ReadPokkenStick(binaryPacket[4], true), binaryPacket[4]);
-                outState.SetAnalog("rstick_x", ReadPokkenStick(binaryPacket[5], false), binaryPacket[5]);
-                outState.SetAnalog("rstick_y", ReadPokkenStick(binaryPacket[6], true), binaryPacket[6]);
+                outState.SetAnalog("lstick_x", ReadHoriStick(binaryPacket[3], false), binaryPacket[3]);
+                outState.SetAnalog("lstick_y", ReadHoriStick(binaryPacket[4], true), binaryPacket[4]);
+                outState.SetAnalog("rstick_x", ReadHoriStick(binaryPacket[5], false), binaryPacket[5]);
+                outState.SetAnalog("rstick_y", ReadHoriStick(binaryPacket[6], true), binaryPacket[6]);
 
                 switch (binaryPacket[2])
                 {
