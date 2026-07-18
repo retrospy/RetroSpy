@@ -149,7 +149,7 @@ namespace RetroSpy
             {
                 for (int j = 0; j < Pixels.Height; ++j)
                 {
-                    Pixels[i, j].FromAbgr32(new Abgr32(blue, green, red, alpha));
+                    Bgra32.FromAbgr32(new Abgr32(blue, green, red, alpha));
 
                 }
             }

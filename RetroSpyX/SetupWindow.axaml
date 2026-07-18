@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
     mc:Ignorable="d" d:DesignWidth="602" d:DesignHeight="515.015" Width="602" Height="515.015" MinWidth="602" MinHeight="515.015" MaxWidth="602" MaxHeight="515.015" Foreground="#FFFFFF" Background="#FF252526" CanResize="false" x:Class="RetroSpy.SetupWindow" Title="RetroSpy" >
 
     <Grid HorizontalAlignment="Left">
