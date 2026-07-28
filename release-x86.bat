@@ -36,31 +36,68 @@ rmdir /S /Q RetroSpy-Upload
 mkdir RetroSpy-Setup
 if %ERRORLEVEL% NEQ 0 goto :fail
 
-if exist "..\..\..\certs\codesignpasswd.txt" (
-    set /p codesignpasswd=<"..\..\..\certs\codesignpasswd.txt"
-    if %ERRORLEVEL% NEQ 0 goto :fail
-)
+set "GOOGLE_APPLICATION_CREDENTIALS=C:\ProgramData\Google\CloudKMS\retrospy-code-signer.json"
 
 REM Sign all 4 executables
 cd "bin\Release\net8.0\"
 if %ERRORLEVEL% NEQ 0 goto :fail
 
-if exist "..\..\..\..\..\..\certs\codesign.cer" (
-"C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x86\SignTool" sign /f "..\..\..\..\..\..\certs\codesign.cer" /csp "eToken Base Cryptographic Provider" /k "%codesignpasswd%" /tr http://timestamp.comodoca.com  /td sha256 /fd sha256 /a Retrospy.exe
+if exist "..\..\..\..\..\..\certs\user.crt" (
+"C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\SignTool.exe" sign ^
+  /v ^
+  /debug ^
+  /fd sha256 ^
+  /td sha256 ^
+  /tr "http://timestamp.sectigo.com" ^
+  /f "..\..\..\..\..\..\certs\user.crt" ^
+  /csp "Google Cloud KMS Provider" ^
+  /kc "projects/retrospy-code-signing/locations/us-west2/keyRings/code-signing/cryptoKeys/retrospy-code-signing/cryptoKeyVersions/1" ^
+  "Retrospy.exe"
 if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
-if exist "..\..\..\..\..\..\certs\codesign.cer" (
-"C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x86\SignTool" sign /f "..\..\..\..\..\..\certs\codesign.cer" /csp "eToken Base Cryptographic Provider" /k "%codesignpasswd%" /tr http://timestamp.comodoca.com  /td sha256 /fd sha256 /a GBPemu.exe
-if %ERRORLEVEL% NEQ 0 goto :fail)
-
-if exist "..\..\..\..\..\..\certs\codesign.cer" (
-"C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x86\SignTool" sign /f "..\..\..\..\..\..\certs\codesign.cer" /csp "eToken Base Cryptographic Provider" /k "%codesignpasswd%" /tr http://timestamp.comodoca.com  /td sha256 /fd sha256 /a UsbUpdater.exe
+:signgbpemu
+if exist "..\..\..\..\..\..\certs\user.crt" (
+"C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\SignTool.exe" sign ^
+  /v ^
+  /debug ^
+  /fd sha256 ^
+  /td sha256 ^
+  /tr "http://timestamp.sectigo.com" ^
+  /f "..\..\..\..\..\..\certs\user.crt" ^
+  /csp "Google Cloud KMS Provider" ^
+  /kc "projects/retrospy-code-signing/locations/us-west2/keyRings/code-signing/cryptoKeys/retrospy-code-signing/cryptoKeyVersions/1" ^
+  "GBPemu.exe"
 if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
-if exist "..\..\..\..\..\..\certs\codesign.cer" (
-"C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x86\SignTool" sign /f "..\..\..\..\..\..\certs\codesign.cer" /csp "eToken Base Cryptographic Provider" /k "%codesignpasswd%" /tr http://timestamp.comodoca.com  /td sha256 /fd sha256 /a GBPUpdater.exe
+:signusbupdater
+if exist "..\..\..\..\..\..\certs\user.crt" (
+"C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\SignTool.exe" sign ^
+  /v ^
+  /debug ^
+  /fd sha256 ^
+  /td sha256 ^
+  /tr "http://timestamp.sectigo.com" ^
+  /f "..\..\..\..\..\..\certs\user.crt" ^
+  /csp "Google Cloud KMS Provider" ^
+  /kc "projects/retrospy-code-signing/locations/us-west2/keyRings/code-signing/cryptoKeys/retrospy-code-signing/cryptoKeyVersions/1" ^
+  "UsbUpdater.exe"
+if %ERRORLEVEL% NEQ 0 goto :fail
+)
+
+:signgbpupdater
+if exist "..\..\..\..\..\..\certs\user.crt" (
+"C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\SignTool.exe" sign ^
+  /v ^
+  /debug ^
+  /fd sha256 ^
+  /td sha256 ^
+  /tr "http://timestamp.sectigo.com" ^
+  /f "..\..\..\..\..\..\certs\user.crt" ^
+  /csp "Google Cloud KMS Provider" ^
+  /kc "projects/retrospy-code-signing/locations/us-west2/keyRings/code-signing/cryptoKeys/retrospy-code-signing/cryptoKeyVersions/1" ^
+  "GBPUpdater.exe"
 if %ERRORLEVEL% NEQ 0 goto :fail
 )
 
