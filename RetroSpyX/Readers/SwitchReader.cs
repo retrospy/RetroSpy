@@ -13,7 +13,7 @@ namespace RetroSpy.Readers
         };
 
         private static readonly string?[] POKKEN_BUTTONS = {
-            "y", "b", "a", "x", "l", "r", "zl", "zr", "-", "+", null, null, "home", "capture"
+            "y", "b", "a", "x", "l", "r", "zl", "zr", "-", "+", "ls", "rs", "home", "capture"
         };
 
         private static float ReadStick(byte input)
